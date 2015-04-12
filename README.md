@@ -8,19 +8,26 @@ WORK IN PROGRESS!
 # Capabilities
 
 * Random map generation - Maze, Cave, Dungeon, Obstacles/Features (Spelunky), City, Universe
-* Box2D physics
-* Smart and efficient update of game world
+* 4 different game types (Top/Down walker, Top/Down vehicle, Top/Down space, Sidescroller)
+* 3 different control schemes (newtonian, direct and vehicle)
 * A lot of predefined yet customizable game objects as loot, enemies and weapons
+* Travel from game world to game world
+* Moving platforms, chasms, mines
+* Start screen with level selector, splash and loading screen, upgrade screen
+* Box2D physics
 * Predefined shaders for a wide range of special effects 
 * Different types of tiled backgrounds
 * Easy masking of terrain 
 * Lights, shadows and particle effects - and lasers! :-)
 * Weapon upgrade system
 * Quest system
-* 3 different control schemes (newtonian, direct and vehicle)
-* 4 different game types (Top/Down walker, Top/Down vehicle, Top/Down space, Sidescroller)
-* Artificial Intelligence (Single and Group)
+* Smart and efficient update of game world based on device performance
+* Artificial Intelligence (Single and Group behaviors)
 * And much more... 
+
+# How to use it
+
+Clone from source, then modify it to your liking
 
 # Prepare assets
 
@@ -48,6 +55,7 @@ IOS: Run IOSLauncher on a connected device or the emulator (requires Mac OS X!)
 
 # Deploy your game
 
+Probably using parcl. (https://github.com/tomcashman/parcl). See here: (https://github.com/mini2Dx/mini2Dx/wiki/Packaging-your-game-for-release-on-Windows-Mac-Linux). 
 Work in progress...
 
 # License
