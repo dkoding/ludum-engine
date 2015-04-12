@@ -70,18 +70,6 @@ public class LevelFactory {
         return new RandomLevel(levelType, level);
     }
 
-    private Level readLevel(Level.LEVEL_TYPE type, int level) {
-        FileHandle internal = Gdx.files.external("level/" + type + level);
-        String content = internal.readString();
-        return json.fromJson(Level.class, content);
-    }
-
-    private void writeLevel(Level level) {
-        String content = json.toJson(level);
-        FileHandle internal = Gdx.files.external("level/" + level.getWorldType() + level.getLevel());
-        internal.writeString(content, false);
-    }
-
     public Level nextLevel() {
         return nextLevel(getRandomLevelType());
     }

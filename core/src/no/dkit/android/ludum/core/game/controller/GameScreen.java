@@ -261,12 +261,17 @@ public class GameScreen implements Screen, InputProcessor {
 
         ButtonGroup weaponGroup = new ButtonGroup();
 
-        Weapon[] playerWeapons = new Weapon[0];
         TextButton[] weaponButtons = new TextButton[0];
+
+        Weapon[] playerWeapons = new Weapon[0];
 
         Array<Weapon> weapons = gameModel.getPlayerWeapons();
         if (weapons.size > 0) {
-            playerWeapons = weapons.toArray(Weapon.class);
+            playerWeapons = new Weapon[weapons.size];
+
+            for (int i=0; i < weapons.size; i++) {
+                playerWeapons[i] = weapons.get(i);
+            }
             weaponButtons = new TextButton[playerWeapons.length];
         }
 
