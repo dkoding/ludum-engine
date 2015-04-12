@@ -3,17 +3,45 @@ The game engine I have created for Ludum Dare
 
 Built on top of LibGDX (https://github.com/libgdx/libgdx)
 
-# Prepare assets using gradle:
+WORK IN PROGRESS!
 
-packManaged - compress all images in the assets/managed catalog and create spritesheets
-copyUnmanaged - copy all images and other assets from assets/unmanaged to android/assets catalog
+# Capabilities
+
+* Random map generation - Maze, Cave, Dungeon, Obstacles/Features (Spelunky), City, Universe
+* Box2D physics
+* Smart and efficient update of game world
+* A lot of predefined yet customizable game objects as loot, enemies and weapons
+* Predefined shaders for a wide range of special effects 
+* Different types of tiled backgrounds
+* Easy masking of terrain 
+* Lights, shadows and particle effects - and lasers! :-)
+* Weapon upgrade system
+* Quest system
+* 3 different control schemes (newtonian, direct and vehicle)
+* 4 different game types (Top/Down walker, Top/Down vehicle, Top/Down space, Sidescroller)
+* Artificial Intelligence (Single and Group)
+* And much more... 
+
+# Prepare assets
+
+FIRST OF ALL: THE CURRENT ASSETS INCLUDED ARE NOT SUPPOSED TO BE PART OF YOUR CONTRIBUTION TO THE LUDUM DARE!
+
+They are just provided as placeholders, and most of them are modified versions of graphics retrieved from http://opengameart.org and 
+http://freesound.org - or even Google Image Search!  
+
+# Prepare assets using gradle
+
+To create sprite sheets and place assets at correct locations, go to the assets project and run:
+
+packManagedAssets - compress all images in the assets/managed catalog and create spritesheets, then copy them to the androd/assets catalog
+copyUnmanagedAssets - copy all images and other assets from assets/unmanaged to android/assets catalog
 
 # Run your game (development)
 
 Desktop: Set working directory to /android/assets so assets will be found and then run DesktopLauncher
 Android: Run AndroidLauncher on a connected device or the emulator
-Web: Run gradle task :html:superDev and when finished point browser to http://localhost:8080/html/
-IOS: Open the project in XCode and run it from there
+Web: Run gradle task :html:superDev and when finished point browser to http://localhost:8080/html/ (or your specified context path)
+IOS: Run IOSLauncher on a connected device or the emulator (requires Mac OS X!)
 
 # Deploy your game
 
@@ -26,3 +54,9 @@ Work in progress...
 2) As long as you release your game using this engine for a Ludum Dare abiding by all Ludum Dare rules you can afterwards
 do with your game/product as you wish, including (of course) distributing your source code. Also, see 1)
 
+# Thanks
+
+The people at http://shadertoy.com (IQ is my hero), http://glslsandbox.com, all the good people involved in random map and noise generation,
+Daniel Shiffman (The Nature of Code: http://natureofcode.com/book/), Lode (Random noise generation) http://lodev.org/cgtutor/randomnoise.html,
+Rogue Basin (http://www.roguebasin.com/index.php?title=Dungeon-Building_Algorithm) and a lot of people on Stack Overflow and 
+GameDev.net (http://www.gamedev.net/forum/11-game-programming/), and the LibGDX team (http://www.badlogicgames.com/forum)
