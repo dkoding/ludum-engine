@@ -50,6 +50,7 @@ Desktop: Set working directory to /android/assets so assets will be found and th
 Android: Run AndroidLauncher on a connected device or the emulator
 
 Web: Run gradle task :html:superDev and when finished point browser to http://localhost:8080/html/ (or your specified context path)
+Sometimes you have to recompile (press the refresh button in the brower) to get the game to start properly. I don't know why this is...
 
 IOS: Run IOSLauncher on a connected device or the emulator (requires Mac OS X!)
 
