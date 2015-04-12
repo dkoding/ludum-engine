@@ -70,6 +70,10 @@ You have to serve the contents of the war directory via an http server. Most bro
 
 To generate a deployment via gradle, run gradlew html:dist. That will create a dist directory within your html/build directory and will contain everything you need to deploy (and more). The same rule about the http server applies.
 
+# Forum and homepage
+
+http://darkdroid.com
+
 # License
 
 1) Please give credit where credit is due.
