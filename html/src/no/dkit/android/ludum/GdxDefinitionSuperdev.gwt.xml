@@ -8,8 +8,6 @@
 	<inherits name='com.badlogic.ashley_gwt' />
 	<inherits name='com.badlogic.gdx.ai' />
 	<inherits name='com.kotcrab.vis.vis-ui' />
-	<inherits name='libgdx-utils' />
-	<inherits name='libgdx-utils-box2d-gwt' />
 
     <inherits name='no.dkit.android.ludum.GdxDefinition' />
     

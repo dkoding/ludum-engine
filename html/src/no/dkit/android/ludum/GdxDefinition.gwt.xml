@@ -8,11 +8,9 @@
 	<inherits name='com.badlogic.ashley_gwt' />
 	<inherits name='com.badlogic.gdx.ai' />
 	<inherits name='com.kotcrab.vis.vis-ui' />
-	<inherits name='libgdx-utils' />
-	<inherits name='libgdx-utils-box2d-gwt' />
 
-	<inherits name='LudumEngine' />
+	<inherits name='XXXX' />
 	<entry-point class='no.dkit.android.ludum.client.HtmlLauncher' />
 	
-	<set-configuration-property name="gdx.assetpath" value="../android/assets" />
+    <set-configuration-property name="gdx.assetpath" value="../android/assets" />
 </module>

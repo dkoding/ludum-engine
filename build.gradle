@@ -16,6 +16,7 @@ allprojects {
     apply plugin: "idea"
 
     version = '1.0'
+
     ext {
         appName = 'ludum-engine'
         gdxVersion = '1.5.5'
@@ -105,16 +106,11 @@ project(":html") {
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion:sources"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion:sources"
         compile "com.kotcrab.vis:vis-ui:0.7.1:sources"
-        compile "net.dermetfan.libgdx-utils:libgdx-utils:0.10.0:sources"
-        compile "net.dermetfan.libgdx-utils:libgdx-utils:0.10.0:sources"
-        compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.10.0:sources"
-        compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d-gwt:0.10.0:sources"
     }
 }
 
 project(":core") {
     apply plugin: "java"
-
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -124,11 +120,20 @@ project(":core") {
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.kotcrab.vis:vis-ui:0.7.1"
-        compile "net.dermetfan.libgdx-utils:libgdx-utils:0.10.0"
-        compile "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.10.0"
     }
 }
 
 tasks.eclipse.doLast {
     delete ".project"
+}
+
+project(":assets") {
+    apply plugin: "java"
+
+    dependencies {
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-tools:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    }
 }

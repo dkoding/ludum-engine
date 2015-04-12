@@ -1,0 +1,1 @@
+convert 1.png +gravity -crop 128x128 +repage +adjoin 2_%d.png

@@ -1,0 +1,1 @@
+for /R %U in (*.png) do mogrify -type Grayscale -alpha on -auto-level %U

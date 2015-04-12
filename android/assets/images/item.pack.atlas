@@ -1,0 +1,223 @@
+
+item.pack.png
+size: 1024,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+armor
+  rotate: false
+  xy: 155, 318
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+bombbullet
+  rotate: false
+  xy: 219, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+bombweapon
+  rotate: false
+  xy: 35, 262
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+cannon1
+  rotate: false
+  xy: 283, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+cannon2
+  rotate: false
+  xy: 347, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+crate
+  rotate: false
+  xy: 675, 392
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+crystal
+  rotate: false
+  xy: 163, 384
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+disc
+  rotate: false
+  xy: 411, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+door
+  rotate: false
+  xy: 291, 384
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+fireballbullet
+  rotate: false
+  xy: 475, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+gunbullet
+  rotate: false
+  xy: 475, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+fireballweapon
+  rotate: false
+  xy: 795, 392
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+flamethrowerweapon
+  rotate: false
+  xy: 0, 136
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+gunweapon
+  rotate: false
+  xy: 0, 16
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+key
+  rotate: false
+  xy: 419, 384
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+lamp
+  rotate: false
+  xy: 539, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+laserbeam
+  rotate: false
+  xy: 603, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+laserend
+  rotate: false
+  xy: 915, 448
+  size: 65, 64
+  orig: 65, 64
+  offset: 0, 0
+  index: -1
+laserendglow
+  rotate: false
+  xy: 915, 384
+  size: 65, 64
+  orig: 65, 64
+  offset: 0, 0
+  index: -1
+laserglow
+  rotate: false
+  xy: 675, 328
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+laserweapon
+  rotate: false
+  xy: 120, 142
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+medpack
+  rotate: false
+  xy: 739, 328
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+mine
+  rotate: false
+  xy: 803, 328
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+orb
+  rotate: false
+  xy: 867, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+particle
+  rotate: false
+  xy: 0, 0
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+rocketbullet
+  rotate: false
+  xy: 0, 256
+  size: 35, 256
+  orig: 35, 256
+  offset: 0, 0
+  index: -1
+rocketweapon
+  rotate: false
+  xy: 120, 22
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+tower
+  rotate: false
+  xy: 35, 382
+  size: 128, 130
+  orig: 128, 130
+  offset: 0, 0
+  index: -1
+treasure
+  rotate: false
+  xy: 931, 320
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+turret
+  rotate: false
+  xy: 547, 384
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+wallamp
+  rotate: false
+  xy: 240, 256
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1

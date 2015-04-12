@@ -1,0 +1,167 @@
+
+ui.pack.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+arrow_left
+  rotate: false
+  xy: 0, 0
+  size: 17, 24
+  orig: 17, 24
+  offset: 0, 0
+  index: -1
+arrow_right
+  rotate: false
+  xy: 17, 0
+  size: 17, 24
+  orig: 17, 24
+  offset: 0, 0
+  index: -1
+bomb
+  rotate: false
+  xy: 514, 290
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+crosshair
+  rotate: false
+  xy: 0, 152
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+target
+  rotate: false
+  xy: 0, 152
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+face
+  rotate: false
+  xy: 0, 410
+  size: 430, 512
+  orig: 430, 512
+  offset: 0, 0
+  index: -1
+face2
+  rotate: false
+  xy: 430, 410
+  size: 362, 512
+  orig: 362, 512
+  offset: 0, 0
+  index: -1
+fireball
+  rotate: false
+  xy: 634, 290
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+flamethrower
+  rotate: false
+  xy: 871, 904
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+gun
+  rotate: false
+  xy: 792, 784
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+help
+  rotate: false
+  xy: 912, 706
+  size: 48, 48
+  orig: 48, 48
+  offset: 0, 0
+  index: -1
+laser
+  rotate: false
+  xy: 792, 664
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 0, 922
+  size: 871, 102
+  orig: 871, 102
+  offset: 0, 0
+  index: -1
+rocket
+  rotate: false
+  xy: 792, 544
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+sound
+  rotate: false
+  xy: 912, 829
+  size: 75, 75
+  orig: 75, 75
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 386, 283
+  size: 128, 127
+  orig: 128, 127
+  offset: 0, 0
+  index: -1
+start
+  rotate: false
+  xy: 0, 280
+  size: 130, 130
+  orig: 130, 130
+  offset: 0, 0
+  index: -1
+sticky
+  rotate: false
+  xy: 792, 424
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
+travelsidescroll
+  rotate: false
+  xy: 130, 282
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+traveltopdown
+  rotate: false
+  xy: 0, 24
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+traveluniverse
+  rotate: false
+  xy: 258, 282
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+vibrate
+  rotate: false
+  xy: 912, 754
+  size: 75, 75
+  orig: 75, 75
+  offset: 0, 0
+  index: -1
+wrench
+  rotate: false
+  xy: 754, 290
+  size: 120, 120
+  orig: 120, 120
+  offset: 0, 0
+  index: -1
