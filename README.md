@@ -5,6 +5,10 @@ Built on top of LibGDX (https://github.com/libgdx/libgdx)
 
 WORK IN PROGRESS!
 
+# Demo
+
+A playable demo of the engine can be found here: http://dkit.no/ludum-engine/
+
 # Capabilities
 
 * Random map generation - Maze, Cave, Dungeon, Obstacles/Features (Spelunky), City, Universe
@@ -56,8 +60,15 @@ IOS: Run IOSLauncher on a connected device or the emulator (requires Mac OS X!)
 
 # Deploy your game
 
-Probably using parcl. (https://github.com/tomcashman/parcl). See here: (https://github.com/mini2Dx/mini2Dx/wiki/Packaging-your-game-for-release-on-Windows-Mac-Linux). 
+Windows/Mac/Linux
+Probably using parcl to deploy Windows/OS X/Linux versions. (https://github.com/tomcashman/parcl). 
+See here: (https://github.com/mini2Dx/mini2Dx/wiki/Packaging-your-game-for-release-on-Windows-Mac-Linux). 
 Work in progress...
+
+HTML/WEB
+You have to serve the contents of the war directory via an http server. Most browsers will not allow the async requests to load the additional files when running on the filesystem.
+
+To generate a deployment via gradle, run gradlew html:dist. That will create a dist directory within your html/build directory and will contain everything you need to deploy (and more). The same rule about the http server applies.
 
 # License
 

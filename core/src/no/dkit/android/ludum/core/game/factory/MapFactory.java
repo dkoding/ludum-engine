@@ -20,7 +20,7 @@ public class MapFactory {
         return instance;
     }
 
-    public AbstractMap getRandomMap(Level.LEVEL_TYPE type, int level, boolean inside, boolean platforms) {
+    public AbstractMap getRandomMap(Level.LEVEL_TYPE type, final int level, boolean inside, boolean platforms) {
         AbstractMap map;
         float random = MathUtils.random();
 

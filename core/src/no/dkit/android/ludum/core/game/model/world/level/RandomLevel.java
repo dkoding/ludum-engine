@@ -30,9 +30,6 @@ public class RandomLevel extends Level {
         if (!sanityChecked()) {
             throw new RuntimeException("Sanity check failed!");
         }
-
-        map.item[(int)startPosition.x + 2][(int)startPosition.y] = AbstractMap.ITEM_ENTRANCE_SURFACE;
-        map.item[(int)startPosition.x + 4][(int)startPosition.y] = AbstractMap.ITEM_ENTRANCE_CAVE;
     }
 
     @Override

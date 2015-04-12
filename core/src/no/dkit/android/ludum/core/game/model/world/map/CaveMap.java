@@ -16,7 +16,8 @@ public class CaveMap extends AbstractMap {
     }
 
     public CaveMap createMap(int level, boolean inside, boolean platforms) {
-        MathUtils.random = new Random(Config.RANDOM_SEED + level);
+        int baseLevel = level;
+        MathUtils.random = new Random(Config.RANDOM_SEED + baseLevel);
 
         initVariables(Config.CAVE_SIZE, Config.CAVE_SIZE);
 
@@ -34,8 +35,8 @@ public class CaveMap extends AbstractMap {
 
         if (largest < Config.CAVE_SIZE * 5) {
             printMap(map2d);
-            LevelFactory.level++;
-            return createMap(LevelFactory.level, inside, platforms);
+            baseLevel++;
+            return createMap(baseLevel, inside, platforms);
         }
 
         makeBorders(BORDER);
