@@ -61,9 +61,13 @@ IOS: Run IOSLauncher on a connected device or the emulator (requires Mac OS X!)
 # Deploy your game
 
 Windows/Mac/Linux
-Probably using parcl to deploy Windows/OS X/Linux versions. (https://github.com/tomcashman/parcl). 
-See here: (https://github.com/mini2Dx/mini2Dx/wiki/Packaging-your-game-for-release-on-Windows-Mac-Linux). 
-Work in progress...
+
+gradlew desktop:dist
+This will create a runnable .jar-file in the desktop/build/libs-directory (desktop-1.0.jar is the default).
+From this directory start the program with 'java -jar desktop-1.0.jar' (and even better, create a start.bat/start.sh file that does this for you)
+Note that the java runtime environment has to be installed for this to work and java has to be on your classpath.
+
+...or just use packr: https://github.com/libgdx/packr
 
 HTML/WEB
 You have to serve the contents of the war directory via an http server. Most browsers will not allow the async requests to load the additional files when running on the filesystem.
