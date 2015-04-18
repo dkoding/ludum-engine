@@ -219,9 +219,11 @@ public class PlayerBody extends AgentBody implements GameEventListener {
     public void fireBullet1(Vector2 touchPos) {
         prepareShot(touchPos);
         if (weapon != null) {
+/*
             this.tmp.set(firingDirection).scl(Config.TILE_SIZE_X / 2);
             tmp.add(position);
-            weapon.fire1(tmp, touchPos);
+*/
+            weapon.fire1(position, touchPos);
         }
     }
 

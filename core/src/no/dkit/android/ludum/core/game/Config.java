@@ -1,14 +1,21 @@
 package no.dkit.android.ludum.core.game;
 
+import com.badlogic.gdx.graphics.Color;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class Config {
+    Color COLOR_1_PURPLE = Color.valueOf("7a00ff");
+    Color COLOR_2_BLUE_DARK = Color.valueOf("2a0ce8");
+    Color COLOR_3_BLUE_MEDIUM = Color.valueOf("0031ff");
+    Color COLOR_4_BLUE_LIGHT = Color.valueOf("0c7ee8");
+    Color COLOR_5_BLUE_LIGHTEST = Color.valueOf("0ddaff");
+
     public static final int MAX_LEVEL = 100;
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
     public static final float DEBUG_SCALE = 1f;
     public static boolean DEBUGTEXT = false;
 
-    public static final boolean SANDBOX = false;
+    public static final boolean SANDBOX = true;
     public static final Level.LEVEL_TYPE SANDBOX_TYPE = Level.LEVEL_TYPE.SIDESCROLL;
 
     public static final float AGENT_SPOT_CHANCE = .9f;
@@ -26,7 +33,7 @@ public class Config {
 
     public static final int UNIVERSE_SIZE = 4;
     public static final int MAZE_SIZE = 4;
-    public static final int CAVE_SIZE = 20;
+    public static final int CAVE_SIZE = 10;
     public static final int DUNGEON_SIZE = 30;
     public static final int CITY_SIZE = 25;
 

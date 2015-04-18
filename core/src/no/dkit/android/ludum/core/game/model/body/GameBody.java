@@ -279,4 +279,32 @@ public abstract class GameBody {
     public void setDisabled(boolean disabled) {
         body.setActive(!disabled);
     }
+
+    @Override
+    public String toString() {
+        return "GameBody{" +
+                "health=" + health +
+                ", hurtThreshold=" + hurtThreshold +
+                ", criticalThreshold=" + criticalThreshold +
+                ", created=" + created +
+                ", ttl=" + ttl +
+                ", alpha=" + alpha +
+                ", alphaMod=" + alphaMod +
+                ", rotation=" + rotation +
+                ", rotationMod=" + rotationMod +
+                ", scale=" + scale +
+                ", scaleMod=" + scaleMod +
+                ", lightCounter=" + lightCounter +
+                ", lightDistance=" + lightDistance +
+                ", lightMod=" + lightMod +
+                ", bodyType=" + bodyType +
+                ", drawLayer=" + drawLayer +
+                ", radius=" + radius +
+                ", body=" + body +
+                ", light=" + light +
+                ", active=" + active +
+                ", image=" + image +
+                ", position=" + position +
+                '}';
+    }
 }

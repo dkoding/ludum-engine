@@ -18,31 +18,12 @@ public class SandboxMap extends AbstractMap {
 
         clearMap();
         box(SOLID);
-        //for (int x = 0; x < sizeX; x++) map2d[x][1]  = SOLID;
 
-        clearOccupied(CLEAR);
-
-        if (inside) {
-            replaceAll(CLEAR, ROOM, map2d);
-            replaceSomeTiles(10, ROOM, CHASM);
+        for(int x=1; x<sizeX-1;x++) {
+            item[x][1] = ITEM_LIQUID_SS;
         }
 
-        placeItemsWithinEmptySpace(5, ITEM_CANNON, CLEAR);
-        //placeItemsWithinEmptySpace(10, ITEM_LAMP, CLEAR);
-
-/*
-        placeItemsWithinEmptySpace(5, ITEM_CANNON, CLEAR);
-        placeItemsOnSurface(5,ITEM_CANNON, AbstractMap.N, CLEAR, SOLID);
-        placeItemsEncasedFacing(1, ITEM_LIQUID_SS, N, CLEAR, SOLID);
-        placeItemsOnSurface(1, ITEM_ENTRANCE_UNIVERSE, N, CLEAR, SOLID);
-        placeItemsOnSurface(2, ITEM_CRATE, N, CLEAR, SOLID);
-        placeItemsOnSurface(5, ITEM_FEATURE, N, CLEAR, SOLID);
-        placeItemsWithinEmptySpace(1, ITEM_CANNON, CLEAR);
-*/
-
         clearOccupied(CLEAR);
-
-        start = new int[]{sizeX / 4, sizeY / 4};
 
         printMap(map2d);
 

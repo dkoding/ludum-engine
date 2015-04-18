@@ -153,7 +153,7 @@ public abstract class Level {
 
         switch (worldType) {
             case SIDESCROLL:
-                lightTypes.addAll(Arrays.asList(LightFactory.LIGHT_TYPE.ALWAYS_CONE, LightFactory.LIGHT_TYPE.SMALL_PLAYER_LIGHT));
+                lightTypes.add(LightFactory.LIGHT_TYPE.LARGE_PLAYER_LIGHT);
                 break;
             case TOPDOWN:
                 lightTypes.addAll(Arrays.asList(LightFactory.LIGHT_TYPE.INSIDE_CONE, LightFactory.LIGHT_TYPE.SMALL_PLAYER_LIGHT));
@@ -167,7 +167,7 @@ public abstract class Level {
     protected void getDefaultBackgroundFor(LEVEL_TYPE worldType) {
         switch (worldType) {
             case SIDESCROLL:
-                background = RenderOperations.BACKGROUND_TYPE.DARKROCK;
+                background = RenderOperations.BACKGROUND_TYPE.UNIVERSE;
                 break;
             case TOPDOWN:
                 background = RenderOperations.BACKGROUND_TYPE.GROUND;
@@ -261,10 +261,7 @@ public abstract class Level {
             case SIDESCROLL: // First weapon is default weapon
                 weaponTypes.addAll(
                         Arrays.asList(
-                                Loot.LOOT_TYPE.GUN,
-                                Loot.LOOT_TYPE.BOMB,
-                                Loot.LOOT_TYPE.FIREBALL,
-                                Loot.LOOT_TYPE.FLAME_THROWER
+                                Loot.LOOT_TYPE.TONGUE
                         ));
                 break;
             case TOPDOWN: // First weapon is default weapon
@@ -297,7 +294,7 @@ public abstract class Level {
     protected void getDefaultImagesFor(LEVEL_TYPE worldType) {
         switch (worldType) {
             case SIDESCROLL:
-                wallTexture = "earthwall";
+                wallTexture = "tile1";
                 indoorImage = "indoor";
                 chasmImage = "chasm";
                 corridorImage = "path";

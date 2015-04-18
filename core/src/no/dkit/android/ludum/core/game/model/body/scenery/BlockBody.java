@@ -74,4 +74,14 @@ public class BlockBody extends DirectionalGameBody {
     public void hit(int damage) {
 
     }
+
+    @Override
+    public String toString() {
+        return "BlockBody{" +
+                "x=" + x +
+                ", y=" + y +
+                ", tileIndex=" + tileIndex +
+                ", texture=" + texture +
+                '}';
+    }
 }

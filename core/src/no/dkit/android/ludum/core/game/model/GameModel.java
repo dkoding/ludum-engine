@@ -611,6 +611,13 @@ public class GameModel {
         aimPos.set(touchPos.x, touchPos.y);
         playerBody.fireBullet1(aimPos);
 
+        final Body body = selectBody();
+        if(body != null) {
+            final Object userData = body.getUserData();
+            if (userData instanceof BlockBody)
+                System.out.println("body = " + ((BlockBody) this.userData).toString());
+        }
+
 /*
         if (Level.worldType == Level.LEVEL_TYPE.TOPDOWN)
             playerBody.setAngle(playerBody.getFiringAngle());

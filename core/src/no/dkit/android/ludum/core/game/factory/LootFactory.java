@@ -10,6 +10,7 @@ import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.loot.Medpack;
 import no.dkit.android.ludum.core.game.model.loot.Orb;
 import no.dkit.android.ludum.core.game.model.loot.Rocket;
+import no.dkit.android.ludum.core.game.model.loot.Tongue;
 import no.dkit.android.ludum.core.game.model.loot.Treasure;
 import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
@@ -78,6 +79,8 @@ public class LootFactory {
                 return new Laser();
             case ROCKET:
                 return new Rocket();
+            case TONGUE:
+                return new Tongue();
             default:
                 throw new RuntimeException("DERP..." + type);
         }

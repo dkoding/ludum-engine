@@ -56,6 +56,7 @@ import no.dkit.android.ludum.core.game.model.body.scenery.SpawnBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.UpgradeBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.BombBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.BulletBody;
+import no.dkit.android.ludum.core.game.model.body.weapon.TongueBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.EnergyBallBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.ParticleBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.RocketBody;
@@ -549,11 +550,11 @@ public class BodyFactory {
         return fixture;
     }
 
-    private FixtureDef createChainBulletAttributes(FixtureDef fixture, Shape shape) {
+    private FixtureDef createTongueBulletAttributes(FixtureDef fixture, Shape shape) {
         fixture.shape = shape;
-        fixture.density = 5000f;
-        fixture.friction = 1f;
-        fixture.restitution = 1f;
+        fixture.density = 0f;
+        fixture.friction = 0f;
+        fixture.restitution = 0f;
 
         return fixture;
     }
@@ -617,12 +618,16 @@ public class BodyFactory {
         return createBodyDef(true, BodyDef.BodyType.DynamicBody, 0, gravityScale, 0, 0, false);
     }
 
+    private BodyDef createTongueBulletDef() {
+        return createBodyDef(true, BodyDef.BodyType.DynamicBody, 0, .1f, 0f, .5f, false);
+    }
+
     private BodyDef createSlowingBulletDef() {
         return createBodyDef(true, BodyDef.BodyType.DynamicBody, 0, 1, .75f, .75f, false);
     }
 
     private BodyDef createAgentBodyDef(boolean fixedRotation) {
-        return createBodyDef(false, BodyDef.BodyType.DynamicBody, 0, 0, 0, 0, fixedRotation);
+        return createBodyDef(false, BodyDef.BodyType.DynamicBody, 0, 1, 0, 0, fixedRotation);
     }
 
     private BodyDef createAgentBodyDef(boolean fixedRotation, float gravityScale) {
@@ -660,6 +665,10 @@ public class BodyFactory {
             case ROCKET:
                 createRocketAttributes(bulletFixture, createBoxShape(Config.TILE_SIZE_X / 4f, Config.TILE_SIZE_X / 16f));
                 bulletDef = createGravityBulletDef(.1f);
+                break;
+            case TONGUE:
+                createTongueBulletAttributes(bulletFixture, createCircleShape(Config.TILE_SIZE_X / 5));
+                bulletDef = createTongueBulletDef();
                 break;
             default:
                 createBulletAttributes(bulletFixture, createCircleShape(Config.TILE_SIZE_X / 10f));
@@ -1024,9 +1033,9 @@ public class BodyFactory {
     }
 
     public PlayerBody createSidescrollPlayer(Vector2 playerPosition) {
-        Body body = getDefaultPlayerBody(playerPosition, true);
+        Body body = getDefaultPlayerBody(playerPosition, false);
         return new PlayerBody(body, Config.TILE_SIZE_X / 2, new PlayerData(),
-                ResourceFactory.getInstance().getWorldTypeImage("player"), PlayerBody.CONTROL_MODE.DIRECT, GameBody.BODY_TYPE.METAL);
+                ResourceFactory.getInstance().getWorldTypeImage("player"), PlayerBody.CONTROL_MODE.DIRECT, GameBody.BODY_TYPE.ALIEN);
     }
 
     private Body getDefaultPlayerBody(Vector2 playerPosition, boolean fixedRotation) {
@@ -1051,7 +1060,7 @@ public class BodyFactory {
 
     protected FixtureDef createPlayerAttributes(Shape shape) {
         playerFixture.shape = shape;
-        playerFixture.density = 20f;
+        playerFixture.density = 100f;
         playerFixture.friction = 0f;
         playerFixture.restitution = 0f;
         return playerFixture;
@@ -1309,6 +1318,23 @@ public class BodyFactory {
                     break;
                 case GUN:
                     new BulletBody(body, bulletFixture.shape.getRadius(), def.getBulletImage(), angle, def.getDamage());
+                    break;
+                case TONGUE:
+                    int particles = 4;
+                    Body[] limbs = new Body[particles];
+
+                    for (int i = 0; i < particles; i++) {
+                        limbs[i] = getBulletBody(def.getType(), def.getSourceX(), def.getSourceY(), 0, 0, def.isPlayerOwned());
+
+                        if(i==0)
+                            BodyFactory.getInstance().connectRope(body, limbs[0], Config.TILE_SIZE_X / 2);
+                        if (i > 0 && i < particles)
+                            BodyFactory.getInstance().connectRope(limbs[i - 1], limbs[i], Config.TILE_SIZE_X / 2);
+                        if(i == particles-1)
+                            BodyFactory.getInstance().connectRope(GameModel.getPlayer().getBody(), limbs[i], Config.TILE_SIZE_X / 2);
+                    }
+
+                    new TongueBody(body, limbs, Config.TILE_SIZE_X / 4f, Config.TILE_SIZE_X / 16f, def.getBulletImage(), angle, def.getDamage());
                     break;
                 case ROCKET:
                     new RocketBody(body, Config.TILE_SIZE_X / 4f, Config.TILE_SIZE_X / 16f, def.getBulletImage(), angle, def.getDamage());

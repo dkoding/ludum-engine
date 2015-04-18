@@ -13,7 +13,7 @@ public class PlayerVehicleBody extends PlayerBody {
     public PlayerVehicleBody(Body body, float radius, PlayerData data, TextureRegion vehicleImage, TextureRegion turretImage) {
         super(body, radius, data, vehicleImage, CONTROL_MODE.VEHICLE, BODY_TYPE.METAL);
         this.turretImage = turretImage;
-        addWeapon(LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.FIREBALL));
+        addWeapon(LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.TONGUE));
     }
 
 

@@ -178,7 +178,8 @@ public class GameView {
     private void drawImages() {
         fpsCounter++;
         if (fpsCounter == 100) {
-            System.out.println("FPS:" + Gdx.graphics.getFramesPerSecond());
+            if(Config.DEBUGTEXT)
+                System.out.println("FPS:" + Gdx.graphics.getFramesPerSecond());
             fpsCounter = 0;
         }
 

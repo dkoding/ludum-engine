@@ -47,6 +47,8 @@ public class CaveMap extends AbstractMap {
         replaceAll(SOLID, OCCUPIED, map2d);
         replaceAll(BORDER, SOLID, map2d);
 
+        clearOccupied(CLEAR);
+
         if (inside) {
             if (platforms)
                 replaceAll(CLEAR, PLATFORM, map2d);
@@ -55,6 +57,15 @@ public class CaveMap extends AbstractMap {
         }
 
         printMap(map2d);
+
+        // TODO: Fix bug with water outside the cave
+        for (int x = 1; x < sizeX - 1; x++) {
+            if (map2d[x][1] == CLEAR) {
+                item[x][1] = ITEM_LIQUID_SS;
+                mapDirection[x-1][1] = NO_DIRECTION;
+                mapDirection[x+1][1] = NO_DIRECTION;
+            }
+        }
 
         return this;
     }
