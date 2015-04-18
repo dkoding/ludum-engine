@@ -6,6 +6,8 @@ public class TunnellShader extends AbstractTextureShader {
 
     @Override
     public String getFragmentShader() {
+        wrapped = true;
+
         return "uniform float time;\n" +
                 "uniform vec2 resolution;\n" +
                 "uniform sampler2D u_texture;\n" +

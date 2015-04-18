@@ -16,8 +16,7 @@ public class CaveMap extends AbstractMap {
     }
 
     public CaveMap createMap(int level, boolean inside, boolean platforms) {
-        int baseLevel = level;
-        MathUtils.random = new Random(Config.RANDOM_SEED + baseLevel);
+        MathUtils.random = new Random(Config.RANDOM_SEED + level);
 
         initVariables(Config.CAVE_SIZE, Config.CAVE_SIZE);
 
@@ -34,9 +33,8 @@ public class CaveMap extends AbstractMap {
         int largest = fillSmallCaves();
 
         if (largest < Config.CAVE_SIZE * 5) {
-            printMap(map2d);
-            baseLevel++;
-            return createMap(baseLevel, inside, platforms);
+            level++;
+            return createMap(level, inside, platforms);
         }
 
         makeBorders(BORDER);
@@ -47,7 +45,7 @@ public class CaveMap extends AbstractMap {
         replaceAll(SOLID, OCCUPIED, map2d);
         replaceAll(BORDER, SOLID, map2d);
 
-        clearOccupied(CLEAR);
+        //clearOccupied(CLEAR);
 
         if (inside) {
             if (platforms)
@@ -55,8 +53,6 @@ public class CaveMap extends AbstractMap {
             else
                 replaceAll(CLEAR, ROOM, map2d);
         }
-
-        printMap(map2d);
 
         // TODO: Fix bug with water outside the cave
         for (int x = 1; x < sizeX - 1; x++) {
@@ -67,6 +63,7 @@ public class CaveMap extends AbstractMap {
             }
         }
 
+        printMap(map2d);
         return this;
     }
 

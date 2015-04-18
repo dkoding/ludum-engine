@@ -424,8 +424,8 @@ public class AgentBody extends PoolableGameBody {
 
     protected void updateEmission() {
         trailEmitter.setPosition(position.x, position.y);
-        trailEmitter.getAngle().setHigh(angle - emitterArc, angle + emitterArc);
-        trailEmitter.getAngle().setLow(angle - emitterArc, angle + emitterArc);
+        trailEmitter.getAngle().setHigh(angle - emitterArc+180, angle + emitterArc+180);
+        trailEmitter.getAngle().setLow(angle - emitterArc+180, angle + emitterArc+180);
         trailEmitter.getVelocity().setHigh(unconscious ? 0 : speed / 2, unconscious ? 0 : speed);
         trailEmitter.getVelocity().setLow(0, unconscious ? 0 : speed / 4);
         trailEmitter.getEmission().setLow(0, 0);

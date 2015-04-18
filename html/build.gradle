@@ -14,7 +14,8 @@ gwt {
     compiler {
         strict = true;
         enableClosureCompiler = true;
-        disableCastChecking = true;
+        disableCastChecking = false;
+        draftCompile = true;
     }
 }
 
@@ -32,6 +33,7 @@ task superDev(type: de.richsource.gradle.plugins.gwt.GwtSuperDev) {
     }
 }
 
+// Remember to change this back
 task dist(dependsOn: [clean, compileGwt]) {
     doLast {
         file("build/dist").mkdirs()

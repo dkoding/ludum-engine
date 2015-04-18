@@ -3,15 +3,15 @@ package no.dkit.android.ludum.core.game.model.loot;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 
-public class Tongue extends Weapon {
-    public Tongue() {
+public class Dongue extends Weapon {
+    public Dongue() {
         super(
                 LOOT_TYPE.TONGUE,
                 "tongue"
         );
 
-        this.cooldown1 = 100;
-        this.cooldown2 = 100;
+        this.cooldown1 = 1000;
+        this.cooldown2 = 10;
     }
 
     @Override

@@ -10,7 +10,7 @@ public class PlayerData {
     float maxSpeed = Config.PLAYER_MAX_SPEED;
     float minSpeed = Config.PLAYER_MIN_SPEED;
     int score;
-    private int keys = 1;
+    private int keys = 0;
 
     public PlayerData() {
         health = Config.PLAYER_START_HEALTH;

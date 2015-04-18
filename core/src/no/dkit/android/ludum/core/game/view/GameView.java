@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.utils.Array;
@@ -20,6 +21,7 @@ import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
+import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.BlockBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.FloorBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringFeatureBody;
@@ -90,7 +92,7 @@ public class GameView {
         Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         drawImages();
-        drawShapes();
+        //drawShapes();
 
         if (Config.DEBUGTEXT)
             startMeasure();
@@ -195,14 +197,6 @@ public class GameView {
         if (Config.DEBUGTEXT)
             startMeasure();
         spriteBatch.begin();
-        gameModel.getPlayerBody().draw(spriteBatch);
-        spriteBatch.end();
-        if (Config.DEBUGTEXT)
-            endMeasure("Player");
-
-        if (Config.DEBUGTEXT)
-            startMeasure();
-        spriteBatch.begin();
         EffectFactory.getInstance().drawEffects(spriteBatch, GameBody.DRAW_LAYER.FRONT);
         spriteBatch.end();
         if (Config.DEBUGTEXT)
@@ -217,6 +211,14 @@ public class GameView {
                 camera.position.x - Config.getDimensions().WORLD_WIDTH / 2f,
                 camera.position.y - Config.getDimensions().WORLD_HEIGHT / 2f,
                 Config.getDimensions().WORLD_WIDTH, Config.getDimensions().WORLD_HEIGHT);
+    }
+
+    private void drawPlayer() {
+        if (Config.DEBUGTEXT)
+            startMeasure();
+        gameModel.getPlayerBody().draw(spriteBatch);
+        if (Config.DEBUGTEXT)
+            endMeasure("Player");
     }
 
     // TODO: Move these to model to save on iterations
@@ -250,6 +252,9 @@ public class GameView {
             endMeasure("Draw Effects on BACK layer");
 
         drawLayer(gameModel.getMediumLayer());
+
+        drawPlayer();
+
         drawLayer(gameModel.getFrontLayer());
     }
 
@@ -257,6 +262,7 @@ public class GameView {
         if (layer.size == 0) return;
 
         for (GameBody gameBody : layer) {
+            if(gameBody instanceof PlayerBody) continue;
             gameBody.draw(spriteBatch);
         }
     }
@@ -360,16 +366,12 @@ public class GameView {
 
     private void drawCrosshairs() {
         if (gameModel.panning) {
-            spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-            spriteBatch.setColor(255, 255, 255, 128);
-
-            spriteBatch.draw(crosshairImage,
-                    gameModel.getPointPos().x - Config.TILE_SIZE_X / 2, gameModel.getPointPos().y - Config.TILE_SIZE_Y / 2,
-                    Config.TILE_SIZE_X / 2, Config.TILE_SIZE_Y / 2,
-                    Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
-                    1, 1,
-                    -globalRotation,
-                    true);
+            drawJumpArrow(spriteBatch,
+                    ResourceFactory.getInstance().getItemImage("laserglow"),
+                                        ResourceFactory.getInstance().getItemImage("laserbeam"),
+                                        ResourceFactory.getInstance().getItemImage("laserend"),
+                                        ResourceFactory.getInstance().getItemImage("laserendglow")
+            );
         }
 
         long a = System.currentTimeMillis() - gameModel.getLastTap();
@@ -384,8 +386,83 @@ public class GameView {
                 globalRotation,
                 true);
 
-        spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         spriteBatch.setColor(Color.WHITE);
+    }
+
+    private void drawJumpArrow(SpriteBatch spriteBatch, TextureRegion glow, TextureRegion beam, TextureRegion end, TextureRegion endGlow) {
+        Color glowColor = Color.RED;
+        Color beamColor = Color.WHITE;
+
+        Vector2 firingDirection = new Vector2();
+        firingDirection.set(gameModel.getPointPos().x - gameModel.getPlayerBody().position.x, gameModel.getPointPos().y - gameModel.getPlayerBody().position.y);
+        float firingAngle = (MathUtils.radiansToDegrees * MathUtils.atan2(firingDirection.y, firingDirection.x)) + 90f;
+
+        spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+
+        //glowColor.lerp(Color.CLEAR, .1f);
+        spriteBatch.setColor(glowColor);
+
+        spriteBatch.draw(endGlow,
+                gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y - Config.TILE_SIZE_X,
+                Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
+                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
+                .2f, .2f,
+                0,
+                true);
+
+        spriteBatch.draw(endGlow,
+                gameModel.getPlayerBody().position.x - Config.TILE_SIZE_X, gameModel.getPlayerBody().position.y - Config.TILE_SIZE_X,
+                Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
+                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
+                .1f, .1f,
+                0,
+                true);
+
+        spriteBatch.draw(glow,
+                gameModel.getPlayerBody().position.x - Config.TILE_SIZE_X, gameModel.getPlayerBody().position.y,
+                Config.TILE_SIZE_X, 0,
+                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
+                .1f, firingDirection.len(),
+                firingAngle,
+                true);
+
+        //beamColor.lerp(Color.CLEAR, .2f);
+        spriteBatch.setColor(beamColor);
+
+        spriteBatch.draw(end,
+                gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y - Config.TILE_SIZE_X,
+                Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
+                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
+                .1f, .1f,
+                0,
+                true);
+
+        spriteBatch.draw(end,
+                gameModel.getPlayerBody().position.x - Config.TILE_SIZE_X, gameModel.getPlayerBody().position.y - Config.TILE_SIZE_X,
+                Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
+                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
+                .1f, .1f,
+                0,
+                true);
+
+        spriteBatch.draw(end,
+                firingDirection.x - Config.TILE_SIZE_X, firingDirection.y - Config.TILE_SIZE_X,
+                Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
+                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
+                .1f, .1f,
+                0,
+                true);
+
+        spriteBatch.draw(beam,
+                gameModel.getPlayerBody().position.x - Config.TILE_SIZE_X, gameModel.getPlayerBody().position.y,
+                Config.TILE_SIZE_X, 0,
+                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
+                .1f, firingDirection.len(),
+                firingAngle,
+                true);
+
+        spriteBatch.setColor(Color.WHITE);
+        spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
     }
 
     public void dispose() {

@@ -232,7 +232,7 @@ public class ResourceFactory implements AssetErrorListener {
                             ResourceFactory.getInstance().getTransparentTexture("fog1"),
                             worldWidth, worldHeight, mapWidth, mapHeight);
             case UNIVERSE:
-                return new UniverseBackground(ResourceFactory.getInstance().getTransparentTexture("fog3"),
+                return new UniverseBackground(ResourceFactory.getInstance().getTransparentTexture("fog1"),
                         ResourceFactory.getInstance().getTransparentTexture("fog3"),
                         ResourceFactory.getInstance().getFeatureImage(level.getRandomPlanetFeatureType()),
                         ResourceFactory.getInstance().getWorldTypeImage("star"),

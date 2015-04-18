@@ -44,7 +44,6 @@ public class GameScreen implements Screen, InputProcessor {
     public static final String TOGGLE = "toggle";
     public static final String TRANSPARENT = "transparent";
     public static final String WEAPONWINDOW = "WEAPONWINDOW";
-    private static Level.LEVEL_TYPE travelType;
 
     GameModel gameModel;
     GameView gameView;
@@ -91,6 +90,7 @@ public class GameScreen implements Screen, InputProcessor {
     private static ImageButton mapButton;
     private static Button upgradeButton;
     private static Button travelSidescrollButton;
+    private static Button noTravelSidescrollButton;
     private static Button travelUniverseButton;
     private static Button travelTopdownButton;
 
@@ -130,6 +130,8 @@ public class GameScreen implements Screen, InputProcessor {
         upgradeButton.setVisible(false);
         travelSidescrollButton = new Button(new Image(ResourceFactory.getInstance().getImage(ResourceFactory.UI, "travelsidescroll")), skin, TRANSPARENT);
         travelSidescrollButton.setVisible(false);
+        noTravelSidescrollButton = new Button(new Image(ResourceFactory.getInstance().getImage(ResourceFactory.UI, "notravelsidescroll")), skin, TRANSPARENT);
+        noTravelSidescrollButton.setVisible(false);
         travelUniverseButton = new Button(new Image(ResourceFactory.getInstance().getImage(ResourceFactory.UI, "traveluniverse")), skin, TRANSPARENT);
         travelUniverseButton.setVisible(false);
         travelTopdownButton = new Button(new Image(ResourceFactory.getInstance().getImage(ResourceFactory.UI, "traveltopdown")), skin, TRANSPARENT);
@@ -235,6 +237,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         Stack stack = new Stack();
         uiWindow.add(stack).size(Config.getDimensions().SCREEN_WIDTH / 20);
+        stack.add(noTravelSidescrollButton);
         stack.add(travelSidescrollButton);
         stack.add(travelUniverseButton);
         stack.add(travelTopdownButton);
@@ -269,7 +272,7 @@ public class GameScreen implements Screen, InputProcessor {
         if (weapons.size > 0) {
             playerWeapons = new Weapon[weapons.size];
 
-            for (int i=0; i < weapons.size; i++) {
+            for (int i = 0; i < weapons.size; i++) {
                 playerWeapons[i] = weapons.get(i);
             }
             weaponButtons = new TextButton[playerWeapons.length];
@@ -377,35 +380,28 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     public static void enableTravelMenu(Level.LEVEL_TYPE type) {
+        noTravelSidescrollButton.setVisible(false);
         travelSidescrollButton.setVisible(false);
         travelTopdownButton.setVisible(false);
         travelUniverseButton.setVisible(false);
 
         switch (type) {
             case SIDESCROLL:
-                travelSidescrollButton.setVisible(true);
-                break;
-            case TOPDOWN:
-                travelTopdownButton.setVisible(true);
-                break;
-            case UNIVERSE:
-                travelUniverseButton.setVisible(true);
+                if (GameModel.getPlayer().getData().getKeys() > 0) {
+                    travelSidescrollButton.setVisible(true);
+                } else {
+                    noTravelSidescrollButton.setVisible(true);
+                }
+
                 break;
         }
-
-        travelType = type;
     }
 
     public static void disableTravelMenu(Level.LEVEL_TYPE type) {
         switch (type) {
             case SIDESCROLL:
                 travelSidescrollButton.setVisible(false);
-                break;
-            case TOPDOWN:
-                travelTopdownButton.setVisible(false);
-                break;
-            case UNIVERSE:
-                travelUniverseButton.setVisible(false);
+                noTravelSidescrollButton.setVisible(false);
                 break;
         }
     }
@@ -487,7 +483,7 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         public boolean tap(float x, float y, int count, int button) {
-            gameModel.touch(x, y);
+            gameModel.touch(x, y, button);
             return true;
         }
 
@@ -523,7 +519,8 @@ public class GameScreen implements Screen, InputProcessor {
 
         @Override
         public boolean panStop(float x, float y, int pointer, int button) {
-            return false;
+            gameModel.panStop(x, y);
+            return true;
         }
 
         public boolean zoom(float initialDistance, float distance) {

@@ -494,20 +494,23 @@ public abstract class Level {
     protected boolean sanityChecked() {
         boolean exitFound = false;
         boolean startFeatureFound = false;
+        boolean keyFound = false;
 
         for (int x = 0; x < map.getWidth(); x++)
             for (int y = 0; y < map.getHeight(); y++) {
                 if (!exitFound)
                     if (map.item[x][y] == UniverseMap.ITEM_ENTRANCE_CAVE
-                            || map.item[x][y] == UniverseMap.ITEM_ENTRANCE_SURFACE
-                            || map.item[x][y] == UniverseMap.ITEM_ENTRANCE_UNIVERSE
                             || map.item[x][y] == UniverseMap.ITEM_TRIGGER)
                         exitFound = true;
+
+                if (!keyFound)
+                    if (map.item[x][y] == UniverseMap.ITEM_KEY)
+                        keyFound = true;
             }
 
         startFeatureFound = startPosition.x != -1 && startPosition.y != -1;
 
-        return exitFound && startFeatureFound;
+        return exitFound && startFeatureFound && keyFound;
     }
 
     public boolean isPlatforms() {

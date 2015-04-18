@@ -8,6 +8,7 @@ public abstract class Loot {
         GUN,
         ROCKET,
         TONGUE,
+        DONGUE,
         FIREBALL,
         FLAME_THROWER,
         LASER,

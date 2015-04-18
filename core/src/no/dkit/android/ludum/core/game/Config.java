@@ -4,18 +4,19 @@ import com.badlogic.gdx.graphics.Color;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class Config {
-    Color COLOR_1_PURPLE = Color.valueOf("7a00ff");
-    Color COLOR_2_BLUE_DARK = Color.valueOf("2a0ce8");
-    Color COLOR_3_BLUE_MEDIUM = Color.valueOf("0031ff");
-    Color COLOR_4_BLUE_LIGHT = Color.valueOf("0c7ee8");
-    Color COLOR_5_BLUE_LIGHTEST = Color.valueOf("0ddaff");
+    public static final float TONGUE_SPEED = .1f;
+    public static Color COLOR_1_PURPLE = Color.valueOf("7a00ff");
+    public static Color COLOR_2_BLUE_DARK = Color.valueOf("2a0ce8");
+    public static Color COLOR_3_BLUE_MEDIUM = Color.valueOf("0031ff");
+    public static Color COLOR_4_BLUE_LIGHT = Color.valueOf("0c7ee8");
+    public static Color COLOR_5_BLUE_LIGHTEST = Color.valueOf("0ddaff");
 
-    public static final int MAX_LEVEL = 100;
+    public static final int MAX_LEVEL = 10000;
     public static boolean DEBUG = true;
     public static final float DEBUG_SCALE = 1f;
     public static boolean DEBUGTEXT = false;
 
-    public static final boolean SANDBOX = true;
+    public static final boolean SANDBOX = false;
     public static final Level.LEVEL_TYPE SANDBOX_TYPE = Level.LEVEL_TYPE.SIDESCROLL;
 
     public static final float AGENT_SPOT_CHANCE = .9f;
@@ -33,7 +34,7 @@ public class Config {
 
     public static final int UNIVERSE_SIZE = 4;
     public static final int MAZE_SIZE = 4;
-    public static final int CAVE_SIZE = 10;
+    public static final int CAVE_SIZE = 20;
     public static final int DUNGEON_SIZE = 30;
     public static final int CITY_SIZE = 25;
 
@@ -43,9 +44,9 @@ public class Config {
 
     public static final int PLAYER_START_HEALTH = 100;
     public static final int PLAYER_START_ARMOR = 100;
-    public static final int PLAYER_START_ORBS = 20;
-    public static final int PLAYER_START_KEYS = 3;
-    public static final int PLAYER_START_CREDITS = 200;
+    public static final int PLAYER_START_ORBS = 0;
+    public static final int PLAYER_START_KEYS = 0;
+    public static final int PLAYER_START_CREDITS = 100;
 
     public static final int TURRET_TURN_SPEED = 3;
 
@@ -146,7 +147,7 @@ public class Config {
             SCREEN_SHORTEST = SCREEN_HEIGHT > SCREEN_WIDTH ? SCREEN_WIDTH : SCREEN_HEIGHT;
             ASPECT_RATIO = (float) SCREEN_SHORTEST / (float) SCREEN_LONGEST;
 
-            WORLD_WIDTH = 6;   // Number of tiles across screen
+            WORLD_WIDTH = 10;   // Number of tiles across screen
             WORLD_HEIGHT = (int) (WORLD_WIDTH * ASPECT_RATIO);
 
             float fraction = (WORLD_WIDTH * ASPECT_RATIO) - WORLD_HEIGHT;
@@ -168,8 +169,8 @@ public class Config {
     public static final int BOX_VELOCITY_ITERATIONS = 3;
     public static final float BOX_STEP = 1 / 25f;
 
-    public static final float PLAYER_MAX_SPEED = 1f;
-    public static final float PLAYER_MIN_SPEED = .1f;
+    public static final float PLAYER_MAX_SPEED = 3f;
+    public static final float PLAYER_MIN_SPEED = 0f;
     public static final float MAX_SPEED = .5f;
     public static final float LOOT_SPEED = .1f;
     public static final float MIN_SPEED = .01f;
@@ -186,6 +187,8 @@ public class Config {
     public static short CATEGORY_PARTICLE = 0x200;
     public static short CATEGORY_PLATFORM = 0x400;
     public static short CATEGORY_LOOT = 0x800;
+
+    public static final int JUMP_STRENGTH = 5;
 
     public static final float EPSILON = .01f;
 

@@ -11,10 +11,12 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.Array;
@@ -23,12 +25,14 @@ import no.dkit.android.ludum.core.game.ai.simulationobjects.Neighborhood;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.PlayerData;
 import no.dkit.android.ludum.core.game.model.body.DiscardBody;
+import no.dkit.android.ludum.core.game.model.body.DiscardJoint;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.LightBody;
 import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
 import no.dkit.android.ludum.core.game.model.body.agent.AnimatedAgentBody;
 import no.dkit.android.ludum.core.game.model.body.agent.AnimatedPlayerBody;
 import no.dkit.android.ludum.core.game.model.body.agent.Blob;
+import no.dkit.android.ludum.core.game.model.body.agent.BlobPlayerBody;
 import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
 import no.dkit.android.ludum.core.game.model.body.agent.PlayerVehicleBody;
 import no.dkit.android.ludum.core.game.model.body.agent.ShipSingle;
@@ -78,10 +82,13 @@ public class BodyFactory {
     public static final short SCENERY_BITS = (short) (Config.CATEGORY_ITEM | Config.CATEGORY_PLAYER | Config.CATEGORY_ENEMY | Config.CATEGORY_ENEMY_BULLET | Config.CATEGORY_BULLET | Config.CATEGORY_LIGHT | Config.CATEGORY_PARTICLE | Config.CATEGORY_LOOT);
     public static final short PLATFORM_BITS = (short) (Config.CATEGORY_PLAYER | Config.CATEGORY_ENEMY);
     public static final short PARTICLE_BITS = (short) (Config.CATEGORY_ITEM | Config.CATEGORY_PLAYER | Config.CATEGORY_ENEMY | Config.CATEGORY_SCENERY);
-    public static final short TRIGGER_BITS = Config.CATEGORY_PLAYER;
+    public static final short TRIGGER_BITS = (short) (Config.CATEGORY_PLAYER | Config.CATEGORY_SCENERY);
     public static final short SELF_COLLIDING_ENEMY_BITS = (short) (ENEMY_BITS | Config.CATEGORY_ENEMY);
 
     private int explosionNumber = 0;
+    private int numJoints = 0;
+    private TongueBody tongue;
+    private TongueBody dongue;
 
     public enum ENEMY_IMAGE {
         SHIP_1, SHIP_2
@@ -114,6 +121,7 @@ public class BodyFactory {
     static World world;
 
     Array<Body> worldBodies = new Array<Body>();
+    Array<Joint> worldJoints = new Array<Joint>();
 
 /*
     private final Pool<Body> agentPool;
@@ -300,8 +308,8 @@ public class BodyFactory {
         lootFixture.filter.categoryBits = Config.CATEGORY_LOOT;
         lootFixture.filter.maskBits = LOOT_BITS;
 
-        keyFixture.filter.categoryBits = Config.CATEGORY_ITEM;
-        keyFixture.filter.maskBits = ITEM_BITS;
+        keyFixture.filter.categoryBits = Config.CATEGORY_TRIGGER;
+        keyFixture.filter.maskBits = TRIGGER_BITS;
 
         dangerFixture.filter.categoryBits = Config.CATEGORY_ITEM;
         dangerFixture.filter.maskBits = ITEM_BITS;
@@ -552,9 +560,18 @@ public class BodyFactory {
 
     private FixtureDef createTongueBulletAttributes(FixtureDef fixture, Shape shape) {
         fixture.shape = shape;
+        fixture.density = .1f;
+        fixture.friction = 1f;
+        fixture.restitution = 1f;
+
+        return fixture;
+    }
+
+    private FixtureDef createDongueBulletAttributes(FixtureDef fixture, Shape shape) {
+        fixture.shape = shape;
         fixture.density = 0f;
         fixture.friction = 0f;
-        fixture.restitution = 0f;
+        fixture.restitution = 1f;
 
         return fixture;
     }
@@ -611,7 +628,7 @@ public class BodyFactory {
     }
 
     private BodyDef createKeyBodyDef() {
-        return createBodyDef(false, BodyDef.BodyType.DynamicBody, 0, 1, 1, 1, false);
+        return createBodyDef(false, BodyDef.BodyType.DynamicBody, 0, 0, 1, 1, false);
     }
 
     private BodyDef createGravityBulletDef(float gravityScale) {
@@ -619,7 +636,11 @@ public class BodyFactory {
     }
 
     private BodyDef createTongueBulletDef() {
-        return createBodyDef(true, BodyDef.BodyType.DynamicBody, 0, .1f, 0f, .5f, false);
+        return createBodyDef(false, BodyDef.BodyType.DynamicBody, 0, 1f, 0f, 0f, false);
+    }
+
+    private BodyDef createDongueBulletDef() {
+        return createBodyDef(false, BodyDef.BodyType.DynamicBody, 0, 0f, 0f, 0f, false);
     }
 
     private BodyDef createSlowingBulletDef() {
@@ -627,7 +648,7 @@ public class BodyFactory {
     }
 
     private BodyDef createAgentBodyDef(boolean fixedRotation) {
-        return createBodyDef(false, BodyDef.BodyType.DynamicBody, 0, 1, 0, 0, fixedRotation);
+        return createBodyDef(false, BodyDef.BodyType.DynamicBody, 0, .25f, 0, 0, fixedRotation);
     }
 
     private BodyDef createAgentBodyDef(boolean fixedRotation, float gravityScale) {
@@ -669,6 +690,10 @@ public class BodyFactory {
             case TONGUE:
                 createTongueBulletAttributes(bulletFixture, createCircleShape(radius));
                 bulletDef = createTongueBulletDef();
+                break;
+            case DONGUE:
+                createDongueBulletAttributes(bulletFixture, createCircleShape(radius));
+                bulletDef = createDongueBulletDef();
                 break;
             default:
                 createBulletAttributes(bulletFixture, createCircleShape(Config.TILE_SIZE_X / 10f));
@@ -874,7 +899,7 @@ public class BodyFactory {
         else if (type == AbstractMap.ITEM_ROCK)
             return new DangerBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getItemImage("crystal"));
         else if (type == AbstractMap.ITEM_KEY)
-            return new KeyBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getItemImage("key"));
+            return new KeyBody(body, fixtureDef.shape.getRadius() * 2, ResourceFactory.getInstance().getItemImage("key"));
         else if (type == AbstractMap.ITEM_TRIGGER)
             return new TriggerBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getWorldTypeImage("spawn"));
         else if (type == AbstractMap.ITEM_UPGRADE)
@@ -919,9 +944,6 @@ public class BodyFactory {
                 return new RotatingGunBody(body, Config.TILE_SIZE_X / 2, ResourceFactory.getInstance().getItemImage("turret"),
                         LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.LASER), .1f, false);
             case 2:
-                return new RotatingGunBody(body, Config.TILE_SIZE_X / 2, ResourceFactory.getInstance().getItemImage("turret"),
-                        LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.FLAME_THROWER), 1f, false);
-            case 3:
             default:
                 return new RotatingGunBody(body, Config.TILE_SIZE_X / 2, ResourceFactory.getInstance().getItemImage("turret"),
                         LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.BOMB), 2f, false);
@@ -1004,7 +1026,7 @@ public class BodyFactory {
     }
 
     private Color getRandomColor() {
-        return new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), .75f);
+        return new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1f);
     }
 
     public void createItems(int num, float x, float y, int type) {
@@ -1016,7 +1038,8 @@ public class BodyFactory {
     public PlayerBody createShipPlayer(Vector2 playerPosition) {
         Body body = getDefaultPlayerBody(playerPosition, false);
         return new PlayerBody(body, Config.TILE_SIZE_X / 2, new PlayerData(),
-                ResourceFactory.getInstance().getWorldTypeImage("player"), PlayerBody.CONTROL_MODE.NEWTONIAN, GameBody.BODY_TYPE.SPACESHIP);
+                ResourceFactory.getInstance().getWorldTypeImage("player"),
+                PlayerBody.CONTROL_MODE.NEWTONIAN, GameBody.BODY_TYPE.SPACESHIP);
     }
 
     public PlayerBody createTopDownPlayer(Vector2 playerPosition) {
@@ -1034,15 +1057,68 @@ public class BodyFactory {
 
     public PlayerBody createSidescrollPlayer(Vector2 playerPosition) {
         Body body = getDefaultPlayerBody(playerPosition, false);
-        return new PlayerBody(body, Config.TILE_SIZE_X / 2, new PlayerData(),
-                ResourceFactory.getInstance().getWorldTypeImage("player"), PlayerBody.CONTROL_MODE.DIRECT, GameBody.BODY_TYPE.ALIEN);
+        createTongue(body);
+        createDongue(body);
+
+        return new BlobPlayerBody(body, Config.TILE_SIZE_X / 2, new PlayerData(),
+                ResourceFactory.getInstance().getWorldTypeImage("player"),
+                ResourceFactory.getInstance().getWorldTypeImage("eye"),
+                ResourceFactory.getInstance().getWorldTypeImage("pupil"),
+                ResourceFactory.getInstance().getWorldTypeImage("mouth"),
+                PlayerBody.CONTROL_MODE.DIRECT, GameBody.BODY_TYPE.ALIEN);
+    }
+
+    private void createTongue(Body owner) {
+        Body tip = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y + Config.TILE_SIZE_Y / 2f, 0, 0, true, .15f);
+        int particles = 16;
+        Body[] rest = new Body[particles];
+
+        for (int i = 0; i < particles; i++) {
+            rest[i] = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y + Config.TILE_SIZE_Y / 2f, 0, 0, true, .15f / ((i * .05f) + 1f));
+
+            if (i == 0)
+                BodyFactory.getInstance().connectRope(tip, rest[0], .01f);
+            if (i > 0 && i < particles)
+                BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], .01f);
+            if (i == particles - 1)
+                BodyFactory.getInstance().connectRope(owner, rest[i], .01f);
+        }
+
+        tongue = new TongueBody(tip, rest, bulletFixture.shape.getRadius(), ResourceFactory.getInstance().getBulletImage("tongue"), null, null, 0, 1);
+    }
+
+    private void createDongue(Body owner) {
+        Body tip = getBulletBody(Loot.LOOT_TYPE.DONGUE,
+                owner.getPosition().x,
+                owner.getPosition().y + Config.TILE_SIZE_Y,
+                0, 0, true, .05f);
+
+        int particles = 3;
+        Body[] rest = new Body[particles];
+
+        for (int i = 0; i < particles; i++) {
+            rest[i] = getBulletBody(Loot.LOOT_TYPE.DONGUE,
+                    owner.getPosition().x,
+                    owner.getPosition().y + Config.TILE_SIZE_Y / ((i * .05f) + 1f),
+                    0, 0, true, .05f / ((i * .05f) + 1f));
+
+            if (i == 0)
+                BodyFactory.getInstance().rubberConnect(tip, rest[0], 0, -.001f);
+            if (i > 0 && i < particles)
+                BodyFactory.getInstance().rubberConnect(rest[i - 1], rest[i], 0, -.001f);
+            if (i == particles - 1)
+                BodyFactory.getInstance().rubberConnect(owner, rest[i], 0, -.001f);
+        }
+
+        dongue = new TongueBody(tip, rest, bulletFixture.shape.getRadius(), ResourceFactory.getInstance().getBulletImage("tongue"),
+                ResourceFactory.getInstance().getWorldTypeImage("eye"), ResourceFactory.getInstance().getWorldTypeImage("pupil"), 0, 2);
     }
 
     private Body getDefaultPlayerBody(Vector2 playerPosition, boolean fixedRotation) {
         BodyDef playerDef = createAgentBodyDef(fixedRotation);
         playerDef.position.set(playerPosition.x, playerPosition.y);
         Body body = createBody(playerDef);
-        Shape shape = createCircleShape(Config.TILE_SIZE_X / 5);
+        Shape shape = createCircleShape(Config.TILE_SIZE_X / 4);
         body.createFixture(createPlayerAttributes(shape));
         body.setAwake(true);
         return body;
@@ -1060,7 +1136,7 @@ public class BodyFactory {
 
     protected FixtureDef createPlayerAttributes(Shape shape) {
         playerFixture.shape = shape;
-        playerFixture.density = 100f;
+        playerFixture.density = 500f;
         playerFixture.friction = 0f;
         playerFixture.restitution = 0f;
         return playerFixture;
@@ -1115,13 +1191,23 @@ public class BodyFactory {
 
     public void connectRope(Body master, Body slave, float len) {
         RopeJointDef ropeJointDef = new RopeJointDef();
-        ropeJointDef.bodyA = master;
-        ropeJointDef.bodyB = slave;
+        ropeJointDef.bodyA = slave;
+        ropeJointDef.bodyB = master;
         ropeJointDef.localAnchorA.set(0, 0);
         ropeJointDef.localAnchorB.set(0, 0);
         ropeJointDef.maxLength = len;
-        ropeJointDef.collideConnected = true;
+        ropeJointDef.collideConnected = false;
         world.createJoint(ropeJointDef);
+    }
+
+    public void rubberConnect(Body master, Body slave, float x, float y) {
+        RevoluteJointDef rubberConnect = new RevoluteJointDef();
+        rubberConnect.bodyA = slave;
+        rubberConnect.bodyB = master;
+        rubberConnect.localAnchorA.set(x, y);
+        rubberConnect.localAnchorB.set(x, y);
+        rubberConnect.collideConnected = false;
+        world.createJoint(rubberConnect);
     }
 
     public void createExplosion(Vector2 position, int power) {
@@ -1300,13 +1386,14 @@ public class BodyFactory {
             createLights();
 
         world.getBodies(this.worldBodies);
+        world.getJoints(this.worldJoints);
         return this.worldBodies;
     }
 
     private void createBullets() {
         float angle;
         for (BulletDef def : bulletsToCreate) {
-            Body body = getBulletBody(def.getType(), def.getSourceX(), def.getSourceY(), def.getVelocityX(), def.getVelocityY(), def.isPlayerOwned(), Config.TILE_SIZE_X / 5);
+            final Body body = getBulletBody(def.getType(), def.getSourceX(), def.getSourceY(), def.getVelocityX(), def.getVelocityY(), def.isPlayerOwned(), Config.TILE_SIZE_X / 5);
             angle = MathUtils.radiansToDegrees * MathUtils.atan2(def.getVelocityY(), def.getVelocityX());
 
             switch (def.getType()) {
@@ -1318,24 +1405,6 @@ public class BodyFactory {
                     break;
                 case GUN:
                     new BulletBody(body, bulletFixture.shape.getRadius(), def.getBulletImage(), angle, def.getDamage());
-                    break;
-                case TONGUE:
-                    final float ropeLength = Config.TILE_SIZE_X / 5;
-                    int particles = 20;
-                    Body[] limbs = new Body[particles];
-
-                    for (int i = 0; i < particles; i++) {
-                        limbs[i] = getBulletBody(def.getType(), def.getSourceX(), def.getSourceY(), 0, 0, def.isPlayerOwned(), .1f / ((i*.1f)+1));
-
-                        if(i==0)
-                            BodyFactory.getInstance().connectRope(body, limbs[0], ropeLength);
-                        if (i > 0 && i < particles)
-                            BodyFactory.getInstance().connectRope(limbs[i - 1], limbs[i], ropeLength);
-                        if(i == particles-1)
-                            BodyFactory.getInstance().connectRope(GameModel.getPlayer().getBody(), limbs[i], ropeLength);
-                    }
-
-                    new TongueBody(body, limbs, bulletFixture.shape.getRadius(), def.getBulletImage(), angle, def.getDamage());
                     break;
                 case ROCKET:
                     new RocketBody(body, Config.TILE_SIZE_X / 4f, Config.TILE_SIZE_X / 16f, def.getBulletImage(), angle, def.getDamage());
@@ -1488,7 +1557,20 @@ public class BodyFactory {
             userData = body.getUserData();
 
             if (userData != null && userData instanceof DiscardBody) {
+                if (body.getJointList().size > 0) {
+                    world.destroyJoint(body.getJointList().get(0).joint);
+                }
                 world.destroyBody(body); // Joints are automatically destroyed
+            }
+        }
+
+        for (Joint joint : worldJoints) {
+            if (joint == null) continue;
+
+            userData = joint.getUserData();
+
+            if (userData != null && userData instanceof DiscardJoint) {
+                world.destroyJoint(joint);
             }
         }
     }
@@ -1641,6 +1723,18 @@ public class BodyFactory {
             return type;
         }
     }
+
+    public void lick(Vector2 target, Vector2 firingDirection) {
+        tongue.lick(target, firingDirection);
+        dongue.lick(target, firingDirection);
+    }
+
+    public void slurp(Vector2 target) {
+        tongue.slurp(target);
+        dongue.slurp(target);
+    }
+
+
 
 /*
     public Vector2 getVector() {

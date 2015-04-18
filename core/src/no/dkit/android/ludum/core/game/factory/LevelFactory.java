@@ -2,7 +2,6 @@ package no.dkit.android.ludum.core.game.factory;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Json;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
@@ -34,7 +33,7 @@ public class LevelFactory {
         if (Config.SANDBOX)
             currentLevel = nextLevel(Config.SANDBOX_TYPE);
         else
-            currentLevel = nextLevel(Level.LEVEL_TYPE.UNIVERSE);
+            currentLevel = nextLevel(Level.LEVEL_TYPE.SIDESCROLL);
 
     }
 
@@ -52,16 +51,7 @@ public class LevelFactory {
     }
 
     private Level.LEVEL_TYPE getRandomLevelType() {
-        Level.LEVEL_TYPE levelType;
-        float type = MathUtils.random();
-
-        if (type < .33)
-            levelType = Level.LEVEL_TYPE.SIDESCROLL;
-        else if (type < .66)
-            levelType = Level.LEVEL_TYPE.TOPDOWN;
-        else
-            levelType = Level.LEVEL_TYPE.UNIVERSE;
-        return levelType;
+        return Level.LEVEL_TYPE.SIDESCROLL;
     }
 
     private Level createRandomLevel(Level.LEVEL_TYPE levelType) {

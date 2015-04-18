@@ -6,12 +6,14 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -48,6 +50,7 @@ import no.dkit.android.ludum.core.game.model.body.scenery.PlatformBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.LaserBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.ParticleBody;
+import no.dkit.android.ludum.core.game.model.body.weapon.TongueBody;
 import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.model.world.level.SandboxLevel;
@@ -470,7 +473,7 @@ public class GameModel {
 
             if (gameBody instanceof PlayerBody) {
                 float impulse = playerBody.getImpulse();
-                if (impulse >= 1.0f)
+                if (impulse >= 100.0f)
                     ((PlayerBody) gameBody).collide((int) impulse);
                 map.spot(gameBody, Color.GREEN);
                 //fireBullet(); // Make it no-autofire...
@@ -607,13 +610,17 @@ public class GameModel {
         playerBody.fireBullet2(aimPos);
     }
 
-    public void touch(float x, float y) {
+    public void touch(float x, float y, int button) {
         lastTap = System.currentTimeMillis();
         if (playerBody.isDead()) afterGameOver();
         touchPos.set(x, y, 0);
         camera.unproject(touchPos);
         aimPos.set(touchPos.x, touchPos.y);
-        playerBody.fireBullet1(aimPos);
+
+        if (button == 0)
+            playerBody.fireBullet1(aimPos);
+        else if (button == 1)
+            playerBody.fireBullet2(aimPos);
 
 /*
         final Body body = selectBody();
@@ -650,6 +657,12 @@ public class GameModel {
         return playerBody;
     }
 
+    public void panStop(float x, float y) {
+        playerBody.scheduleJump(playerBody.position.x - pointPos.x, playerBody.position.y - pointPos.y);
+        pointPos.set(playerBody.position.x, playerBody.position.y);
+        panning = false;
+    }
+
     public void panPointPos(int x, int y, int deltaX, int deltaY) {      // Delta is in pixels
         if (!panning) {
             pointPos.set(playerBody.position.x, playerBody.position.y);
@@ -659,15 +672,18 @@ public class GameModel {
 
         playerBody.removeAllKeys();
         playerBody.getMind().clear();
+/*
         playerBody.getMind().addBehavior(new Arrive(pointPos, 5, Config.getDimensions().SCREEN_LONGEST, 30f));
-        playerBody.setControlMode(PlayerBody.CONTROL_MODE.DIRECT); // For when on mobile without keys
+*/
+        //playerBody.setControlMode(PlayerBody.CONTROL_MODE.DIRECT); // For when on mobile without keys
 
         pointPos.add(deltaX * Config.getDimensions().WORLD_ON_SCREEN_FACTOR, -deltaY * Config.getDimensions().WORLD_ON_SCREEN_FACTOR);
-
+/*
         if (XXXX.aimMode.equals(XXXX.AIM_MODE.DIRECTION)) {
             touchPos.set(pointPos.x, pointPos.y, 0);
             playerBody.setAim(touchPos.x, touchPos.y);
         }
+*/
     }
 
     public void autopan(float deltaX, float deltaY) {      // Delta is in pixels

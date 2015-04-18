@@ -11,19 +11,23 @@ import no.dkit.android.ludum.core.game.model.body.DirectionalGameBody;
 import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
 
 public class LampBody extends DirectionalGameBody {
+    Color color;
+
     public LampBody(Body body, float radius, Color color, int direction) {
         this(body, radius, color, direction, Config.TILE_SIZE_X);
+        this.color = color;
         bodyType = BODY_TYPE.METAL;
     }
 
     public LampBody(Body body, float radius, Color color, int direction, float offset) {
         super(body, radius, direction, offset, true, false);
+        this.color = color;
         bodyType = BODY_TYPE.METAL;
         if (direction == AbstractMap.NO_DIRECTION) {
-            addLight(LightFactory.getInstance().getLight(position.x, position.y, Config.getDimensions().WORLD_WIDTH/4, 6, color));
+            addLight(LightFactory.getInstance().getLight(position.x, position.y, Config.getDimensions().WORLD_WIDTH/4, 6, this.color));
             image = ResourceFactory.getInstance().getItemImage("lamp");
         } else {
-            addLight(LightFactory.getInstance().getConeLight(getBody().getPosition(), Config.getDimensions().WORLD_WIDTH/4, 4, color, startDirection, 90));
+            addLight(LightFactory.getInstance().getConeLight(getBody().getPosition(), Config.getDimensions().WORLD_WIDTH/4, 4, this.color, startDirection, 90));
             image = ResourceFactory.getInstance().getItemImage("wallamp");
         }
 
@@ -34,6 +38,7 @@ public class LampBody extends DirectionalGameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive() || image == null) return;
 
+        spriteBatch.setColor(this.color);
         spriteBatch.draw(image,
                 body.getPosition().x - radius,
                 body.getPosition().y - radius,
@@ -42,6 +47,7 @@ public class LampBody extends DirectionalGameBody {
                 1, 1,
                 startDirection * MathUtils.radiansToDegrees,
                 true);
+        spriteBatch.setColor(Color.WHITE);
     }
 
     @Override

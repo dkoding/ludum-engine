@@ -988,13 +988,12 @@ public abstract class AbstractMap {
 
     private void placeAllItems(int level, Level.LEVEL_TYPE levelType, int space, int surface, boolean inside, boolean chasms) {
         if (levelType == Level.LEVEL_TYPE.SIDESCROLL) {
-            placeItemsOnSurface(Config.MAX_EXITS, ITEM_ENTRANCE_SURFACE, N, space, surface);
             placeItemsOnSurface(Config.MAX_EXITS, ITEM_ENTRANCE_CAVE, N, space, surface);
-            placeItemsOnSurface(Config.MAX_EXITS, ITEM_ENTRANCE_UNIVERSE, N, space, surface);
             if (!inside)
                 placeItemsEncasedFacing(Config.MAX_LIQUID, ITEM_LIQUID_SS, N, space, surface);
             placeItemsOnSurface(Config.MAX_FEATURES, ITEM_FEATURE, N, space, surface); // TODO: THIS SHOULD NOT BE ITEM, THIS SHOULD BE TILE
             placeItemsOnSurface(Config.MAX_CRATES, ITEM_CRATE, N, space, surface);
+            placeItemsOnSurface(Config.MAX_KEYS, ITEM_KEY, N, space, surface);
             placeItemsWithinEmptySpace(Config.MAX_LOOT, ITEM_LOOT, space);
             placeLamps(space, surface);
             placeCannons(level, space, surface);

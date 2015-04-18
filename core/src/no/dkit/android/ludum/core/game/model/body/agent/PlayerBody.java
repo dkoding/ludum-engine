@@ -1,6 +1,6 @@
+
 package no.dkit.android.ludum.core.game.model.body.agent;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,6 +21,7 @@ import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.factory.TextItem;
 import no.dkit.android.ludum.core.game.model.PlayerData;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
+import no.dkit.android.ludum.core.game.model.body.scenery.BlockBody;
 import no.dkit.android.ludum.core.game.quest.GameEvent;
 import no.dkit.android.ludum.core.game.quest.GameEventListener;
 
@@ -28,6 +29,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerBody extends AgentBody implements GameEventListener {
+    private boolean hasCollided = false;
+    private Vector2 collidePos;
+    private Body collideBody;
+    private boolean justJumped;
+    private long lastJump;
+
     public enum CONTROL_MODE {NEWTONIAN, DIRECT, VEHICLE}
 
     CONTROL_MODE controlMode = CONTROL_MODE.NEWTONIAN;
@@ -49,6 +56,12 @@ public class PlayerBody extends AgentBody implements GameEventListener {
     private Map<GameEvent.EVENT_TYPE, Array<GameEvent>> listeners;
 
     private Map<Integer, Integer> input = new HashMap<Integer, Integer>();
+
+    private Vector2 jump = new Vector2();
+
+    public void scheduleJump(float x, float y) {
+        jump.set(x, y);
+    }
 
     public PlayerBody(Body body, float radius, PlayerData data, TextureRegion image, CONTROL_MODE controlMode, BODY_TYPE type) {
         super(body, radius, image);
@@ -180,8 +193,8 @@ public class PlayerBody extends AgentBody implements GameEventListener {
                 position.x - radius, position.y - radius,
                 radius, radius,
                 radius * 2, radius * 2,
-                scale, flip ? -scale : scale,
-                fixedRotation ? 90 : angle,
+                scale, scale,
+                angle,
                 true);
     }
 
@@ -204,7 +217,30 @@ public class PlayerBody extends AgentBody implements GameEventListener {
                 EffectFactory.getInstance().addHitEffect(position, bodyType);
                 TextFactory.getInstance().addText(new TextItem("Avoid ENEMIES", 0, Config.getDimensions().SCREEN_HEIGHT / 3, Color.WHITE), -.01f); // TODO: Change this to avoid object creation on repeat events
             }
+        } else if (other instanceof BlockBody) { // Walls
+            justJumped = System.currentTimeMillis() - 500 < lastJump;
+            if (hasCollided || justJumped) return;
+            hasCollided = true;
+            collidePos = position;
+            collideBody = other.getBody();
+            //BodyFactory.getInstance().weld(other.getBody(), this.getBody());
         }
+    }
+
+    private void loosenGrip() {
+        hasCollided = false;
+        collidePos = null;
+        collideBody = null;
+/*
+        final JointEdge next = getBody().getJointList().select(new Predicate<JointEdge>() {
+            @Override
+            public boolean evaluate(JointEdge arg0) {
+                return arg0 != null && arg0.joint != null && arg0.joint instanceof WeldJoint;
+            }
+        }).iterator().next();
+        final WeldJoint joint = (WeldJoint) next.joint;
+        joint.setUserData(new DiscardJoint(next.joint));
+*/
     }
 
     public void removeOrbs(int value) {
@@ -256,6 +292,14 @@ public class PlayerBody extends AgentBody implements GameEventListener {
         }
     }
 
+    public void jump(float x, float y) {
+        if (!hasCollided) return;
+
+        lastJump = System.currentTimeMillis();
+        loosenGrip();
+        body.setLinearVelocity(x * Config.JUMP_STRENGTH, y * Config.JUMP_STRENGTH);
+    }
+
     private void prepareShot(Vector2 touchPos) {
         this.touchPos.set(touchPos.x, touchPos.y);
         updateFiringAngle();
@@ -305,6 +349,13 @@ public class PlayerBody extends AgentBody implements GameEventListener {
             }
     }
 
+    private void parseControllerInput() {
+        if (jump.len() > 0) {
+            jump(jump.x, jump.y);
+            jump.set(0, 0);
+        }
+    }
+
     public PlayerData getData() {
         return data;
     }
@@ -320,121 +371,29 @@ public class PlayerBody extends AgentBody implements GameEventListener {
 
     @Override
     public void update() {
-        super.update();
+        if (hasCollided) {
+            body.setGravityScale(0);
+            this.position.set(collidePos.x, collidePos.y);
+            body.setTransform(collidePos.x, collidePos.y, 0);
+        } else {
+            body.setGravityScale(1);
+            super.update();
+        }
+
         parseControllerInput();
+        determineAngle();
     }
 
     @Override
     protected void determineAngle() {
-        if (controlMode == CONTROL_MODE.NEWTONIAN)
-            angle = getBody().getAngle();
-        else
-            super.determineAngle();
-    }
-
-    private void parseControllerInput() {
-        if(unconscious) return;
-
-        if (controlMode == CONTROL_MODE.DIRECT)
-            parseDirectControllerInput();
-        else if (controlMode == CONTROL_MODE.VEHICLE)
-            parseVehicleControllerInput();
-        else if (controlMode == CONTROL_MODE.NEWTONIAN)
-            parseNewtonianControllerInput();
-    }
-
-    private void parseDirectControllerInput() {
-        Integer inputKey;
-
-        speedVector.set(0, 0);
-
-        for (Integer integer : input.keySet()) {
-            inputKey = input.get(integer);
-
-            if (inputKey != 0) {
-                if (integer == Input.Keys.W)
-                    speedVector.set(speedVector.x, inputKey);
-                if (integer == Input.Keys.S)
-                    speedVector.set(speedVector.x, -inputKey);
-                if (integer == Input.Keys.A)
-                    speedVector.set(-inputKey, speedVector.y);
-                if (integer == Input.Keys.D)
-                    speedVector.set(inputKey, speedVector.y);
-                if (integer == Input.Keys.SPACE && inputKey > 0)
-                    fireBullet1();
-                if (integer == Input.Keys.SHIFT_LEFT && inputKey > 0)
-                    fireBullet2();
+        if (hasCollided) {
+            angle = (MathUtils.radiansToDegrees * MathUtils.atan2(collideBody.getPosition().x - position.x, collideBody.getPosition().y - position.y)) + 90;
+        } else {
+            if (speed >= Config.EPSILON) {
+                angle = MathUtils.atan2(body.getLinearVelocity().y, body.getLinearVelocity().x);
+                angle *= MathUtils.radiansToDegrees;
             }
         }
-
-        getBody().setLinearDamping(2f);
-        getBody().applyForceToCenter(speedVector, true);
-    }
-
-    private void parseNewtonianControllerInput() {
-        Integer inputKey;
-
-        speedVector.set(.5f, 0).rotate(angle);
-
-        for (Integer integer : input.keySet()) {
-            inputKey = input.get(integer);
-
-            if (inputKey != 0) {
-                if (integer == Input.Keys.W) {
-                    getBody().applyForceToCenter(speedVector, false);
-                }
-                if (integer == Input.Keys.S)
-                    getBody().applyForceToCenter(speedVector.scl(.1f).rotate(180), false);
-                if (integer == Input.Keys.A)
-                    getBody().applyAngularImpulse(500, true);
-                if (integer == Input.Keys.D)
-                    getBody().applyAngularImpulse(-500, true);
-                if (integer == Input.Keys.SPACE && inputKey > 0)
-                    fireBullet1();
-                if (integer == Input.Keys.SHIFT_LEFT && inputKey > 0)
-                    fireBullet2();
-            }
-        }
-
-        body.setAngularDamping(3f);
-        body.setLinearDamping(.2f);
-    }
-
-    private void parseVehicleControllerInput() {
-        Integer inputKey;
-
-        speedVector.set(0, 0);
-
-        for (Integer integer : input.keySet()) {
-            inputKey = input.get(integer);
-
-            if (inputKey != 0) {
-                if (integer == Input.Keys.W)
-                    if (speed < Config.PLAYER_MIN_SPEED)
-                        getBody().setLinearVelocity(new Vector2(Config.PLAYER_MIN_SPEED, 0).rotate(angle));
-                    else if (speed < Config.PLAYER_MAX_SPEED) {
-                        getBody().setLinearVelocity(getBody().getLinearVelocity().scl(1.1f));
-                    }
-                if (integer == Input.Keys.S)
-                    if (speed < Config.PLAYER_MIN_SPEED) {
-                        getBody().setLinearVelocity(new Vector2(0, 0));
-                    } else {
-                        getBody().setLinearVelocity(getBody().getLinearVelocity().scl(0.9f));
-                    }
-                if (integer == Input.Keys.A)
-                    getBody().setLinearVelocity(getBody().getLinearVelocity().rotate(1f));
-                if (integer == Input.Keys.D)
-                    getBody().setLinearVelocity(getBody().getLinearVelocity().rotate(-1f));
-                if (integer == Input.Keys.SPACE && inputKey > 0)
-                    fireBullet1();
-                if (integer == Input.Keys.SHIFT_LEFT && inputKey > 0)
-                    fireBullet2();
-            }
-        }
-
-        body.setAngularDamping(2f);
-        body.setLinearDamping(.01f);
-
     }
 
     public void removeAllKeys() {
@@ -458,8 +417,9 @@ public class PlayerBody extends AgentBody implements GameEventListener {
             trailEmitter.getVelocity().setLow(0, emissionSpeed / 4);
             trailEmitter.getEmission().setLow(emission * emissionSpeed, emission * emissionSpeed);
             trailEmitter.getEmission().setHigh(emission * emissionSpeed, emission * emissionSpeed);
-        } else
+        } else {
             super.updateEmission();
+        }
     }
 
     public void setControlMode(CONTROL_MODE controlMode) {

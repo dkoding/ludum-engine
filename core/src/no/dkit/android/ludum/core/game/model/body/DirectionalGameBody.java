@@ -10,6 +10,10 @@ public abstract class DirectionalGameBody extends GameBody {
     protected float yOffset;
     protected float startDirection;
 
+    public float getStartDirection() {
+        return startDirection;
+    }
+
     protected DirectionalGameBody(Body body, float radius, int direction) {
         super(body, radius);
         this.direction = direction;

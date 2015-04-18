@@ -19,7 +19,7 @@ public class WeaponBody extends PoolableGameBody {
 
     protected boolean bounce = false;
     protected int damage;
-    protected int speed;
+    protected float speed;
     Color color;
     ParticleEmitter emitter;
 

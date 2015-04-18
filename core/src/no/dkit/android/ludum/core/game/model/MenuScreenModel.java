@@ -25,11 +25,8 @@ import no.dkit.android.ludum.core.game.factory.LevelFactory;
 import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.shaders.AbstractShader;
-import no.dkit.android.ludum.core.shaders.AbstractTextureShader;
 import no.dkit.android.ludum.core.shaders.RenderOperations;
-import no.dkit.android.ludum.core.shaders.fullscreen.ShiningStarScrollShader;
-import no.dkit.android.ludum.core.shaders.fullscreen.SimpleCloudShader;
-import no.dkit.android.ludum.core.shaders.texture.TunnellShader;
+import no.dkit.android.ludum.core.shaders.fullscreen.LightSwirlShader;
 
 public class MenuScreenModel {
     public static final String TRANSPARENT = "transparent";
@@ -188,17 +185,8 @@ public class MenuScreenModel {
     }
 
     private void updateBackground() {
-        if(level.worldType == Level.LEVEL_TYPE.TOPDOWN) {
-            background = new SimpleCloudShader();
-            ((AbstractShader)background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        } else if(level.worldType == Level.LEVEL_TYPE.UNIVERSE) {
-            background = new ShiningStarScrollShader();
-            ((AbstractShader)background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        } else if(level.worldType == Level.LEVEL_TYPE.SIDESCROLL) {
-            background = new TunnellShader();
-            ((AbstractTextureShader)background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
-                    ResourceFactory.getInstance().getTexture("stone"));
-        }
+        background = new LightSwirlShader();
+        ((AbstractShader)background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     public void update() {
