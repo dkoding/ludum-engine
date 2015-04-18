@@ -651,7 +651,7 @@ public class BodyFactory {
         lightSourcesToCreate.add(new LightSourceDef(position, type, lightMod, numRepetitions));
     }
 
-    private Body getBulletBody(Loot.LOOT_TYPE type, float sourceX, float sourceY, float velocityX, float velocityY, boolean playerOwned) {
+    private Body getBulletBody(Loot.LOOT_TYPE type, float sourceX, float sourceY, float velocityX, float velocityY, boolean playerOwned, float radius) {
         bulletFixture.filter.categoryBits = playerOwned ? Config.CATEGORY_BULLET : Config.CATEGORY_ENEMY_BULLET;
         bulletFixture.filter.maskBits = playerOwned ? PLAYER_BULLET_BITS : ENEMY_BULLET_BITS;
 
@@ -667,7 +667,7 @@ public class BodyFactory {
                 bulletDef = createGravityBulletDef(.1f);
                 break;
             case TONGUE:
-                createTongueBulletAttributes(bulletFixture, createCircleShape(Config.TILE_SIZE_X / 5));
+                createTongueBulletAttributes(bulletFixture, createCircleShape(radius));
                 bulletDef = createTongueBulletDef();
                 break;
             default:
@@ -1306,7 +1306,7 @@ public class BodyFactory {
     private void createBullets() {
         float angle;
         for (BulletDef def : bulletsToCreate) {
-            Body body = getBulletBody(def.getType(), def.getSourceX(), def.getSourceY(), def.getVelocityX(), def.getVelocityY(), def.isPlayerOwned());
+            Body body = getBulletBody(def.getType(), def.getSourceX(), def.getSourceY(), def.getVelocityX(), def.getVelocityY(), def.isPlayerOwned(), Config.TILE_SIZE_X / 5);
             angle = MathUtils.radiansToDegrees * MathUtils.atan2(def.getVelocityY(), def.getVelocityX());
 
             switch (def.getType()) {
@@ -1320,21 +1320,22 @@ public class BodyFactory {
                     new BulletBody(body, bulletFixture.shape.getRadius(), def.getBulletImage(), angle, def.getDamage());
                     break;
                 case TONGUE:
-                    int particles = 4;
+                    final float ropeLength = Config.TILE_SIZE_X / 5;
+                    int particles = 20;
                     Body[] limbs = new Body[particles];
 
                     for (int i = 0; i < particles; i++) {
-                        limbs[i] = getBulletBody(def.getType(), def.getSourceX(), def.getSourceY(), 0, 0, def.isPlayerOwned());
+                        limbs[i] = getBulletBody(def.getType(), def.getSourceX(), def.getSourceY(), 0, 0, def.isPlayerOwned(), .1f / ((i*.1f)+1));
 
                         if(i==0)
-                            BodyFactory.getInstance().connectRope(body, limbs[0], Config.TILE_SIZE_X / 2);
+                            BodyFactory.getInstance().connectRope(body, limbs[0], ropeLength);
                         if (i > 0 && i < particles)
-                            BodyFactory.getInstance().connectRope(limbs[i - 1], limbs[i], Config.TILE_SIZE_X / 2);
+                            BodyFactory.getInstance().connectRope(limbs[i - 1], limbs[i], ropeLength);
                         if(i == particles-1)
-                            BodyFactory.getInstance().connectRope(GameModel.getPlayer().getBody(), limbs[i], Config.TILE_SIZE_X / 2);
+                            BodyFactory.getInstance().connectRope(GameModel.getPlayer().getBody(), limbs[i], ropeLength);
                     }
 
-                    new TongueBody(body, limbs, Config.TILE_SIZE_X / 4f, Config.TILE_SIZE_X / 16f, def.getBulletImage(), angle, def.getDamage());
+                    new TongueBody(body, limbs, bulletFixture.shape.getRadius(), def.getBulletImage(), angle, def.getDamage());
                     break;
                 case ROCKET:
                     new RocketBody(body, Config.TILE_SIZE_X / 4f, Config.TILE_SIZE_X / 16f, def.getBulletImage(), angle, def.getDamage());

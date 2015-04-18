@@ -391,7 +391,8 @@ public class GameModel {
 
             while (bodyIterator.hasNext()) {
                 currentBody = bodyIterator.next();
-                if (currentBody == null) continue; // WHY IS THIS NECESSARY!?
+                if (currentBody == null)
+                    continue; // WHY IS THIS NECESSARY!?
 
                 userData = currentBody.getUserData();
 
@@ -460,9 +461,12 @@ public class GameModel {
             numActiveBodies++;
             gameBody.update();
 
-            if (gameBody.getDrawLayer() == GameBody.DRAW_LAYER.BACK) backLayer.add(gameBody);
-            else if (gameBody.getDrawLayer() == GameBody.DRAW_LAYER.MEDIUM) mediumLayer.add(gameBody);
-            else if (gameBody.getDrawLayer() == GameBody.DRAW_LAYER.FRONT) frontLayer.add(gameBody);
+            if (gameBody.getDrawLayer() == GameBody.DRAW_LAYER.BACK)
+                backLayer.add(gameBody);
+            else if (gameBody.getDrawLayer() == GameBody.DRAW_LAYER.MEDIUM)
+                mediumLayer.add(gameBody);
+            else if (gameBody.getDrawLayer() == GameBody.DRAW_LAYER.FRONT)
+                frontLayer.add(gameBody);
 
             if (gameBody instanceof PlayerBody) {
                 float impulse = playerBody.getImpulse();
@@ -611,12 +615,14 @@ public class GameModel {
         aimPos.set(touchPos.x, touchPos.y);
         playerBody.fireBullet1(aimPos);
 
+/*
         final Body body = selectBody();
         if(body != null) {
             final Object userData = body.getUserData();
             if (userData instanceof BlockBody)
                 System.out.println("body = " + ((BlockBody) this.userData).toString());
         }
+*/
 
 /*
         if (Level.worldType == Level.LEVEL_TYPE.TOPDOWN)

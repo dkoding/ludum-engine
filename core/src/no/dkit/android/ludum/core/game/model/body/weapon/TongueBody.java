@@ -5,31 +5,23 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
+
+import com.badlogic.gdx.utils.Timer;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.model.body.DiscardBody;
+import no.dkit.android.ludum.core.game.model.body.GameBody;
 
 public class TongueBody extends WeaponBody {
     Body[] rest;
-    float width;
-    float height;
-    float angle;
 
-    public TongueBody(Body tip, Body[] rest, float width, float height, TextureRegion image, float angle, int damage) {
-        super(tip, width / 2, image, angle, damage);
+    public TongueBody(Body tip, Body[] rest, float radius, TextureRegion image, float angle, int damage) {
+        super(tip, radius, image, angle, damage);
+
         this.rest = rest;
-
-        for (Body limb : rest) {
-            limb.setUserData(new TongueRest(this));
-        }
-
-        this.width = width * 2;
-        this.height = height * 2;
-        this.angle = angle;
-
-        ttl = 3000; // MS
+        ttl = 2000; // MS
         bounce = true;
         this.damage = 1;
-        speed = 1;
+        speed = 5;
         tip.setLinearVelocity(tip.getLinearVelocity().nor().scl(speed));
 
         switch (this.damage) {
@@ -44,6 +36,10 @@ public class TongueBody extends WeaponBody {
                 break;
             default:
                 color = Color.WHITE;
+        }
+
+        for (Body body : rest) {
+            body.setUserData(new TongueRest(body, body.getFixtureList().get(0).getShape().getRadius(), image, color));
         }
 
         //addLight(LightFactory.getInstance().getLight(getPosition(), Config.HALF_TILE_SIZE_X * 2, 6, Color.ORANGE));
@@ -76,40 +72,72 @@ public class TongueBody extends WeaponBody {
 
 
     @Override
-      public void draw(SpriteBatch spriteBatch) {
+    public void draw(SpriteBatch spriteBatch) {
+        spriteBatch.setColor(color);
         spriteBatch.draw(image,
-                body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2,
-                getWidth() / 2, getHeight() / 2,
-                getWidth(), getHeight(),
-                1, 1,
-                angle,
+                body.getPosition().x - radius, body.getPosition().y - radius,
+                radius, radius,
+                radius * 2, radius * 2,
+                2, 2,
+                getAngle(),
                 true);
+        spriteBatch.setColor(Color.WHITE);
+    }
 
-          for (Body limb : this.rest) {
-              spriteBatch.draw(image,
-                      limb.getPosition().x - getWidth() / 2, limb.getPosition().y - getHeight() / 2,
-                      getWidth() / 2, getHeight() / 2,
-                      getWidth(), getHeight(),
-                      1, 1,
-                      limb.getAngle(),
-                      true);
-          }
-          //spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-      }
+    @Override
+    public void delete() {
+        for (int i = 0; i < rest.length; i++) {
+            final int x = i;
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    Body limb = rest[x];
+                    limb.setUserData(new DiscardBody(body));
 
-      @Override
-      public void setActive(boolean active) {
-          super.setActive(active);
-          for (Body limb : rest) {
-              limb.setActive(active);
-          }
-      }
+                    if (x == rest.length)
+                        body.setUserData(new DiscardBody(body));
 
-      @Override
-      public void delete() {
-          super.delete();
-          for (Body limb : rest) {
-              limb.setUserData(new DiscardBody(body));
-          }
-      }
+                }
+            }, .05f * i);
+        }
+    }
+
+    @Override
+    public DRAW_LAYER getDrawLayer() {
+        return DRAW_LAYER.FRONT;
+    }
+
+    @Override
+    public void collidedWith(GameBody other) {
+        super.collidedWith(other);
+    }
+
+    public static class TongueRest extends GameBody {
+        private final Color color;
+        TextureRegion image;
+
+        public TongueRest(Body body, float radius, TextureRegion image, Color color) {
+            super(body, radius);
+            this.image = image;
+            this.color = color;
+        }
+
+        @Override
+        public DRAW_LAYER getDrawLayer() {
+            return DRAW_LAYER.FRONT;
+        }
+
+        @Override
+        public void draw(SpriteBatch spriteBatch) {
+            spriteBatch.setColor(color);
+            spriteBatch.draw(image,
+                    body.getPosition().x - radius, body.getPosition().y - radius,
+                    radius, radius,
+                    radius * 2, radius * 2,
+                    1, 1,
+                    0,
+                    true);
+            spriteBatch.setColor(Color.WHITE);
+        }
+    }
 }

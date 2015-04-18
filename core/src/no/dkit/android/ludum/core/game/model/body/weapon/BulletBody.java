@@ -1,3 +1,4 @@
+
 package no.dkit.android.ludum.core.game.model.body.weapon;
 
 import com.badlogic.gdx.graphics.Color;

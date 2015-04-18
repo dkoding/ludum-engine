@@ -44,8 +44,8 @@ public abstract class Weapon extends Loot {
 
     public Weapon(LOOT_TYPE type, String imageName) {
         super(type, imageName);
-        this.cooldown1 = 200;
-        this.cooldown2 = 1000;
+        this.cooldown1 = 3000;
+        this.cooldown2 = 3000;
         ammo = MathUtils.random(50, 99);
 
         emitters = 1;
