@@ -560,9 +560,9 @@ public class BodyFactory {
 
     private FixtureDef createTongueBulletAttributes(FixtureDef fixture, Shape shape) {
         fixture.shape = shape;
-        fixture.density = .1f;
-        fixture.friction = 1f;
-        fixture.restitution = 1f;
+        fixture.density = 1f;
+        fixture.friction = .2f;
+        fixture.restitution = .2f;
 
         return fixture;
     }
@@ -636,7 +636,7 @@ public class BodyFactory {
     }
 
     private BodyDef createTongueBulletDef() {
-        return createBodyDef(false, BodyDef.BodyType.DynamicBody, 0, 1f, 0f, 0f, false);
+        return createBodyDef(false, BodyDef.BodyType.DynamicBody, 0, .1f, 1f, 1f, false);
     }
 
     private BodyDef createDongueBulletDef() {
@@ -1058,7 +1058,7 @@ public class BodyFactory {
     public PlayerBody createSidescrollPlayer(Vector2 playerPosition) {
         Body body = getDefaultPlayerBody(playerPosition, false);
         createTongue(body);
-        createDongue(body);
+        //createDongue(body);
 
         return new BlobPlayerBody(body, Config.TILE_SIZE_X / 2, new PlayerData(),
                 ResourceFactory.getInstance().getWorldTypeImage("player"),
@@ -1069,19 +1069,19 @@ public class BodyFactory {
     }
 
     private void createTongue(Body owner) {
-        Body tip = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y + Config.TILE_SIZE_Y / 2f, 0, 0, true, .15f);
-        int particles = 16;
+        Body tip = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y, 0, 0, true, .1f);
+        int particles = 10;
         Body[] rest = new Body[particles];
 
         for (int i = 0; i < particles; i++) {
-            rest[i] = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y + Config.TILE_SIZE_Y / 2f, 0, 0, true, .15f / ((i * .05f) + 1f));
+            rest[i] = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y, 0, 0, true, .1f / ((i * .1f) + 1f));
 
             if (i == 0)
-                BodyFactory.getInstance().connectRope(tip, rest[0], .01f);
+                BodyFactory.getInstance().connectRope(tip, rest[0], .1f);
             if (i > 0 && i < particles)
-                BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], .01f);
+                BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], .1f);
             if (i == particles - 1)
-                BodyFactory.getInstance().connectRope(owner, rest[i], .01f);
+                BodyFactory.getInstance().connectRope(owner, rest[i], .01f, .02f);
         }
 
         tongue = new TongueBody(tip, rest, bulletFixture.shape.getRadius(), ResourceFactory.getInstance().getBulletImage("tongue"), null, null, 0, 1);
@@ -1093,7 +1093,7 @@ public class BodyFactory {
                 owner.getPosition().y + Config.TILE_SIZE_Y,
                 0, 0, true, .05f);
 
-        int particles = 3;
+        int particles = 5;
         Body[] rest = new Body[particles];
 
         for (int i = 0; i < particles; i++) {
@@ -1189,15 +1189,19 @@ public class BodyFactory {
         return false;
     }
 
-    public void connectRope(Body master, Body slave, float len) {
+    public void connectRope(Body master, Body slave, float len, float masterAnchorModY) {
         RopeJointDef ropeJointDef = new RopeJointDef();
         ropeJointDef.bodyA = slave;
         ropeJointDef.bodyB = master;
-        ropeJointDef.localAnchorA.set(0, 0);
+        ropeJointDef.localAnchorA.set(0, masterAnchorModY);
         ropeJointDef.localAnchorB.set(0, 0);
         ropeJointDef.maxLength = len;
         ropeJointDef.collideConnected = false;
         world.createJoint(ropeJointDef);
+    }
+
+    public void connectRope(Body master, Body slave, float len) {
+        connectRope(master, slave, len, 0);
     }
 
     public void rubberConnect(Body master, Body slave, float x, float y) {
@@ -1726,12 +1730,12 @@ public class BodyFactory {
 
     public void lick(Vector2 target, Vector2 firingDirection) {
         tongue.lick(target, firingDirection);
-        dongue.lick(target, firingDirection);
+        //dongue.lick(target, firingDirection);
     }
 
     public void slurp(Vector2 target) {
         tongue.slurp(target);
-        dongue.slurp(target);
+        //dongue.slurp(target);
     }
 
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.MassData;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 
@@ -17,6 +18,9 @@ public class TongueBody extends WeaponBody {
 
     public TongueBody(Body tip, Body[] rest, float radius, TextureRegion image, TextureRegion eyeImage, TextureRegion pupilImage, float angle, int damage) {
         super(tip, radius, image, angle, damage);
+        final MassData massData = new MassData();
+        massData.mass = 0f;
+
         this.tip = tip;
         this.eyeImage = eyeImage;
         this.pupilImage = pupilImage;
@@ -26,6 +30,8 @@ public class TongueBody extends WeaponBody {
         bounce = true;
         this.damage = damage;
         speed = Config.TONGUE_SPEED;
+
+        tip.setMassData(massData);
 
         switch (this.damage) {
             case 1:
@@ -43,6 +49,7 @@ public class TongueBody extends WeaponBody {
 
         for (Body body : rest) {
             body.setUserData(new TongueRest(body, body.getFixtureList().get(0).getShape().getRadius()));
+            body.setMassData(massData);
         }
 
         //addLight(LightFactory.getInstance().getLight(getPosition(), Config.HALF_TILE_SIZE_X * 2, 6, Color.ORANGE));
@@ -72,7 +79,6 @@ public class TongueBody extends WeaponBody {
     public float getAngle() {
         return angle;
     }
-
 
     @Override
     public void draw(SpriteBatch spriteBatch) {

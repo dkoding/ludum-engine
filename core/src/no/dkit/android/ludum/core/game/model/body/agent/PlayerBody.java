@@ -218,7 +218,7 @@ public class PlayerBody extends AgentBody implements GameEventListener {
                 TextFactory.getInstance().addText(new TextItem("Avoid ENEMIES", 0, Config.getDimensions().SCREEN_HEIGHT / 3, Color.WHITE), -.01f); // TODO: Change this to avoid object creation on repeat events
             }
         } else if (other instanceof BlockBody) { // Walls
-            justJumped = System.currentTimeMillis() - 500 < lastJump;
+            justJumped = System.currentTimeMillis() - 50 < lastJump;
             if (hasCollided || justJumped) return;
             hasCollided = true;
             collidePos = position;

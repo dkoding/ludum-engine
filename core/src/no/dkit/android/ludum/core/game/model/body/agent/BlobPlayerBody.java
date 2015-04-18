@@ -34,7 +34,6 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                     angle,
                     true);
 
-/*
         spriteBatch.setColor(Color.RED);
         spriteBatch.draw(mouth,
                 position.x - radius, position.y - radius,
@@ -43,7 +42,6 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                 .5f, .5f,
                 angle,
                 true);
-*/
 
         spriteBatch.setColor(Color.WHITE);
         spriteBatch.draw(eye,

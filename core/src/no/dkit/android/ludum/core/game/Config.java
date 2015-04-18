@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class Config {
-    public static final float TONGUE_SPEED = .1f;
+    public static final float TONGUE_SPEED = 20f;
     public static Color COLOR_1_PURPLE = Color.valueOf("7a00ff");
     public static Color COLOR_2_BLUE_DARK = Color.valueOf("2a0ce8");
     public static Color COLOR_3_BLUE_MEDIUM = Color.valueOf("0031ff");
