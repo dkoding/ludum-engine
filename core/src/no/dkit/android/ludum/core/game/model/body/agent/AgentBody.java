@@ -209,6 +209,7 @@ public class AgentBody extends PoolableGameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive()) return;
 
+/*
         if (isCritical()) {
             spriteBatch.setColor(Color.RED);
         } else if (isHurt()) {
@@ -224,11 +225,14 @@ public class AgentBody extends PoolableGameBody {
         } else if (mind.getState().equals(Mind.MindState.NEUTRAL)) {
             spriteBatch.setColor(Color.WHITE);
         }
+*/
 
         boolean flip = false;
 
         if (body.isFixedRotation() && body.getLinearVelocity().x < 0)
             flip = true;
+
+        spriteBatch.setColor(color);
 
         spriteBatch.draw(image,
                 body.getPosition().x - radius, body.getPosition().y - radius,

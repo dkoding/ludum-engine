@@ -45,11 +45,11 @@ public class LightFactory {
 
     private LightFactory(World world) {
         Light.setContactFilter(BodyFactory.lightFilter);
-        RayHandler.useDiffuseLight(true);
+        RayHandler.useDiffuseLight(false);
         rayHandler = new RayHandler(world);
-        rayHandler.setCulling(false);
+        rayHandler.setCulling(true);
         rayHandler.setShadows(true);
-        //rayHandler.setBlur(true);
+        rayHandler.setBlur(true);
         LightFactory.world = world;
         playerLights = new HashMap<LIGHT_TYPE, Light>();
 
@@ -134,7 +134,7 @@ public class LightFactory {
         pointLight.setStaticLight(true);
         pointLight.setXray(true);
         pointLight.setSoftnessLength(0);
-        pointLight.setSoft(false);
+        pointLight.setSoft(true);
         return pointLight;
     }
 

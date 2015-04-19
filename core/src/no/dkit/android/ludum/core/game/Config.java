@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class Config {
-    public static final float TONGUE_SPEED = 20f;
+    public static final float TONGUE_SPEED = 30f;
     public static Color COLOR_1_PURPLE = Color.valueOf("7a00ff");
     public static Color COLOR_2_BLUE_DARK = Color.valueOf("2a0ce8");
     public static Color COLOR_3_BLUE_MEDIUM = Color.valueOf("0031ff");
@@ -12,7 +12,7 @@ public class Config {
     public static Color COLOR_5_BLUE_LIGHTEST = Color.valueOf("0ddaff");
 
     public static final int MAX_LEVEL = 10000;
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     public static final float DEBUG_SCALE = 1f;
     public static boolean DEBUGTEXT = false;
 
@@ -169,9 +169,9 @@ public class Config {
     public static final int BOX_VELOCITY_ITERATIONS = 3;
     public static final float BOX_STEP = 1 / 25f;
 
-    public static final float PLAYER_MAX_SPEED = 3f;
+    public static final float PLAYER_MAX_SPEED = 5f;
     public static final float PLAYER_MIN_SPEED = 0f;
-    public static final float MAX_SPEED = .5f;
+    public static final float MAX_SPEED = 1f;
     public static final float LOOT_SPEED = .1f;
     public static final float MIN_SPEED = .01f;
     public static final float ROTATE_SPEED = 5f;

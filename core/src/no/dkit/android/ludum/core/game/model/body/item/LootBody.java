@@ -22,9 +22,11 @@ public class LootBody extends PoolableGameBody {
     Loot.LOOT_TYPE type;
     TextureAtlas.AtlasRegion bgImage;
     boolean collected;
+    Color color;
 
-    public LootBody(Body body, float halfTileSizeX, Loot.LOOT_TYPE type, TextureAtlas.AtlasRegion itemImage, TextureAtlas.AtlasRegion bgImage) {
+    public LootBody(Body body, float halfTileSizeX, Loot.LOOT_TYPE type, TextureAtlas.AtlasRegion itemImage, TextureAtlas.AtlasRegion bgImage, Color color) {
         super(body, halfTileSizeX, itemImage);
+        this.color = color;
         collected = false;
         this.bgImage = bgImage;
         this.type = type;
@@ -35,8 +37,8 @@ public class LootBody extends PoolableGameBody {
         getBody().setLinearVelocity(MathUtils.random(Config.LOOT_SPEED * 2) - Config.LOOT_SPEED, MathUtils.random(Config.LOOT_SPEED * 2) - Config.LOOT_SPEED);
     }
 
-    public LootBody(Body body, float halfTileSizeX, Loot.LOOT_TYPE type, TextureAtlas.AtlasRegion itemImage) {
-        this(body, halfTileSizeX, type, itemImage, null);
+    public LootBody(Body body, float halfTileSizeX, Loot.LOOT_TYPE type, TextureAtlas.AtlasRegion itemImage, Color color) {
+        this(body, halfTileSizeX, type, itemImage, null, color);
     }
 
     @Override
@@ -74,14 +76,23 @@ public class LootBody extends PoolableGameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive() || image == null) return;
 
+        if(type == Loot.LOOT_TYPE.TREASURE) color = Color.YELLOW;
+        else if(type == Loot.LOOT_TYPE.MEDPACK) color = Color.RED;
+        else if(type == Loot.LOOT_TYPE.ORB) color = Color.PURPLE;
+        else if(type == Loot.LOOT_TYPE.ARMOR) color = Color.BLUE;
+
+        spriteBatch.setColor(Color.YELLOW);
+
         if (bgImage != null)
             spriteBatch.draw(bgImage,
-                    body.getPosition().x - Config.TILE_SIZE_X / 2, body.getPosition().y - Config.TILE_SIZE_Y / 2,
-                    Config.TILE_SIZE_X / 2, Config.TILE_SIZE_X / 2,
-                    Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
-                    Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
-                    -rotation,
+                    body.getPosition().x - radius, body.getPosition().y - radius,
+                    radius, radius,
+                    radius * 2, radius * 2,
+                    1, 1,
+                    rotation,
                     true);
+
+        spriteBatch.setColor(color);
 
         spriteBatch.draw(image,
                 body.getPosition().x - radius, body.getPosition().y - radius,

@@ -1,6 +1,5 @@
 package no.dkit.android.ludum.core.game.factory;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
@@ -27,10 +26,10 @@ public class SoundFactory implements AssetErrorListener {
     private Music music;
 
     public enum SOUND_TYPE {
-        OUCH1, SCREAM,
+        OUCH1, SCREAM, JUMP,
         DOOROPEN, DOORCLOSE, DOORLOCKED,
         GUNEMPTY, WEAPONPICKUP, CASH, ORB, ARMOR,
-        THROWER, HIT, IMPACT, EXPLOSION, ROCKET, LASER, BOMB, BULLET
+        THROWER, HIT, IMPACT, EXPLOSION, ROCKET, LASER, BOMB, BULLET, TONGUE
     }
 
     public enum MUSIC_TYPE {
@@ -41,6 +40,7 @@ public class SoundFactory implements AssetErrorListener {
     private static final Map<GameBody.BODY_TYPE, Sound> hitSounds;
     private static final Map<GameBody.BODY_TYPE, Sound> dieSounds;
     private static final Map<SOUND_TYPE, String> soundFileNames;
+    private static final Map<MUSIC_TYPE, String> musicFileNames;
 
     AssetManager manager;
 
@@ -49,26 +49,30 @@ public class SoundFactory implements AssetErrorListener {
         hitSounds = new HashMap<GameBody.BODY_TYPE, Sound>();
         dieSounds = new HashMap<GameBody.BODY_TYPE, Sound>();
 
+        musicFileNames = new HashMap<MUSIC_TYPE, String>();
+        musicFileNames.put(MUSIC_TYPE.LOSE, "dead");
+        musicFileNames.put(MUSIC_TYPE.WIN, "win");
+        musicFileNames.put(MUSIC_TYPE.MENU, "menu");
+        musicFileNames.put(MUSIC_TYPE.GAME, "menu");
+
         soundFileNames = new HashMap<SOUND_TYPE, String>();
 
-        soundFileNames.put(SOUND_TYPE.OUCH1, "ouch1");
-        soundFileNames.put(SOUND_TYPE.SCREAM, "scream");
+        soundFileNames.put(SOUND_TYPE.TONGUE, "tongue");    //
+        soundFileNames.put(SOUND_TYPE.OUCH1, "ouch1");    //
         soundFileNames.put(SOUND_TYPE.GUNEMPTY, "gunempty");
         soundFileNames.put(SOUND_TYPE.WEAPONPICKUP, "weaponpickup");
-        soundFileNames.put(SOUND_TYPE.DOORLOCKED, "doorlocked");
-        soundFileNames.put(SOUND_TYPE.DOOROPEN, "dooropen");
-        soundFileNames.put(SOUND_TYPE.DOORCLOSE, "doorclose");
         soundFileNames.put(SOUND_TYPE.THROWER, "thrower");
-        soundFileNames.put(SOUND_TYPE.HIT, "hit");
-        soundFileNames.put(SOUND_TYPE.IMPACT, "impact");
-        soundFileNames.put(SOUND_TYPE.EXPLOSION, "explosion");
-        soundFileNames.put(SOUND_TYPE.ROCKET, "rocket");
-        soundFileNames.put(SOUND_TYPE.LASER, "laser");
-        soundFileNames.put(SOUND_TYPE.CASH, "cash");
-        soundFileNames.put(SOUND_TYPE.ORB, "orb");
-        soundFileNames.put(SOUND_TYPE.ARMOR, "armor");
-        soundFileNames.put(SOUND_TYPE.BOMB, "bomb");
-        soundFileNames.put(SOUND_TYPE.BULLET, "bullet");
+        soundFileNames.put(SOUND_TYPE.HIT, "hit");     //
+        soundFileNames.put(SOUND_TYPE.IMPACT, "impact");    //
+        soundFileNames.put(SOUND_TYPE.JUMP, "jump");    //
+        soundFileNames.put(SOUND_TYPE.EXPLOSION, "explosion");  //
+        soundFileNames.put(SOUND_TYPE.ROCKET, "rocket");   //
+        soundFileNames.put(SOUND_TYPE.LASER, "laser");   //
+        soundFileNames.put(SOUND_TYPE.CASH, "cash"); //
+        soundFileNames.put(SOUND_TYPE.ORB, "orb");  //
+        soundFileNames.put(SOUND_TYPE.ARMOR, "armor");  //
+        soundFileNames.put(SOUND_TYPE.BOMB, "bomb");   //
+        soundFileNames.put(SOUND_TYPE.BULLET, "bullet");   //
     }
 
     public static SoundFactory getInstance() {
@@ -86,6 +90,10 @@ public class SoundFactory implements AssetErrorListener {
 
         for (String fileName : soundFileNames.values()) {
             manager.load(soundpath + fileName + soundFormat, Sound.class);
+        }
+
+        for (String fileName : musicFileNames.values()) {
+            manager.load(musicpath + fileName + musicFormat, Music.class);
         }
     }
 
@@ -109,6 +117,9 @@ public class SoundFactory implements AssetErrorListener {
                 break;
             case BOMB:
                 playSound(SOUND_TYPE.BOMB, pitch);
+                break;
+            case TONGUE:
+                playSound(SOUND_TYPE.TONGUE, pitch);
                 break;
             case ROCKET:
             case FIREBALL:
@@ -158,23 +169,24 @@ public class SoundFactory implements AssetErrorListener {
     }
 
     public void playMusic(MUSIC_TYPE type) {
-        if (music != null && music.isPlaying()) music.stop();
+        if (music != null && music.isPlaying())
+            music.stop();
+
+        music = manager.get(musicpath + musicFileNames.get(type) + musicFormat, Music.class);
+
+        music.setPosition(0);
 
         switch (type) {
             case MENU:
-                music = Gdx.audio.newMusic(Gdx.files.internal(musicpath + "music" + musicFormat));
                 music.setLooping(true);
                 break;
             case GAME:
-                music = Gdx.audio.newMusic(Gdx.files.internal(musicpath + "music" + musicFormat));
                 music.setLooping(true);
                 break;
-            case SHOP:
-                music = Gdx.audio.newMusic(Gdx.files.internal(musicpath + "music" + musicFormat));
+            case LOSE:
                 music.setLooping(true);
                 break;
             case WIN:
-                music = Gdx.audio.newMusic(Gdx.files.internal(musicpath + "music" + musicFormat));
                 music.setLooping(false);
                 break;
         }

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import no.dkit.android.ludum.core.game.Config;
+import no.dkit.android.ludum.core.game.factory.EffectFactory;
 import no.dkit.android.ludum.core.game.factory.LightFactory;
 import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.factory.TextFactory;
@@ -48,8 +49,8 @@ public class KeyBody extends GameBody {
     @Override
     public void collidedWith(GameBody other) { // Will always be playerbody because of collission bits
         ((PlayerBody) other).getData().addKey();
-        TextFactory.getInstance().addText(new TextItem("Collect KEYS", 0, Config.getDimensions().SCREEN_HEIGHT / 3, Color.WHITE), -.01f);
-        SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.CASH);
+        SoundFactory.getInstance().playMusic(SoundFactory.MUSIC_TYPE.WIN);
+        EffectFactory.getInstance().addEffect(position, EffectFactory.EFFECT_TYPE.ACHIEVE);
         delete();
     }
 }

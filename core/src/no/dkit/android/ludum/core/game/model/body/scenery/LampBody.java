@@ -24,13 +24,12 @@ public class LampBody extends DirectionalGameBody {
         this.color = color;
         bodyType = BODY_TYPE.METAL;
         if (direction == AbstractMap.NO_DIRECTION) {
-            addLight(LightFactory.getInstance().getLight(position.x, position.y, Config.getDimensions().WORLD_WIDTH/4, 6, this.color));
             image = ResourceFactory.getInstance().getItemImage("lamp");
         } else {
-            addLight(LightFactory.getInstance().getConeLight(getBody().getPosition(), Config.getDimensions().WORLD_WIDTH/4, 4, this.color, startDirection, 90));
             image = ResourceFactory.getInstance().getItemImage("wallamp");
         }
 
+        addLight(LightFactory.getInstance().getLight(position.x, position.y, Config.getDimensions().WORLD_WIDTH/4, 6, this.color));
         light.setStaticLight(true);
     }
 

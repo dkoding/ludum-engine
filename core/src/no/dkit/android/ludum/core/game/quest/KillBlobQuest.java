@@ -46,6 +46,7 @@ public class KillBlobQuest extends Quest {
 
     @Override
     public void startQuest() {
+/*
         final AgentBody questAgent = BodyFactory.getInstance().createQuestAgent(Level.getInstance().getEnemyTypes().get(0),
                 GameModel.getPlayer().position.cpy().add(Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2), GameModel.getPlayer().position);
 
@@ -59,6 +60,7 @@ public class KillBlobQuest extends Quest {
         });
 
         GameModel.getPlayer().addLoot(new Flamethrower());
+*/
     }
 
     @Override

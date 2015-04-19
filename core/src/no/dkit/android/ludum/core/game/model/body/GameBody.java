@@ -2,6 +2,7 @@ package no.dkit.android.ludum.core.game.model.body;
 
 import box2dLight.ConeLight;
 import box2dLight.Light;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -21,6 +22,8 @@ public abstract class GameBody {
     protected int health = 5;
     int hurtThreshold = health > 2 ? 2 : 0;
     int criticalThreshold = health > 1 ? 1 : 0;
+
+    protected Color color = Color.WHITE;
 
     public enum BODY_TYPE {
         HUMANOID,
@@ -234,12 +237,16 @@ public abstract class GameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive() || image == null) return;
 
+        spriteBatch.setColor(color);
+
         spriteBatch.draw(image,
                 position.x - radius, position.y - radius,
                 radius, radius,
                 radius * 2, radius * 2,
                 scale, scale,
                 rotation + 90, true);
+
+        spriteBatch.setColor(Color.WHITE);
     }
 
     public void setActive(boolean active) {

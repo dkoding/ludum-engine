@@ -21,7 +21,7 @@ public abstract class Level {
 
     public enum LEVEL_TYPE {UNIVERSE, TOPDOWN, SIDESCROLL}
 
-    public List<BodyFactory.ENEMY_ANIM> walkers = new ArrayList<BodyFactory.ENEMY_ANIM>();
+    public List<BodyFactory.ENEMY_IMAGE> walkers = new ArrayList<BodyFactory.ENEMY_IMAGE>();
     public List<BodyFactory.ENEMY_ANIM> flyers = new ArrayList<BodyFactory.ENEMY_ANIM>();
     public List<BodyFactory.ENEMY_IMAGE> ships = new ArrayList<BodyFactory.ENEMY_IMAGE>();
     public List<BodyFactory.ENEMY_TYPE> enemyTypes = new ArrayList<BodyFactory.ENEMY_TYPE>();
@@ -99,6 +99,10 @@ public abstract class Level {
             case SHIP_1:
                 return Loot.LOOT_TYPE.LASER;
             case SHIP_2:
+                return Loot.LOOT_TYPE.ROCKET;
+            case WALKER_1:
+                return Loot.LOOT_TYPE.FLAME_THROWER;
+            case WALKER_2:
                 return Loot.LOOT_TYPE.ROCKET;
         }
         throw new RuntimeException("No weapon assigned to enemy " + enemy);
@@ -208,49 +212,24 @@ public abstract class Level {
     protected void getDefaultAgentsFor(LEVEL_TYPE worldType) {
         enemyTypes.clear();
 
-        switch (worldType) {
-            case SIDESCROLL:
-                enemyTypes.addAll(
-                        Arrays.asList(
-                                BodyFactory.ENEMY_TYPE.BLOB
-                        )
-                );
-                break;
-            case TOPDOWN:
-                enemyTypes.addAll(
-                        Arrays.asList(
-                                BodyFactory.ENEMY_TYPE.WALKER_SINGLE,
-                                BodyFactory.ENEMY_TYPE.WALKER_GROUP,
-                                BodyFactory.ENEMY_TYPE.FLYER_SINGLE,
-                                BodyFactory.ENEMY_TYPE.FLYER_GROUP
-                        )
-                );
-                walkers.addAll(
-                        Arrays.asList(
-                                BodyFactory.ENEMY_ANIM.WALKER_ANIM_1
-                        )
-                );
-                flyers.addAll(
-                        Arrays.asList(
-                                BodyFactory.ENEMY_ANIM.FLYER_ANIM_1
-                        )
-                );
-                break;
-            case UNIVERSE:
-                enemyTypes.addAll(
-                        Arrays.asList(
-                                BodyFactory.ENEMY_TYPE.SHIP_SINGLE,
-                                BodyFactory.ENEMY_TYPE.SHIP_GROUP
-                        )
-                );
-                ships.addAll(
-                        Arrays.asList(
-                                BodyFactory.ENEMY_IMAGE.SHIP_1,
-                                BodyFactory.ENEMY_IMAGE.SHIP_2
-                        )
-                );
-                break;
-        }
+        enemyTypes.addAll(
+                Arrays.asList(
+                        BodyFactory.ENEMY_TYPE.BLOB,
+                        BodyFactory.ENEMY_TYPE.FLYER_SINGLE,
+                        BodyFactory.ENEMY_TYPE.WALKER_SINGLE
+                )
+        );
+        walkers.addAll(
+                Arrays.asList(
+                        BodyFactory.ENEMY_IMAGE.WALKER_1,
+                        BodyFactory.ENEMY_IMAGE.WALKER_2
+                )
+        );
+        flyers.addAll(
+                Arrays.asList(
+                        BodyFactory.ENEMY_ANIM.FLYER_ANIM_1
+                )
+        );
     }
 
     protected void getDefaultLootFor(LEVEL_TYPE worldType) {
@@ -345,7 +324,7 @@ public abstract class Level {
         return ships.get(MathUtils.random(ships.size() - 1));
     }
 
-    public BodyFactory.ENEMY_ANIM getRandomWalker() {
+    public BodyFactory.ENEMY_IMAGE getRandomWalker() {
         return walkers.get(MathUtils.random(walkers.size() - 1));
     }
 

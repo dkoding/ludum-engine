@@ -159,18 +159,18 @@ public class MenuScreenModel {
         window.row();
         window.add(levelLabel).colspan(3);
         window.row();
-        window.add(toggleVibrate).size(100, 100);
-        window.add(playButton).size(100, 100);
-        window.add(toggleSound).size(100, 100);
+        //window.add(toggleVibrate).size(100, 100);
+        window.add(playButton).colspan(3);
+        //window.add(toggleSound).size(100, 100);
         window.row();
         window.add(fpsLabel).colspan(3);
         //window.pack();
 
         // stage.addActor(new Button("Behind Window", skin));
         stage.addActor(window);
-        helpButton.setSize(100, 100);
-        helpButton.setPosition(Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 200);
-        stage.addActor(helpButton);
+        //helpButton.setSize(100, 100);
+        //helpButton.setPosition(Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 200);
+        //stage.addActor(helpButton);
     }
 
     private String getLevelLabel() {

@@ -50,6 +50,7 @@ public class GameView {
 
     float time = 1f;
     float angle = 0f;
+    private Vector2 tmpVector = new Vector2();
 
     public GameView(GameModel gameModel) {
         this.gameModel = gameModel;
@@ -96,13 +97,6 @@ public class GameView {
 
         if (Config.DEBUGTEXT)
             startMeasure();
-        LightFactory.getInstance().render(camera.combined,
-                gameModel.getWorldWidth() / 2, gameModel.getWorldHeight() / 2, gameModel.getTileMap().getSizeX(), gameModel.getTileMap().getSizeX());
-        if (Config.DEBUGTEXT)
-            endMeasure("Lights");
-
-        if (Config.DEBUGTEXT)
-            startMeasure();
         spriteBatch.begin();
         for (LaserBody laserBody : lasers) {
             laserBody.draw(spriteBatch, ResourceFactory.getInstance().getItemImage("laserglow"),
@@ -111,6 +105,7 @@ public class GameView {
                     ResourceFactory.getInstance().getItemImage("laserendglow")
             );
         }
+
         spriteBatch.end();
         if (Config.DEBUGTEXT)
             endMeasure("Lasers");
@@ -132,6 +127,15 @@ public class GameView {
 
         globalRotation += 1f;
         if (globalRotation > 360) globalRotation = 0;
+    }
+
+    private void drawLights() {
+        if (Config.DEBUGTEXT)
+            startMeasure();
+        LightFactory.getInstance().render(camera.combined,
+                gameModel.getWorldWidth() / 2, gameModel.getWorldHeight() / 2, gameModel.getTileMap().getSizeX(), gameModel.getTileMap().getSizeX());
+        if (Config.DEBUGTEXT)
+            endMeasure("Lights");
     }
 
     private void drawShapes() {
@@ -180,7 +184,7 @@ public class GameView {
     private void drawImages() {
         fpsCounter++;
         if (fpsCounter == 100) {
-            if(Config.DEBUGTEXT)
+            if (Config.DEBUGTEXT)
                 System.out.println("FPS:" + Gdx.graphics.getFramesPerSecond());
             fpsCounter = 0;
         }
@@ -189,6 +193,8 @@ public class GameView {
                 camera.position.x - Config.getDimensions().WORLD_WIDTH / 2f,
                 camera.position.y - Config.getDimensions().WORLD_HEIGHT / 2f,
                 Config.getDimensions().WORLD_WIDTH, Config.getDimensions().WORLD_HEIGHT);
+
+        drawLights();
 
         spriteBatch.begin();
         drawSpriteLayers();
@@ -262,7 +268,7 @@ public class GameView {
         if (layer.size == 0) return;
 
         for (GameBody gameBody : layer) {
-            if(gameBody instanceof PlayerBody) continue;
+            if (gameBody instanceof PlayerBody) continue;
             gameBody.draw(spriteBatch);
         }
     }
@@ -368,9 +374,9 @@ public class GameView {
         if (gameModel.panning) {
             drawJumpArrow(spriteBatch,
                     ResourceFactory.getInstance().getItemImage("laserglow"),
-                                        ResourceFactory.getInstance().getItemImage("laserbeam"),
-                                        ResourceFactory.getInstance().getItemImage("laserend"),
-                                        ResourceFactory.getInstance().getItemImage("laserendglow")
+                    ResourceFactory.getInstance().getItemImage("laserbeam"),
+                    ResourceFactory.getInstance().getItemImage("laserend"),
+                    ResourceFactory.getInstance().getItemImage("laserendglow")
             );
         }
 

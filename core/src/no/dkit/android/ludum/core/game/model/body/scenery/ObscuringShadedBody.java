@@ -2,6 +2,8 @@ package no.dkit.android.ludum.core.game.model.body.scenery;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
+import no.dkit.android.ludum.core.game.model.body.GameBody;
+import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
 import no.dkit.android.ludum.core.shaders.AbstractShader;
 
 public class ObscuringShadedBody extends ShadedBody {
@@ -15,5 +17,14 @@ public class ObscuringShadedBody extends ShadedBody {
 
     public ObscuringShadedBody(Body body, float halfTileSizeX, AbstractShader shader, TextureRegion maskRegion) {
         super(body, halfTileSizeX, shader, maskRegion);
+    }
+
+    @Override
+    public void collidedWith(GameBody other) {
+        if(other instanceof PlayerBody)
+            other.hit(1);
+        else
+            super.collidedWith(other);
+
     }
 }

@@ -21,6 +21,7 @@ import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.Array;
 import no.dkit.android.ludum.core.game.Config;
+import no.dkit.android.ludum.core.game.ai.mind.PrioritizingMind;
 import no.dkit.android.ludum.core.game.ai.simulationobjects.Neighborhood;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.PlayerData;
@@ -91,7 +92,7 @@ public class BodyFactory {
     private TongueBody dongue;
 
     public enum ENEMY_IMAGE {
-        SHIP_1, SHIP_2
+        SHIP_1, SHIP_2, WALKER_1, WALKER_2
     }
 
     public enum ENEMY_ANIM {
@@ -177,18 +178,18 @@ public class BodyFactory {
 
         createTriggerAttributes(createCircleShape(Config.TILE_SIZE_X / 2));
         createCrateAttributes(createCenteredBoxShape(Config.TILE_SIZE_X / 2, Config.TILE_SIZE_Y / 2));
-        createMineAttributes(createCircleShape(Config.TILE_SIZE_X / 10));
-        createParticleAttributes(createCircleShape(Config.TILE_SIZE_X / 50));
+        createMineAttributes(createCircleShape(Config.TILE_SIZE_X / 5));
+        createParticleAttributes(createCircleShape(Config.TILE_SIZE_X / 40));
         createTileAttributes(createCenteredBoxShape(Config.TILE_SIZE_X, Config.TILE_SIZE_Y));
         createDoorAttributes(createDoorShape());
         createPlatformAttributes(createCenteredBoxShape(Config.TILE_SIZE_X, Config.TILE_SIZE_Y));
-        createItemAttributes(createCircleShape(Config.TILE_SIZE_X / 4));
-        createKeyAttributes(createCircleShape(Config.TILE_SIZE_X / 4));
+        createItemAttributes(createCircleShape(Config.TILE_SIZE_X / 2));
+        createKeyAttributes(createCircleShape(Config.TILE_SIZE_X / 2));
         createDangerAttributes(createCircleShape(Config.TILE_SIZE_X / 2));
         createPlanetAttributes(createCircleShape(Config.TILE_SIZE_X / 2));
         createUpgradeAttributes(createCircleShape(Config.TILE_SIZE_X));
         createExitAttributes(createCircleShape(Config.TILE_SIZE_X));
-        createWarpAttributes(createCircleShape(Config.TILE_SIZE_X / 2));
+        createWarpAttributes(createCircleShape(Config.TILE_SIZE_X));
         createLampAttributes(createCircleShape(Config.TILE_SIZE_X / 4));
         createTurretAttributes(createTurretShape());
         createAgentAttributes(createCircleShape(Config.TILE_SIZE_X / 3), 3);
@@ -760,65 +761,6 @@ public class BodyFactory {
         agentsToCreate.add(new AgentDef(type, position));
     }
 
-    public AgentBody createQuestAgent(ENEMY_TYPE type, Vector2 position, Vector2 target) {
-        switch (type) {
-            case SHIP_SINGLE:
-                ENEMY_IMAGE randomShip = Level.getInstance().getRandomShip();
-                ShipSingle shipSingle = new ShipSingle(getAgentBody(position, true, true,
-                        createCircleShape(Config.SHIP_RADIUS), Config.SHIP_DENSITY),
-                        ResourceFactory.getInstance().getShipImage(randomShip), Config.TILE_SIZE_X / 2);
-                shipSingle.bodyType = GameBody.BODY_TYPE.METAL;
-                BehaviorFactory.setupRangedBehavior(target, shipSingle, GameModel.getPlayer(), position.cpy());
-                LootFactory.getInstance().getWeapon(Level.getInstance().getWeaponFor(randomShip)).onPickup(shipSingle);
-                shipSingle.setBoss();
-                return shipSingle;
-            case WALKER_SINGLE:
-                ENEMY_ANIM randomWalker = Level.getInstance().getRandomWalker();
-                AnimatedAgentBody walkerSingle = new AnimatedAgentBody(getAgentBody(position, true, true,
-                        createCircleShape(Config.WALKER_RADIUS), Config.WALKER_DENSITY), Config.TILE_SIZE_X / 2,
-                        ResourceFactory.getInstance().getWalkerAnimation(randomWalker));
-                walkerSingle.bodyType = GameBody.BODY_TYPE.HUMANOID;
-                BehaviorFactory.setupMeleeBehavior(target, walkerSingle, position.cpy());
-                LootFactory.getInstance().getWeapon(Level.getInstance().getWeaponFor(randomWalker)).onPickup(walkerSingle);
-                walkerSingle.setBoss();
-                return walkerSingle;
-            case FLYER_SINGLE:
-                ENEMY_ANIM randomFlyer = Level.getInstance().getRandomFlyer();
-                AnimatedAgentBody flyerSingle = new AnimatedAgentBody(getAgentBody(position, true, true,
-                        createCircleShape(Config.FLYER_RADIUS), Config.FLYER_DENSITY), Config.TILE_SIZE_X / 2,
-                        ResourceFactory.getInstance().getFlyerAnimation(randomFlyer));
-                flyerSingle.flying = true;
-                flyerSingle.bodyType = GameBody.BODY_TYPE.HUMANOID;
-                BehaviorFactory.setupRangedBehavior(target, flyerSingle, GameModel.getPlayer(), position.cpy());
-                LootFactory.getInstance().getWeapon(Level.getInstance().getWeaponFor(randomFlyer)).onPickup(flyerSingle);
-                flyerSingle.setBoss();
-                return flyerSingle;
-            case BLOB:
-                Body head = getAgentBody(position, true, true, createCircleShape(Config.BLOBLIMB_RADIUS), Config.BLOBLIMB_DENSITY, 1);
-                Body[] limbs = new Body[16];
-
-                for (int i = 0; i < 16; i++) {
-                    float angle = (i / (float) 16) * MathUtils.PI2;
-                    Vector2 rayDir = new Vector2(MathUtils.sin(angle), MathUtils.cos(angle));
-                    limbs[i] = getAgentBody(position.cpy().add(rayDir.scl(Config.TILE_SIZE_X / 2f)), true, true,
-                            createCircleShape(Config.BLOBLIMB_RADIUS), Config.BLOBLIMB_DENSITY, 1);
-
-                    BodyFactory.getInstance().connectRope(limbs[i], head);
-                    if (i > 0)
-                        BodyFactory.getInstance().connectRope(limbs[i], limbs[i - 1]);
-                }
-
-                BodyFactory.getInstance().connectRope(limbs[0], limbs[16 - 1]);
-
-                Blob blob = new Blob(head, limbs, ResourceFactory.getInstance().getWorldTypeImage("blob"), Config.TILE_SIZE_X / 2f / 2f);
-                BehaviorFactory.setupMeleeBehavior(target, blob, position.cpy());
-                blob.setBoss();
-                return blob;
-        }
-
-        throw new RuntimeException("NO quest enemy found for " + type);
-    }
-
     public GameBody createMapTile(int x, int y, int type, int direction, TextureAtlas.AtlasRegion indoorImage,
                                   TextureAtlas.AtlasRegion doorImage, TextureAtlas.AtlasRegion corridorImage, Texture wallTexture) {
         if (type == AbstractMap.ROOM) { // Delegate to getFeature-method
@@ -899,15 +841,15 @@ public class BodyFactory {
         else if (type == AbstractMap.ITEM_ROCK)
             return new DangerBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getItemImage("crystal"));
         else if (type == AbstractMap.ITEM_KEY)
-            return new KeyBody(body, fixtureDef.shape.getRadius() * 2, ResourceFactory.getInstance().getItemImage("key"));
+            return new KeyBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getItemImage("key"));
         else if (type == AbstractMap.ITEM_TRIGGER)
             return new TriggerBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getWorldTypeImage("spawn"));
         else if (type == AbstractMap.ITEM_UPGRADE)
             return createUpgradeBody(fixtureDef, body);
         else if (type == AbstractMap.ITEM_SPAWN)
-            return new SpawnBody(body, fixtureDef.shape.getRadius() * 2, ResourceFactory.getInstance().getWorldTypeImage("spawn"));
+            return new SpawnBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getWorldTypeImage("spawn"));
         else if (type == AbstractMap.ITEM_LAMP)
-            return new LampBody(body, fixtureDef.shape.getRadius(), getRandomColor(), direction);
+            return new LampBody(body, fixtureDef.shape.getRadius(), getRandomLampColor(), direction);
         else if (type == AbstractMap.ITEM_MINE)
             return new MineBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getItemImage("mine"));
         else if (type == AbstractMap.ITEM_CRATE)
@@ -959,10 +901,10 @@ public class BodyFactory {
 
         if (LootFactory.weapons.contains(loot.getType()))
             return new LootBody(body, fixtureDef.shape.getRadius(), loot.getType(), ResourceFactory.getInstance().getWeaponImage(loot.getImageName()),
-                    ResourceFactory.getInstance().getImage(ResourceFactory.UI, "star"));
+                    ResourceFactory.getInstance().getImage(ResourceFactory.UI, "star"), Color.WHITE);
         else
             return new LootBody(body, fixtureDef.shape.getRadius(), loot.getType(), ResourceFactory.getInstance().getItemImage(loot.getImageName()),
-                    ResourceFactory.getInstance().getImage(ResourceFactory.UI, "star"));
+                    ResourceFactory.getInstance().getImage(ResourceFactory.UI, "star"), Color.YELLOW);
     }
 
     private FixtureDef getItemFixtureDef(int type) {
@@ -1025,8 +967,25 @@ public class BodyFactory {
         return fixtureDef;
     }
 
-    private Color getRandomColor() {
-        return new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1f);
+    private Color getRandomLampColor() {
+        int f = MathUtils.random(6);
+
+        switch (f) {
+            case 0:
+                return new Color(1f, 0, 0, 1f);
+            case 1:
+                return new Color(0f, 1f, 0, 1f);
+            case 2:
+                return new Color(0f, 0, 1f, 1f);
+            case 3:
+                return new Color(1f, 0, 1f, 1f);
+            case 4:
+                return new Color(1f, 1f, 0, 1f);
+            case 5:
+                return new Color(0f, 1f, 1f, 1f);
+            default:
+                return new Color(1f, 1f, 1f, 1f);
+        }
     }
 
     public void createItems(int num, float x, float y, int type) {
@@ -1423,9 +1382,9 @@ public class BodyFactory {
             Body body = getDefaultLootBody(lootDef.getPosition());
             Loot loot = LootFactory.getInstance().getLoot(lootDef.getType());
             if (LootFactory.weapons.contains(lootDef.getType()))
-                new LootBody(body, Config.TILE_SIZE_X / 4f, lootDef.getType(), ResourceFactory.getInstance().getWeaponImage(loot.getImageName()), ResourceFactory.getInstance().getImage(ResourceFactory.UI, "star"));
+                new LootBody(body, Config.TILE_SIZE_X / 2f, lootDef.getType(), ResourceFactory.getInstance().getWeaponImage(loot.getImageName()), ResourceFactory.getInstance().getImage(ResourceFactory.UI, "star"), Color.RED);
             else
-                new LootBody(body, Config.TILE_SIZE_X / 10f, lootDef.getType(), ResourceFactory.getInstance().getItemImage(loot.getImageName()));
+                new LootBody(body, Config.TILE_SIZE_X / 2f, lootDef.getType(), ResourceFactory.getInstance().getItemImage(loot.getImageName()), Color.YELLOW);
         }
 
         lootToCreate.clear();
@@ -1459,6 +1418,8 @@ public class BodyFactory {
     }
 
     private void createAgents() {
+        if(GameModel.getPlayer() == null || GameModel.getPlayer().position == null) return;
+
         Vector2 target = GameModel.getPlayer().position;
 
         for (AgentDef def : agentsToCreate) {
@@ -1484,25 +1445,12 @@ public class BodyFactory {
                     }
                     break;
                 case WALKER_SINGLE:
-                    ENEMY_ANIM randomWalker = Level.getInstance().getRandomWalker();
-                    AnimatedAgentBody walkerSingle = new AnimatedAgentBody(getAgentBody(def.getPosition(), true, true, createCircleShape(Config.WALKER_RADIUS), Config.WALKER_DENSITY), Config.TILE_SIZE_X / 2,
-                            ResourceFactory.getInstance().getWalkerAnimation(randomWalker));
+                    AgentBody walkerSingle = new AgentBody(getAgentBody(def.getPosition(), true, true, createCircleShape(Config.WALKER_RADIUS), Config.WALKER_DENSITY), Config.TILE_SIZE_X / 2,
+                            ResourceFactory.getInstance().getWorldTypeImage("enemy1"));
                     walkerSingle.bodyType = GameBody.BODY_TYPE.HUMANOID;
+                    walkerSingle.setMind(new PrioritizingMind());
                     BehaviorFactory.setupMeleeBehavior(target, walkerSingle, def.getPosition().cpy());
-                    LootFactory.getInstance().getWeapon(Level.getInstance().getWeaponFor(randomWalker)).onPickup(walkerSingle);
-                    break;
-                case WALKER_GROUP:
-                    ENEMY_ANIM randomGroupWalker = Level.getInstance().getRandomWalker();
-                    Neighborhood walkerNeighborhood = new Neighborhood();
-                    for (int i = 0; i < Config.GROUP_SIZE; i++) {
-                        AnimatedAgentBody groupWalker = new AnimatedAgentBody(getAgentBody(def.getPosition().cpy().add(MathUtils.random() * 2 - 1, MathUtils.random() * 2 - 1),
-                                true, true, createCircleShape(Config.WALKER_RADIUS), Config.WALKER_DENSITY), Config.TILE_SIZE_X / 2,
-                                ResourceFactory.getInstance().getWalkerAnimation(randomGroupWalker));
-                        walkerNeighborhood.addAgentBody(groupWalker);
-                        groupWalker.bodyType = GameBody.BODY_TYPE.HUMANOID;
-                        BehaviorFactory.setupMeleeGroupBehavior(target, groupWalker, def.getPosition().cpy(), walkerNeighborhood);
-                        LootFactory.getInstance().getWeapon(Level.getInstance().getWeaponFor(randomGroupWalker)).onPickup(groupWalker);
-                    }
+                    LootFactory.getInstance().getWeapon(Level.getInstance().getWeaponFor(ENEMY_IMAGE.WALKER_1)).onPickup(walkerSingle);
                     break;
                 case FLYER_SINGLE:
                     ENEMY_ANIM randomFlyer = Level.getInstance().getRandomFlyer();

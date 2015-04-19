@@ -1,5 +1,6 @@
 package no.dkit.android.ludum.core.game.model.body.item;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -54,6 +55,8 @@ public class CrateBody extends GameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive()) return;
 
+        spriteBatch.setColor(Color.MAROON);
+
         spriteBatch.disableBlending();
         spriteBatch.draw(image,
                 body.getPosition().x - Config.TILE_SIZE_X / 2, body.getPosition().y - Config.TILE_SIZE_Y / 2,
@@ -63,6 +66,8 @@ public class CrateBody extends GameBody {
                 body.getAngle() * MathUtils.radiansToDegrees,
                 true);
         spriteBatch.enableBlending();
+
+        spriteBatch.setColor(Color.WHITE);
     }
 
     @Override // Because of gravity

@@ -21,7 +21,9 @@ import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.factory.TextItem;
 import no.dkit.android.ludum.core.game.model.PlayerData;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
+import no.dkit.android.ludum.core.game.model.body.item.CannonBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.BlockBody;
+import no.dkit.android.ludum.core.game.model.body.scenery.LampBody;
 import no.dkit.android.ludum.core.game.quest.GameEvent;
 import no.dkit.android.ludum.core.game.quest.GameEventListener;
 
@@ -109,7 +111,8 @@ public class PlayerBody extends AgentBody implements GameEventListener {
             data.setHealth(health);
         }
 
-        SoundFactory.getInstance().playHitSound(bodyType);
+        //SoundFactory.getInstance().playHitSound(bodyType);
+
         final ParticleEmitter particleEmitter = EffectFactory.getInstance().addHitEffect(position, bodyType);
         particleEmitter.getAngle().setHigh(90, 90);
         particleEmitter.getAngle().setLow(90, 90);
@@ -122,6 +125,7 @@ public class PlayerBody extends AgentBody implements GameEventListener {
     public void onDeath() {
         SoundFactory.getInstance().playDieSound(bodyType);
         EffectFactory.getInstance().addDieEffect(position, bodyType);
+        SoundFactory.getInstance().playMusic(SoundFactory.MUSIC_TYPE.LOSE);
 
         TextFactory.getInstance().addTexts(0,
                 new TextItem("YOU DIED!!!", 0, Config.getDimensions().SCREEN_HEIGHT / 3, Color.RED),
@@ -215,9 +219,8 @@ public class PlayerBody extends AgentBody implements GameEventListener {
                 effectTimer = System.currentTimeMillis();
                 SoundFactory.getInstance().playHitSound(bodyType);
                 EffectFactory.getInstance().addHitEffect(position, bodyType);
-                TextFactory.getInstance().addText(new TextItem("Avoid ENEMIES", 0, Config.getDimensions().SCREEN_HEIGHT / 3, Color.WHITE), -.01f); // TODO: Change this to avoid object creation on repeat events
             }
-        } else if (other instanceof BlockBody) { // Walls
+        } else if (other instanceof BlockBody || other instanceof CannonBody || other instanceof LampBody) { // Walls
             justJumped = System.currentTimeMillis() - 50 < lastJump;
             if (hasCollided || justJumped) return;
             hasCollided = true;
@@ -297,6 +300,7 @@ public class PlayerBody extends AgentBody implements GameEventListener {
 
         lastJump = System.currentTimeMillis();
         loosenGrip();
+        SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.JUMP);
         body.setLinearVelocity(x * Config.JUMP_STRENGTH, y * Config.JUMP_STRENGTH);
     }
 

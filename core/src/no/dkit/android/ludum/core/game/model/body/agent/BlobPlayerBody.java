@@ -14,6 +14,9 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
     TextureRegion pupil;
     TextureRegion mouth;
 
+    float blobSizeXMod = 1f;
+    float blobSizeYMod = 1f;
+
     public BlobPlayerBody(Body body, float radius, PlayerData data, TextureRegion image, TextureRegion eye, TextureRegion pupil, TextureRegion mouth, CONTROL_MODE controlMode, BODY_TYPE type) {
         super(body, radius, data, image, controlMode, type);
         this.eye = eye;
@@ -25,12 +28,12 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive()) return;
 
-        spriteBatch.setColor(Config.COLOR_1_PURPLE);
+        spriteBatch.setColor(Config.COLOR_4_BLUE_LIGHT);
             spriteBatch.draw(image,
                     position.x - radius, position.y - radius,
                     radius, radius,
                     radius * 2, radius * 2,
-                    1, 1,
+                    1 * blobSizeXMod, 1 * blobSizeYMod,
                     angle,
                     true);
 
@@ -60,7 +63,7 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                 angle,
                 true);
 
-        spriteBatch.setColor(Config.COLOR_4_BLUE_LIGHT);
+        spriteBatch.setColor(Config.COLOR_5_BLUE_LIGHTEST);
         spriteBatch.draw(pupil,
                 position.x - radius - .1f, position.y - radius + .1f,
                 radius, radius,
@@ -77,5 +80,6 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                 angle,
                 true);
 
+        spriteBatch.setColor(Color.WHITE);
     }
 }

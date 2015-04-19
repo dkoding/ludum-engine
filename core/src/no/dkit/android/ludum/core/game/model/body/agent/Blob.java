@@ -1,5 +1,7 @@
 package no.dkit.android.ludum.core.game.model.body.agent;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -28,7 +30,8 @@ public class Blob extends AgentBody {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        //spriteBatch.setBlendFunction(GL20.GL_SRC_COLOR, GL20.GL_ONE);
+        spriteBatch.setColor(Color.GREEN);
+        spriteBatch.setBlendFunction(GL20.GL_SRC_COLOR, GL20.GL_ONE);
 
         spriteBatch.draw(image,
                 body.getPosition().x - radius, body.getPosition().y - radius,
@@ -47,7 +50,8 @@ public class Blob extends AgentBody {
                     0,
                     true);
         }
-        //spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        spriteBatch.setColor(Color.WHITE);
     }
 
     @Override

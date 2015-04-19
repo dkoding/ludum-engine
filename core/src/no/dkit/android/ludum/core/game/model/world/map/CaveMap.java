@@ -32,7 +32,7 @@ public class CaveMap extends AbstractMap {
 
         int largest = fillSmallCaves();
 
-        if (largest < Config.CAVE_SIZE * 5) {
+        if (largest < Config.CAVE_SIZE * 3) {
             level++;
             return createMap(level, inside, platforms);
         }

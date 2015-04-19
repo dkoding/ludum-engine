@@ -135,7 +135,7 @@ public class ResourceFactory implements AssetErrorListener {
     public Array<TextureAtlas.AtlasRegion> getWalkerAnimation(BodyFactory.ENEMY_ANIM type) {
         switch (type) {
             case WALKER_ANIM_1:
-                return getWorldTypeAnimation("player");
+                return getWorldTypeAnimation("walker");
         }
         throw new RuntimeException("Unknown walker image type " + type);
     }
@@ -143,7 +143,7 @@ public class ResourceFactory implements AssetErrorListener {
     public Array<TextureAtlas.AtlasRegion> getFlyerAnimation(BodyFactory.ENEMY_ANIM type) {
         switch (type) {
             case FLYER_ANIM_1:
-                return getWorldTypeAnimation("dragon");
+                return getWorldTypeAnimation("propeller");
         }
         throw new RuntimeException("Unknown flyer image type " + type);
     }
@@ -234,7 +234,7 @@ public class ResourceFactory implements AssetErrorListener {
             case UNIVERSE:
                 return new UniverseBackground(ResourceFactory.getInstance().getTransparentTexture("fog1"),
                         ResourceFactory.getInstance().getTransparentTexture("fog3"),
-                        ResourceFactory.getInstance().getFeatureImage(level.getRandomPlanetFeatureType()),
+                        ResourceFactory.getInstance().getWorldTypeImage("bgfeature"),
                         ResourceFactory.getInstance().getWorldTypeImage("star"),
                         worldWidth, worldHeight, mapWidth, mapHeight);
             default:

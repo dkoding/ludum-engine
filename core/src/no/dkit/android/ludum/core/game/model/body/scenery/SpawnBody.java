@@ -1,6 +1,7 @@
 package no.dkit.android.ludum.core.game.model.body.scenery;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -32,5 +33,11 @@ public class SpawnBody extends GameBody {
                             MathUtils.random(-Config.TILE_SIZE_Y, Config.TILE_SIZE_Y)
                     ));
         }
+    }
+
+    public void draw(SpriteBatch spriteBatch) {
+        spriteBatch.setColor(Color.RED);
+        super.draw(spriteBatch);
+        spriteBatch.setColor(Color.WHITE);
     }
 }
