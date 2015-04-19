@@ -58,11 +58,10 @@ import no.dkit.android.ludum.core.shaders.TerrainShader;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 public class GameModel {
     long lastCleanup = System.currentTimeMillis();
-    long updateBodiesInterval = (XXXX.performance == Config.PERFORMANCE.LOW ? 160 : 16); // Todo: More granularity diff bodies
+    long updateBodiesInterval = (XXXX.performance == Config.PERFORMANCE.LOW ? 80 : 16); // Todo: More granularity diff bodies
     boolean objectsDirty = true; // Don't get objects all the time
     public boolean panning = false;
     long lastTap = System.currentTimeMillis();

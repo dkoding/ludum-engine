@@ -52,7 +52,7 @@ public class Config {
 
     public static final int TURRET_TURN_SPEED = 3;
 
-    public static final int MAX_ENEMIES = 10;
+    public static final int MAX_ENEMIES = 5;
     public static final int MAX_CHASMS = 3;
     public static final int MAX_LOOT = 3;
     public static final int MAX_FEATURES = 50;

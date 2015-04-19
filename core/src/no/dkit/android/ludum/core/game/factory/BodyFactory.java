@@ -22,13 +22,10 @@ import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.Array;
 import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
-import no.dkit.android.ludum.core.game.ai.behaviors.single.Flee;
-import no.dkit.android.ludum.core.game.ai.behaviors.single.Seek;
 import no.dkit.android.ludum.core.game.ai.behaviors.single.WalkerFlee;
 import no.dkit.android.ludum.core.game.ai.behaviors.single.WalkerSeek;
 import no.dkit.android.ludum.core.game.ai.mind.PrioritizingMind;
 import no.dkit.android.ludum.core.game.model.GameModel;
-import no.dkit.android.ludum.core.game.model.PlayerData;
 import no.dkit.android.ludum.core.game.model.body.DiscardBody;
 import no.dkit.android.ludum.core.game.model.body.DiscardJoint;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
@@ -64,16 +61,14 @@ import no.dkit.android.ludum.core.game.model.body.scenery.SpawnBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.UpgradeBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.BombBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.BulletBody;
-import no.dkit.android.ludum.core.game.model.body.weapon.TongueBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.EnergyBallBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.ParticleBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.RocketBody;
+import no.dkit.android.ludum.core.game.model.body.weapon.TongueBody;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
 import no.dkit.android.ludum.core.shaders.RenderOperations;
-
-import java.util.Random;
 
 public class BodyFactory {
     public static final short LIGHT_BITS = (short) (Config.CATEGORY_SCENERY);
@@ -1047,7 +1042,7 @@ public class BodyFactory {
              if (i > 0 && i < particles)
                  BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], .1f, -.01f); // ANCHOR CAN NOT BE 0!!!!
              if (i == particles - 1)
-                 BodyFactory.getInstance().connectRope(owner, rest[i], .01f, .08f);
+                 BodyFactory.getInstance().connectRope(owner, rest[i], .02f, .1f);
          }
 
          tongue = new TongueBody(tip, rest, bulletFixture.shape.getRadius(), ResourceFactory.getInstance().getBulletImage("tongue"), null, null, 0, 1);
@@ -1416,9 +1411,11 @@ public class BodyFactory {
     }
 
     public void createLights() {
-        for (LightSourceDef def : lightSourcesToCreate) {
-            Body body = getDefaultLightBody(def.getPosition());
-            new LightBody(body, 1, LightFactory.getInstance().getLightForType(def.getType()), -def.getLightMod(), def.getNumRepetitions());
+        if(XXXX.performance == Config.PERFORMANCE.HIGH) {
+            for (LightSourceDef def : lightSourcesToCreate) {
+                Body body = getDefaultLightBody(def.getPosition());
+                new LightBody(body, 1, LightFactory.getInstance().getLightForType(def.getType()), -def.getLightMod(), def.getNumRepetitions());
+            }
         }
 
         lightSourcesToCreate.clear();

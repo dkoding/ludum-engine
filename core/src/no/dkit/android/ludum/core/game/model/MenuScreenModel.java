@@ -179,7 +179,7 @@ public class MenuScreenModel {
     }
 
     private String getLevelLabel() {
-        return "Level " + LevelFactory.level + ": " + level.getClass().getSimpleName() + ":" + level.getWorldType() + ":" + level.getMap().getClass().getSimpleName();
+        return "Drag mouse to jump. Tap mouse to slurp and lick! Save your children and find the exit.";
     }
 
     private void updateMapImage() {
