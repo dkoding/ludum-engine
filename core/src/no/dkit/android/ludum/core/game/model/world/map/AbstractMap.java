@@ -996,7 +996,7 @@ public abstract class AbstractMap {
         placeAllItems(level, levelType, space, surface, inside, platforms);
 
         clearOccupied(ROOM);
-        printMap(map2d);
+        //printMap(map2d);
     }
 
     private void placeAllItems(int level, Level.LEVEL_TYPE levelType, int space, int surface, boolean inside, boolean chasms) {

@@ -425,10 +425,10 @@ public class GameView {
                 true);
 
         spriteBatch.draw(glow,
-                gameModel.getPlayerBody().position.x - Config.TILE_SIZE_X, gameModel.getPlayerBody().position.y,
+                gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y,
                 Config.TILE_SIZE_X, 0,
                 Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
-                .1f, firingDirection.len(),
+                .1f, firingDirection.len() * 2,
                 firingAngle,
                 true);
 
@@ -459,11 +459,11 @@ public class GameView {
                 0,
                 true);
 
-        spriteBatch.draw(beam,
-                gameModel.getPlayerBody().position.x - Config.TILE_SIZE_X, gameModel.getPlayerBody().position.y,
+             spriteBatch.draw(beam,
+                gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y,
                 Config.TILE_SIZE_X, 0,
                 Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
-                .1f, firingDirection.len(),
+                .1f, firingDirection.len() * 2,
                 firingAngle,
                 true);
 
