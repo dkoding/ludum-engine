@@ -55,7 +55,7 @@ public class CrateBody extends GameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive()) return;
 
-        spriteBatch.setColor(Color.MAROON);
+        spriteBatch.setColor(Config.COLOR_3_BLUE_MEDIUM);
 
         spriteBatch.disableBlending();
         spriteBatch.draw(image,

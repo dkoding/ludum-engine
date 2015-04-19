@@ -137,9 +137,19 @@ public class PlayerBody extends AgentBody implements GameEventListener {
 
         timeOfDeath = System.currentTimeMillis();
 
+        final int i = Config.getDimensions().SCREEN_HEIGHT / 20;
+        final int total =
+                getData().getCredits() * 100
+                        + getData().getOrbs() * 1000
+                        + getData().getRescues() * 10000;
+
         TextFactory.getInstance().addTexts(0,
-                new TextItem("YOU DIED!!!", 0, Config.getDimensions().SCREEN_HEIGHT / 3, Color.RED),
-                new TextItem("Tap to exit...", 0, Config.getDimensions().SCREEN_HEIGHT / 4, Color.WHITE)
+                new TextItem("TOTAL: : " + total, 0, i * 3, Color.WHITE),
+                new TextItem(getData().getRescues() + " Rescues x 10000: " + getData().getRescues() * 10000, 0, i * 4, Color.WHITE),
+                new TextItem(getData().getOrbs() + " Orbs x 1000: " + getData().getOrbs() * 1000, 0, i * 5, Color.WHITE),
+                new TextItem(getData().getCredits() + " Treasure x 100: " + getData().getCredits() * 100, 0, i * 6, Color.WHITE),
+                new TextItem("Final Score", 0, i * 7, Color.WHITE),
+                new TextItem("YOU DIED!!!", 0, i * 8, Color.WHITE)
         );
 
         unconscious = true;
@@ -267,7 +277,6 @@ public class PlayerBody extends AgentBody implements GameEventListener {
 
     public void collide(int damage) {
         hit(damage);
-        TextFactory.getInstance().addText("Avoid smashing into walls");
     }
 
     public void fireBullet1(Vector2 touchPos) {
@@ -334,7 +343,8 @@ public class PlayerBody extends AgentBody implements GameEventListener {
     }
 
     public void addImpulse(float impulse) {
-        this.impulse = impulse;
+        if(impulse > 5) this.impulse = 5f;
+        else this.impulse = impulse;
     }
 
     public float getImpulse() {

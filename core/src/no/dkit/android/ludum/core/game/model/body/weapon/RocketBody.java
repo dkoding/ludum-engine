@@ -80,7 +80,7 @@ public class RocketBody extends WeaponBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive()) return;
 
-        spriteBatch.setColor(Color.GRAY);
+        spriteBatch.setColor(Config.COLOR_3_BLUE_MEDIUM);
         spriteBatch.draw(image,
                 body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2,
                 getWidth() / 2, getHeight() / 2,

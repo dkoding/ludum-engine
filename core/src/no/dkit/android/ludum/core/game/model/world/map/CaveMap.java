@@ -64,7 +64,6 @@ public class CaveMap extends AbstractMap {
 
         replaceAll(OCCUPIED, OUTSIDEBORDERS, map2d);
 
-        printMap(map2d);
         return this;
     }
 

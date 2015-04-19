@@ -20,6 +20,7 @@ import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.ShaderFactory;
 import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.factory.TextFactory;
+import no.dkit.android.ludum.core.game.model.PlayerData;
 import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.transition.DoneCallback;
 import no.dkit.android.ludum.core.game.transition.TransitionScreen;
@@ -28,6 +29,7 @@ public class XXXX extends ApplicationAdapter {
     private static boolean isChanging = false;
     private static Game game;
     private static Screen existingGameScreen;
+    public static PlayerData playerData;
 
     public static Config.PERFORMANCE performance;
 
@@ -105,6 +107,7 @@ public class XXXX extends ApplicationAdapter {
         Screen newScreen = null;
 
         if (to.equals(SCREEN.STARTMENU)) {
+            playerData = new PlayerData();
             newScreen = new MenuScreen();
         } else if (to.equals(SCREEN.HELP)) {
             newScreen = new HelpScreen();

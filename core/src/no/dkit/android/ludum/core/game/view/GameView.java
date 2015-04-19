@@ -67,7 +67,7 @@ public class GameView {
 
         camera.update();
 
-        MathUtils.random = new Random(Config.RANDOM_SEED + LevelFactory.level);
+        MathUtils.random.setSeed(Config.RANDOM_SEED + LevelFactory.level);
 
         if (Config.DEBUG)
             worldRenderer = new Box2DDebugRenderer(true, true, true, true, true, true);

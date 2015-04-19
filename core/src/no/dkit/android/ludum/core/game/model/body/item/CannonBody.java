@@ -68,6 +68,8 @@ public class CannonBody extends DirectionalGameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive()) return;
 
+        spriteBatch.setColor(Color.WHITE);
+
         spriteBatch.draw(image,
                 body.getPosition().x - radius,
                 body.getPosition().y - radius,

@@ -24,6 +24,9 @@ public class SoundFactory implements AssetErrorListener {
     static SoundFactory soundFactory;
 
     private Music music;
+    private long lastPlayTime;
+    private Sound currentSound;
+    private Sound newSound;
 
     public enum SOUND_TYPE {
         OUCH1, SCREAM, JUMP,
@@ -83,7 +86,7 @@ public class SoundFactory implements AssetErrorListener {
     }
 
     protected SoundFactory() {
-        MathUtils.random = new Random(Config.RANDOM_SEED + LevelFactory.level);
+        MathUtils.random.setSeed(Config.RANDOM_SEED + LevelFactory.level);
 
         manager = new AssetManager();
         manager.setErrorListener(this);
@@ -201,7 +204,13 @@ public class SoundFactory implements AssetErrorListener {
      * @return the id of the sound instance if successful, or -1 on failure.
      */
     public void playSound(SOUND_TYPE type, float pitch) {
-        manager.get(soundpath + soundFileNames.get(type) + soundFormat, Sound.class).play(1f, pitch, 0f);
+        newSound = manager.get(soundpath + soundFileNames.get(type) + soundFormat, Sound.class);
+        if(newSound == currentSound) return;
+        if(System.currentTimeMillis() - lastPlayTime <= 3) return;      // Prevent too many sounds playing
+
+        lastPlayTime = System.currentTimeMillis();
+        newSound.play(1f, pitch, 0f);
+        currentSound = newSound;
     }
 
     public void playSound(SOUND_TYPE type) {

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
+import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.controller.GameScreen;
 import no.dkit.android.ludum.core.game.factory.LightFactory;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
@@ -18,7 +19,7 @@ public class ExitBody extends ShadedBody {
 
     public ExitBody(Body body, float radius, Level.LEVEL_TYPE type, TextureRegion image, float rotationMod, AbstractShader shader, TextureRegion maskRegion) {
         super(body, radius, shader);
-        Light light = LightFactory.getInstance().getLight(position.x, position.y, radius, 16, Color.GRAY);
+        Light light = LightFactory.getInstance().getLight(position.x, position.y, radius, 16, Config.COLOR_5_BLUE_LIGHTEST);
         light.setStaticLight(true);
         addLight(light);
         this.exitType = type;

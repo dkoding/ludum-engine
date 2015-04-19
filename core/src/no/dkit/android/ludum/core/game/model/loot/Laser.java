@@ -1,8 +1,10 @@
 package no.dkit.android.ludum.core.game.model.loot;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import no.dkit.android.ludum.core.game.factory.LaserFactory;
 import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
+import no.dkit.android.ludum.core.game.model.world.map.featureobstacle.Feature;
 
 public class Laser extends Weapon {
     public Laser() {
@@ -10,6 +12,10 @@ public class Laser extends Weapon {
                 LOOT_TYPE.LASER,
                 "laser"
         );
+
+        emitters = MathUtils.random(1,3);
+        strength = MathUtils.random(1,7);
+        sideAngle = MathUtils.random(3,7);
     }
 
     public void fire1() {

@@ -99,6 +99,7 @@ public class MenuScreenModel {
             }
         });
 
+/*
         Button prevButton = new Button(new Image(left), skin, TRANSPARENT);
 
         prevButton.addListener(new ClickListener() {
@@ -111,6 +112,7 @@ public class MenuScreenModel {
                 }
             }
         });
+*/
 
         final Button toggleSound = new Button(new Image(soundImage), skin, TOGGLE);
         final Button toggleVibrate = new Button(new Image(vibrateImage), skin, TOGGLE);
@@ -151,19 +153,22 @@ public class MenuScreenModel {
         window.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         window.defaults().pad(10);
 
-        window.add(imageActor).size(logo.getRegionWidth(), logo.getRegionHeight()).colspan(3);
+        window.add(imageActor).size(logo.getRegionWidth(), logo.getRegionHeight());
         window.row();
+/*
         window.add(prevButton).size(200, 200);
-        window.add(mapActor).size(200, 200);
-        window.add(nextButton).size(200, 200);
+*/
+        window.add(nextButton).size(50, 50);
         window.row();
-        window.add(levelLabel).colspan(3);
+        window.add(mapActor).size(200, 200);
+        window.row();
+        window.add(levelLabel);
         window.row();
         //window.add(toggleVibrate).size(100, 100);
-        window.add(playButton).colspan(3);
+        window.add(playButton);
         //window.add(toggleSound).size(100, 100);
         window.row();
-        window.add(fpsLabel).colspan(3);
+        window.add(fpsLabel);
         //window.pack();
 
         // stage.addActor(new Button("Behind Window", skin));

@@ -87,7 +87,7 @@ public class GameScreen implements Screen, InputProcessor {
             Input.Keys.SHIFT_LEFT
     };
 
-    private static ImageButton mapButton;
+//    private static ImageButton mapButton;
     private static Button upgradeButton;
     private static Button travelSidescrollButton;
     private static Button noTravelSidescrollButton;
@@ -118,6 +118,7 @@ public class GameScreen implements Screen, InputProcessor {
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
+/*
         mapButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(gameModel.getMap().getImage()))) {
             @Override
             public void draw(Batch batch, float parentAlpha) {
@@ -125,6 +126,7 @@ public class GameScreen implements Screen, InputProcessor {
                 super.draw(batch, .5f);
             }
         };
+*/
 
         upgradeButton = new Button(new Image(ResourceFactory.getInstance().getImage(ResourceFactory.UI, "wrench")), skin, TRANSPARENT);
         upgradeButton.setVisible(false);
@@ -137,6 +139,7 @@ public class GameScreen implements Screen, InputProcessor {
         travelTopdownButton = new Button(new Image(ResourceFactory.getInstance().getImage(ResourceFactory.UI, "traveltopdown")), skin, TRANSPARENT);
         travelTopdownButton.setVisible(false);
 
+/*
         mapButton.addListener(new ClickListener() {
 
             @Override
@@ -144,6 +147,7 @@ public class GameScreen implements Screen, InputProcessor {
                 XXXX.changeScreen(XXXX.SCREEN.STARTMENU);
             }
         });
+*/
         upgradeButton.addListener(new ClickListener() {
 
             @Override
@@ -200,8 +204,10 @@ public class GameScreen implements Screen, InputProcessor {
         Table mapWindow = new Table(skin);
         mapWindow.defaults();
         mapWindow.pad(5);
+/*
         mapWindow.add(mapButton).size(100, 100);
         mapButton.getImageCell().fill().expand();
+*/
         mapWindow.pack();
         mapWindow.setPosition(0, Config.getDimensions().SCREEN_HEIGHT - mapWindow.getHeight());
 

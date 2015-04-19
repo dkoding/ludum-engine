@@ -88,7 +88,7 @@ public class TongueBody extends WeaponBody {
     public void draw(SpriteBatch spriteBatch) {
         tongueColor = Color.RED.cpy();
 
-        for (int i = rest.length-1; i > -1 ; i--) {
+        for (int i = rest.length - 1; i > -1; i--) {
             tongueColor.set(1f - (i * mod), 0, 0, .9f);
             spriteBatch.setColor(tongueColor);
 
@@ -96,7 +96,7 @@ public class TongueBody extends WeaponBody {
                     rest[i].getPosition().x - radius, rest[i].getPosition().y - radius,
                     radius, radius,
                     radius * 2, radius * 2,
-                    4f/((i * .2f) + 1f), 4f/((i * .2f) + 1f),
+                    4f / ((i * .2f) + 1f), 4f / ((i * .2f) + 1f),
                     0,
                     true);
         }
@@ -122,7 +122,7 @@ public class TongueBody extends WeaponBody {
                     0,
                     true);
 
-        spriteBatch.setColor(Color.BLUE);
+        spriteBatch.setColor(Config.COLOR_4_BLUE_LIGHT);
 
         if (pupilImage != null)
             spriteBatch.draw(pupilImage,
@@ -174,15 +174,20 @@ public class TongueBody extends WeaponBody {
     public void lick(Vector2 target, Vector2 firingDirection) {
         slurp(target);
         tip.applyForceToCenter(firingDirection.nor().scl(speed), true);
-        for (Body limb : rest) {
-            limb.applyForceToCenter(firingDirection.nor().scl(speed), true);
+        for (int i = rest.length - 1; i > 0; i--) {
+            rest[i].applyForceToCenter(firingDirection.nor().scl(speed), true);
         }
     }
 
     public void slurp(Vector2 target) {
         tip.setTransform(target.x, target.y, 0);
-        for (Body limb : rest) {
-            limb.setTransform(target.x, target.y, 0);
+        tip.setAngularVelocity(0);
+        tip.setLinearVelocity(0, 0);
+
+        for (int i = rest.length - 1; i > 0; i--) {
+            rest[i].setAngularVelocity(0);
+            rest[i].setLinearVelocity(0, 0);
+            rest[i].setTransform(target.x, target.y, 0);
         }
     }
 

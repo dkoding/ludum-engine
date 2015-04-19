@@ -1,6 +1,5 @@
 package no.dkit.android.ludum.core.game.model;
 
-import box2dLight.Light;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -26,7 +25,6 @@ import no.dkit.android.ludum.core.game.factory.LightFactory;
 import no.dkit.android.ludum.core.game.factory.LootFactory;
 import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.ShaderFactory;
-import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.factory.TextItem;
 import no.dkit.android.ludum.core.game.model.body.DiscardBody;
@@ -259,7 +257,7 @@ public class GameModel {
     }
 
     private void createTiles(Level level) {
-        MathUtils.random = new Random(Config.RANDOM_SEED + LevelFactory.level);
+        MathUtils.random.setSeed(Config.RANDOM_SEED + LevelFactory.level);
 
         tiles = new GameBody[level.getMap().getSizeX()][level.getMap().getSizeY()];
 
@@ -789,24 +787,6 @@ public class GameModel {
 
     public Map getMap() {
         return map;
-    }
-
-    private void wonLevel() {
-        TextFactory.getInstance().addText(new TextItem("LEVEL CLEARED"), 0f);
-
-        int counter = 0;
-
-        SoundFactory.getInstance().playMusic(SoundFactory.MUSIC_TYPE.WIN);
-
-        while (counter < 50) {
-            Vector2 position = playerBody.position;
-            position.add(MathUtils.random(-Config.getDimensions().WORLD_WIDTH / 2, Config.getDimensions().WORLD_WIDTH / 2),
-                    MathUtils.random(-Config.getDimensions().WORLD_HEIGHT / 2, Config.getDimensions().WORLD_HEIGHT / 2));
-            EffectFactory.getInstance().addEffect(position, EffectFactory.EFFECT_TYPE.ACHIEVE);
-            Light light = LightFactory.getInstance().getLight(position.x, position.y, Config.TILE_SIZE_X * 2, 6, new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1));
-            light.setStaticLight(true);
-            counter++;
-        }
     }
 
     public RenderOperations getBackground() {

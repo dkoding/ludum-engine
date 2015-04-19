@@ -20,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.Array;
+import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.ai.behaviors.single.Flee;
 import no.dkit.android.ludum.core.game.ai.behaviors.single.Seek;
@@ -176,7 +177,7 @@ public class BodyFactory {
     protected BodyFactory(final World world) {
         BodyFactory.world = world;
 
-        MathUtils.random = new Random(Config.RANDOM_SEED + LevelFactory.level);
+        MathUtils.random.setSeed(Config.RANDOM_SEED + LevelFactory.level);
 
         createTriggerAttributes(createCircleShape(Config.TILE_SIZE_X / 2));
         createCrateAttributes(createCenteredBoxShape(Config.TILE_SIZE_X / 2, Config.TILE_SIZE_Y / 2));
@@ -756,7 +757,7 @@ public class BodyFactory {
     }
 
     public void createBullet(Loot.LOOT_TYPE type, Vector2 source, Vector2 velocity, TextureRegion bulletImage, int damage, boolean playerOwned) {
-        bulletsToCreate.add(new BulletDef(type, source.x, source.y, velocity.x, velocity.y, bulletImage, damage, playerOwned));
+        bulletsToCreate.add(new BulletDef(type, source.x, source.y, velocity.x, velocity.y, bulletImage, damage, false));
     }
 
     public void createAgent(ENEMY_TYPE type, Vector2 position) {
@@ -906,7 +907,7 @@ public class BodyFactory {
                     ResourceFactory.getInstance().getImage(ResourceFactory.UI, "star"), Color.WHITE);
         else
             return new LootBody(body, fixtureDef.shape.getRadius(), loot.getType(), ResourceFactory.getInstance().getItemImage(loot.getImageName()),
-                    ResourceFactory.getInstance().getImage(ResourceFactory.UI, "star"), Color.YELLOW);
+                    ResourceFactory.getInstance().getImage(ResourceFactory.UI, "star"), Config.COLOR_5_BLUE_LIGHTEST);
     }
 
     private FixtureDef getItemFixtureDef(int type) {
@@ -1000,30 +1001,32 @@ public class BodyFactory {
 
     public PlayerBody createShipPlayer(Vector2 playerPosition) {
         Body body = getDefaultPlayerBody(playerPosition, false);
-        return new PlayerBody(body, Config.TILE_SIZE_X / 2, new PlayerData(),
+        return new PlayerBody(body, Config.TILE_SIZE_X / 2, XXXX.playerData,
                 ResourceFactory.getInstance().getWorldTypeImage("player"),
                 PlayerBody.CONTROL_MODE.NEWTONIAN, GameBody.BODY_TYPE.SPACESHIP);
     }
 
     public PlayerBody createTopDownPlayer(Vector2 playerPosition) {
         Body body = getDefaultPlayerBody(playerPosition, true);
-        return new AnimatedPlayerBody(body, Config.TILE_SIZE_X / 2, new PlayerData(), ResourceFactory.getInstance().getWorldTypeAnimation("player"),
+        return new AnimatedPlayerBody(body, Config.TILE_SIZE_X / 2, XXXX.playerData, ResourceFactory.getInstance().getWorldTypeAnimation("player"),
                 PlayerBody.CONTROL_MODE.DIRECT, GameBody.BODY_TYPE.HUMANOID);
     }
 
     public PlayerBody createTopDownPlayerVehicle(Vector2 playerPosition) {
         Body body = getVehiclePlayerBody(playerPosition, false);
-        return new PlayerVehicleBody(body, Config.TILE_SIZE_X / 2, new PlayerData(),
+        return new PlayerVehicleBody(body, Config.TILE_SIZE_X / 2, XXXX.playerData,
                 ResourceFactory.getInstance().getWorldTypeImage("tank"),
                 ResourceFactory.getInstance().getWorldTypeImage("tankgun"));
     }
 
     public PlayerBody createSidescrollPlayer(Vector2 playerPosition) {
+        XXXX.playerData.setKeys(0);
+
         Body body = getDefaultPlayerBody(playerPosition, true);
         createTongue(body);
         //createDongue(body);
 
-        return new BlobPlayerBody(body, Config.TILE_SIZE_X / 2, new PlayerData(),
+        return new BlobPlayerBody(body, Config.TILE_SIZE_X / 2, XXXX.playerData,
                 ResourceFactory.getInstance().getWorldTypeImage("player"),
                 ResourceFactory.getInstance().getWorldTypeImage("eye"),
                 ResourceFactory.getInstance().getWorldTypeImage("pupil"),
@@ -1040,11 +1043,11 @@ public class BodyFactory {
              rest[i] = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y, 0, 0, true, .1f / ((i * .1f) + 1f));
 
              if (i == 0)
-                 BodyFactory.getInstance().connectRope(tip, rest[0], .1f, .1f); // ANCHOR CAN NOT BE 0!!!!
+                 BodyFactory.getInstance().connectRope(tip, rest[0], .1f, -.01f); // ANCHOR CAN NOT BE 0!!!!
              if (i > 0 && i < particles)
-                 BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], .1f, .1f); // ANCHOR CAN NOT BE 0!!!!
+                 BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], .1f, -.01f); // ANCHOR CAN NOT BE 0!!!!
              if (i == particles - 1)
-                 BodyFactory.getInstance().connectRope(owner, rest[i], .01f, .02f);
+                 BodyFactory.getInstance().connectRope(owner, rest[i], .01f, .01f);
          }
 
          tongue = new TongueBody(tip, rest, bulletFixture.shape.getRadius(), ResourceFactory.getInstance().getBulletImage("tongue"), null, null, 0, 1);

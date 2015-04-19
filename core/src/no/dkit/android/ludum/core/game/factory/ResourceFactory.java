@@ -55,7 +55,7 @@ public class ResourceFactory implements AssetErrorListener {
 
     protected ResourceFactory() {
         ResourceFactory.level_type = null;
-        MathUtils.random = new Random(Config.RANDOM_SEED + LevelFactory.level);
+        MathUtils.random.setSeed(Config.RANDOM_SEED + LevelFactory.level);
 
         manager = new AssetManager();
         manager.setErrorListener(this);
@@ -70,7 +70,7 @@ public class ResourceFactory implements AssetErrorListener {
 
     protected ResourceFactory(Level.LEVEL_TYPE level_type) {
         ResourceFactory.level_type = level_type;
-        MathUtils.random = new Random(Config.RANDOM_SEED + LevelFactory.level);
+        MathUtils.random.setSeed(Config.RANDOM_SEED + LevelFactory.level);
 
         manager = new AssetManager();
         manager.setErrorListener(this);

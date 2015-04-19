@@ -11,6 +11,7 @@ public class PlayerData {
     float minSpeed = Config.PLAYER_MIN_SPEED;
     int score;
     private int keys = 0;
+    private int rescues = 0;
 
     public PlayerData() {
         health = Config.PLAYER_START_HEALTH;
@@ -20,16 +21,6 @@ public class PlayerData {
         keys = Config.PLAYER_START_KEYS;
         maxSpeed = Config.PLAYER_MAX_SPEED;
         minSpeed = Config.PLAYER_MIN_SPEED;
-    }
-
-    public PlayerData(int health, int armor, int orbs, int keys, int credits, float maxSpeed, float minSpeed) {
-        this.health = health;
-        this.armor = armor;
-        this.orbs = orbs;
-        this.credits = credits;
-        this.maxSpeed = maxSpeed;
-        this.minSpeed = minSpeed;
-        this.keys = keys;
     }
 
     public int getHealth() {
@@ -82,6 +73,7 @@ public class PlayerData {
 
     public void addKey() {
         this.keys++;
+        this.rescues++;
     }
 
     public void removeKey() {
@@ -122,5 +114,13 @@ public class PlayerData {
 
     public void removeArmor(int armor) {
         this.armor -= armor;
+    }
+
+    public int getRescues() {
+        return rescues;
+    }
+
+    public void setKeys(int keys) {
+        this.keys = keys;
     }
 }

@@ -1,12 +1,10 @@
 package no.dkit.android.ludum.core.game.model.body.item;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import no.dkit.android.ludum.core.game.Config;
-import no.dkit.android.ludum.core.game.factory.LightFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.loot.Weapon;
@@ -20,8 +18,6 @@ public class RotatingGunBody extends GameBody {
 
     public RotatingGunBody(Body body, float radius, TextureAtlas.AtlasRegion image, Weapon weapon, float rotationMod, boolean alternateFire) {
         super(body, radius, image);
-        addLight(LightFactory.getInstance().getLight(position.x, position.y, Config.TILE_SIZE_X * 2, 4, Color.RED));
-        light.setStaticLight(true);
         lightMod = .1f;
         bodyType = BODY_TYPE.METAL;
         this.weapon = weapon;

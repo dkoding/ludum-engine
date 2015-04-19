@@ -1,9 +1,11 @@
 package no.dkit.android.ludum.core.game;
 
 import com.badlogic.gdx.graphics.Color;
+import no.dkit.android.ludum.core.game.model.PlayerData;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class Config {
+    public static int rescues = 0;      // Ugly but what the hell...
     public static final float TONGUE_SPEED = 30f;
     public static Color COLOR_1_PURPLE = Color.valueOf("7a00ff");
     public static Color COLOR_2_BLUE_DARK = Color.valueOf("2a0ce8");
