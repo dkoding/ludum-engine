@@ -15,7 +15,7 @@ public class HtmlLauncher extends GwtApplication {
 
     @Override
     public ApplicationListener getApplicationListener() {
-        Config.initialize(1280, 720);
+        Config.initialize(900, 600);
         return new XXXX(Config.PERFORMANCE.LOW);
     }
 }
