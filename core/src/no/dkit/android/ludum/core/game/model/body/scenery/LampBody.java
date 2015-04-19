@@ -37,7 +37,8 @@ public class LampBody extends DirectionalGameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive() || image == null) return;
 
-        spriteBatch.setColor(this.color);
+        spriteBatch.setColor(this.color.r, this.color.g, this.color.b, 1f);
+
         spriteBatch.draw(image,
                 body.getPosition().x - radius,
                 body.getPosition().y - radius,

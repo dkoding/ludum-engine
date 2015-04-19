@@ -101,8 +101,8 @@ public class UniverseBackground extends MovingBackground {
         float radius = planetImage.getRegionWidth() * Config.getDimensions().WORLD_ON_SCREEN_FACTOR;
 
         spriteBatch.draw(planetImage,
-                planetX - (radius / 2) + ((x - planetX) / worldwidth * 9),
-                planetY - (radius / 2) + ((y - planetY) / worldheight * 9),
+                planetX - (radius / 2) + ((x - planetX) / worldwidth),
+                planetY - (radius / 2) + ((y - planetY) / worldheight),
                 radius / 2, radius / 2,
                 radius, radius,
                 1, 1,

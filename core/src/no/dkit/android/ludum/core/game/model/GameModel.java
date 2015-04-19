@@ -268,28 +268,30 @@ public class GameModel {
         final TextureAtlas.AtlasRegion corridorImage = ResourceFactory.getInstance().getWorldTypeImage(level.getCorridorImage());
         final Texture wallTexture = ResourceFactory.getInstance().getTexture(level.getWallTexture());
 
+        final AbstractMap map = level.getMap();
+
         for (int x = 0; x < level.getMap().getSizeX(); x++) {
             for (int y = 0; y < level.getMap().getSizeY(); y++) {
-                if (level.getMap().map2d[x][y] != UniverseMap.CLEAR) {
-                    tiles[x][y] = BodyFactory.getInstance().createMapTile(x, y, level.getMap().map2d[x][y], level.getMap().mapDirection[x][y],
+                if (map.map2d[x][y] != UniverseMap.CLEAR && map.map2d[x][y] != UniverseMap.OUTSIDEBORDERS) {
+                    tiles[x][y] = BodyFactory.getInstance().createMapTile(x, y, map.map2d[x][y], map.mapDirection[x][y],
                             indoorImage, doorImage, corridorImage, wallTexture
                     );
                     if (tiles[x][y] instanceof FeatureBody)
                         featureBodies.add((FeatureBody) tiles[x][y]);
                 }
 
-                if (level.getMap().item[x][y] != UniverseMap.CLEAR) {
-                    if (level.getMap().item[x][y] == AbstractMap.ITEM_FEATURE) {
+                if (map.item[x][y] != UniverseMap.CLEAR) {
+                    if (map.item[x][y] == AbstractMap.ITEM_FEATURE) {
                         FeatureBody item;
 
-                        if (level.getMap().map2d[x][y] == AbstractMap.ROOM)
+                        if (map.map2d[x][y] == AbstractMap.ROOM)
                             item = BodyFactory.getInstance().createFeature(x, y, level.getRandomIndoorFeatureType());
                         else
                             item = BodyFactory.getInstance().createFeature(x, y, level.getRandomOutdoorFeatureType());
 
                         featureBodies.add(item);
                     } else
-                        BodyFactory.getInstance().createItem(x, y, level.getMap().item[x][y], level.getMap().itemDirection[x][y]);
+                        BodyFactory.getInstance().createItem(x, y, map.item[x][y], map.itemDirection[x][y]);
                 }
             }
         }
@@ -349,7 +351,7 @@ public class GameModel {
         if (Config.DEBUGTEXT)
             endMeasure("Checked collissions");
 
-        LightFactory.getInstance().updatePlayerLights(playerBody.getAngle(), worldMap.map2d[(int) (playerBody.position.x + Config.TILE_SIZE_X)][(int) (playerBody.position.y + Config.TILE_SIZE_Y)]);
+        //LightFactory.getInstance().updatePlayerLights(playerBody.getAngle(), worldMap.map2d[(int) (playerBody.position.x + Config.TILE_SIZE_X)][(int) (playerBody.position.y + Config.TILE_SIZE_Y)]);
     }
 
     private void startMeasure() {
@@ -600,7 +602,12 @@ public class GameModel {
     }
 
     public void longpress(float x, float y) {
-        if (playerBody.isDead()) afterGameOver();
+        if (playerBody.isDead()) {
+            if(System.currentTimeMillis() - 5000 > playerBody.timeOfDeath)
+                afterGameOver();
+            else return;
+        }
+
         touchPos.set(x, y, 0);
         camera.unproject(touchPos);
         aimPos.set(touchPos.x, touchPos.y);
@@ -609,7 +616,13 @@ public class GameModel {
 
     public void touch(float x, float y, int button) {
         lastTap = System.currentTimeMillis();
-        if (playerBody.isDead()) afterGameOver();
+
+        if (playerBody.isDead()) {
+            if(System.currentTimeMillis() - 5000 > playerBody.timeOfDeath)
+                afterGameOver();
+            else return;
+        }
+
         touchPos.set(x, y, 0);
         camera.unproject(touchPos);
         aimPos.set(touchPos.x, touchPos.y);

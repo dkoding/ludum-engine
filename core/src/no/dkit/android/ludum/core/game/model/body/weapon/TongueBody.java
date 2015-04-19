@@ -88,15 +88,15 @@ public class TongueBody extends WeaponBody {
     public void draw(SpriteBatch spriteBatch) {
         tongueColor = Color.RED.cpy();
 
-        for (int i = 0; i < rest.length; i++) {
-            tongueColor.set(1f - (i * mod), 0, 0, 1f);
+        for (int i = rest.length-1; i > -1 ; i--) {
+            tongueColor.set(1f - (i * mod), 0, 0, .9f);
             spriteBatch.setColor(tongueColor);
 
             spriteBatch.draw(image,
                     rest[i].getPosition().x - radius, rest[i].getPosition().y - radius,
                     radius, radius,
                     radius * 2, radius * 2,
-                    4f/((i * .3f) + 1f), 4f/((i * .3f) + 1f),
+                    4f/((i * .2f) + 1f), 4f/((i * .2f) + 1f),
                     0,
                     true);
         }

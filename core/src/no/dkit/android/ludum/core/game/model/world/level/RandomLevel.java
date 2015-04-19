@@ -8,15 +8,15 @@ import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
 import java.util.Random;
 
 public class RandomLevel extends Level {
+    int attempts = 0;
+
     public RandomLevel(LEVEL_TYPE worldType, int level) throws RuntimeException {
         super(worldType, level, false, false);
 
         MathUtils.random = new Random(Config.RANDOM_SEED + level);
 
-        if (worldType == LEVEL_TYPE.TOPDOWN) {
-            this.platforms = MathUtils.randomBoolean();
-            this.inside = MathUtils.randomBoolean();
-        }
+        inside = false;
+        platforms = false;
 
         this.map = MapFactory.getInstance().getRandomMap(worldType, level, inside, platforms); // Inside + platforms make no sense
 
@@ -27,9 +27,17 @@ public class RandomLevel extends Level {
         this.map.removeAllHints();
 
         // Must sanity check random maps
-        if (!sanityChecked()) {
-            throw new RuntimeException("Sanity check failed!");
+        while (!sanityChecked()) {
+            attempts++;
+            map.item = new int[map.getSizeX()][map.getSizeY()];
+            map.itemDirection = new int[map.getSizeX()][map.getSizeY()];
+            addItems(worldType, level);
+            getDefaultPlayerStartPosition(worldType);
+
+            if (attempts > 100) throw new RuntimeException("Could not use this map...");
         }
+
+        this.map.removeAllHints();
     }
 
     @Override

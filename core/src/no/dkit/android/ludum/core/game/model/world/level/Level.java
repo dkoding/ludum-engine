@@ -236,29 +236,10 @@ public abstract class Level {
         weaponTypes.clear();
         lootTypes.clear();
 
-        switch (worldType) {
-            case SIDESCROLL: // First weapon is default weapon
-                weaponTypes.addAll(
-                        Arrays.asList(
-                                Loot.LOOT_TYPE.TONGUE
-                        ));
-                break;
-            case TOPDOWN: // First weapon is default weapon
-                weaponTypes.addAll(
-                        Arrays.asList(
-                                Loot.LOOT_TYPE.GUN,
-                                Loot.LOOT_TYPE.BOMB,
-                                Loot.LOOT_TYPE.FIREBALL,
-                                Loot.LOOT_TYPE.FLAME_THROWER));
-                break;
-            case UNIVERSE: // First weapon is default weapon
-                weaponTypes.addAll(
-                        Arrays.asList(
-                                Loot.LOOT_TYPE.LASER,
-                                Loot.LOOT_TYPE.ROCKET));
-                break;
-        }
-
+        weaponTypes.addAll(
+                Arrays.asList(
+                        Loot.LOOT_TYPE.TONGUE
+                ));
         lootTypes.addAll(
                 Arrays.asList(
                         Loot.LOOT_TYPE.MEDPACK,
@@ -271,29 +252,11 @@ public abstract class Level {
     }
 
     protected void getDefaultImagesFor(LEVEL_TYPE worldType) {
-        switch (worldType) {
-            case SIDESCROLL:
-                wallTexture = "tile1";
-                indoorImage = "indoor";
-                chasmImage = "chasm";
-                corridorImage = "path";
-                doorImage = "door";
-                break;
-            case TOPDOWN:
-                wallTexture = "wall2";
-                indoorImage = "indoor";
-                chasmImage = "chasm";
-                corridorImage = "path";
-                doorImage = "door";
-                break;
-            case UNIVERSE:
-                wallTexture = NOT_USED;  // Not used
-                indoorImage = NOT_USED; // Not used
-                chasmImage = NOT_USED;
-                doorImage = NOT_USED; // Not used
-                corridorImage = NOT_USED; // Not used
-                break;
-        }
+        wallTexture = "tile" + MathUtils.random(1, 5);
+        indoorImage = "indoor";
+        chasmImage = "chasm";
+        corridorImage = "path";
+        doorImage = "door";
     }
 
     public String getWallTexture() {

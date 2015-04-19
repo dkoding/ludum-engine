@@ -12,7 +12,7 @@ public class LightSwirlShader extends AbstractShader {
                 "float distFactor = 250.0;\n" +
                 "float uStarSize = 9.0;\n" +
                 "const int uNumStars = 100;\n" +
-                "vec4 domColor = vec4(0.8,0.0,1.0,1.0);\n" +
+                "vec4 domColor = vec4(0.4,0.0,1.0,1.0);\n" +
                 "\n" +
                 "float rand(vec2 co){\n" +
                 "  return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);\n" +

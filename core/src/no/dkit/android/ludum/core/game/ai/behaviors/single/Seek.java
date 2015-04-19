@@ -5,7 +5,7 @@ import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
 
 public class Seek extends SingleBehavior {
     Vector2 des_vel = new Vector2();
-    private Vector2 target = new Vector2();
+    protected Vector2 target = new Vector2();
     float distance;
 
     public Seek(Vector2 target, float activeDistance, float influence) {

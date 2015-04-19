@@ -23,6 +23,8 @@ import com.badlogic.gdx.utils.Array;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.ai.behaviors.single.Flee;
 import no.dkit.android.ludum.core.game.ai.behaviors.single.Seek;
+import no.dkit.android.ludum.core.game.ai.behaviors.single.WalkerFlee;
+import no.dkit.android.ludum.core.game.ai.behaviors.single.WalkerSeek;
 import no.dkit.android.ludum.core.game.ai.mind.PrioritizingMind;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.PlayerData;
@@ -968,23 +970,25 @@ public class BodyFactory {
     }
 
     private Color getRandomLampColor() {
-        int f = MathUtils.random(6);
+        int f = MathUtils.random(5);
+
+        final float alpha = .75f;
 
         switch (f) {
             case 0:
-                return new Color(1f, 0, 0, 1f);
+                return new Color(1f, 0, 0, alpha);
             case 1:
-                return new Color(0f, 1f, 0, 1f);
+                return new Color(0f, 1f, 0, alpha);
             case 2:
-                return new Color(0f, 0, 1f, 1f);
+                return new Color(0f, 0, 1f, alpha);
             case 3:
-                return new Color(1f, 0, 1f, 1f);
+                return new Color(1f, 0, 1f, alpha);
             case 4:
-                return new Color(1f, 1f, 0, 1f);
+                return new Color(1f, 1f, 0, alpha);
             case 5:
-                return new Color(0f, 1f, 1f, 1f);
+                return new Color(0f, 1f, 1f, alpha);
             default:
-                return new Color(1f, 1f, 1f, 1f);
+                return new Color(1f, 1f, 1f, alpha);
         }
     }
 
@@ -1028,23 +1032,23 @@ public class BodyFactory {
     }
 
     private void createTongue(Body owner) {
-        Body tip = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y -.1f, 0, 0, true, .15f);
-        int particles = 10;
-        Body[] rest = new Body[particles];
+         Body tip = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y, 0, 0, true, .1f);
+         int particles = 10;
+         Body[] rest = new Body[particles];
 
-        for (int i = 0; i < particles; i++) {
-            rest[i] = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y -(.1f*i), 0, 0, true, .15f / ((i * .3f) + 1f));
+         for (int i = 0; i < particles; i++) {
+             rest[i] = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y, 0, 0, true, .1f / ((i * .1f) + 1f));
 
-            if (i == 0)
-                BodyFactory.getInstance().connectRope(tip, rest[0], .1f);
-            if (i > 0 && i < particles)
-                BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], .1f);
-            if (i == particles - 1)
-                BodyFactory.getInstance().connectRope(owner, rest[i], .01f, .01f);
-        }
+             if (i == 0)
+                 BodyFactory.getInstance().connectRope(tip, rest[0], .1f);
+             if (i > 0 && i < particles)
+                 BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], .1f);
+             if (i == particles - 1)
+                 BodyFactory.getInstance().connectRope(owner, rest[i], .01f, .02f);
+         }
 
-        tongue = new TongueBody(tip, rest, bulletFixture.shape.getRadius(), ResourceFactory.getInstance().getBulletImage("tongue"), null, null, 0, 1);
-    }
+         tongue = new TongueBody(tip, rest, bulletFixture.shape.getRadius(), ResourceFactory.getInstance().getBulletImage("tongue"), null, null, 0, 1);
+     }
 
     private void createDongue(Body owner) {
         Body tip = getBulletBody(Loot.LOOT_TYPE.DONGUE,
@@ -1433,9 +1437,9 @@ public class BodyFactory {
                     walkerSingle.setMind(new PrioritizingMind());
                     BehaviorFactory.setupDefaultMindBehaviors(target, walkerSingle);
 
-                    walkerSingle.getMind().addBehavior(new Seek(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE));
-                    walkerSingle.getMind().addAttackBehavior(new Seek(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE));
-                    walkerSingle.getMind().addDefendBehavior(new Flee(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE));
+                    walkerSingle.getMind().addBehavior(new WalkerSeek(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE));
+                    walkerSingle.getMind().addAttackBehavior(new WalkerSeek(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE));
+                    walkerSingle.getMind().addDefendBehavior(new WalkerFlee(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE));
 
                     walkerSingle.getBody().setLinearVelocity(
                             MathUtils.random(walkerSingle.minSpeed * 2) - walkerSingle.minSpeed,

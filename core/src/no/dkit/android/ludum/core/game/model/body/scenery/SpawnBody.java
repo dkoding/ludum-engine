@@ -35,9 +35,10 @@ public class SpawnBody extends GameBody {
         }
     }
 
+    @Override
     public void draw(SpriteBatch spriteBatch) {
-        spriteBatch.setColor(Color.RED);
+        Color beforeAlpha = spriteBatch.getColor();
+        spriteBatch.setColor(beforeAlpha.r, .5f,.5f, alpha);
         super.draw(spriteBatch);
-        spriteBatch.setColor(Color.WHITE);
     }
 }

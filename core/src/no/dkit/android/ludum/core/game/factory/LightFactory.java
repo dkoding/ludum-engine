@@ -74,23 +74,23 @@ public class LightFactory {
         Light light;
 
         if (type == LIGHT_TYPE.LARGE_PLAYER_LIGHT) {
-            Color color = new Color(1f, 1f, 1f, 1f);
+            Color color = new Color(1f, 1f, 1f, .75f);
             light = getLight(0, 0, Config.getDimensions().WORLD_WIDTH, numRays, color);
             light.setSoftnessLength(Config.getDimensions().WORLD_WIDTH / 2f);
         } else if (type == LIGHT_TYPE.SMALL_PLAYER_LIGHT) {
-            Color color = new Color(1f, 1f, 1f, 1f);
+            Color color = new Color(1f, 1f, 1f, .75f);
             light = getLight(0, 0, Config.getDimensions().WORLD_WIDTH / 2f, numRays, color);
             light.setSoftnessLength(Config.getDimensions().WORLD_WIDTH / 4f);
         } else if (type == LIGHT_TYPE.EFFECT_LIGHT) {
-            Color color = new Color(1f, 1f, 1f, 1f);
+            Color color = new Color(1f, 1f, 1f, .75f);
             light = getLight(0, 0, Config.TILE_SIZE_X, numRays, color);
             light.setSoftnessLength(Config.TILE_SIZE_X);
         } else if (type == LIGHT_TYPE.ALWAYS_CONE) {
-            Color color = new Color(1f, 1f, 1f, 1f);
+            Color color = new Color(1f, 1f, 1f, .75f);
             light = getConeLight(Vector2.Zero, Config.getDimensions().WORLD_WIDTH / 2f, numRays, color, 0, 30);
             light.setSoftnessLength(Config.TILE_SIZE_X * 2);
         } else if (type == LIGHT_TYPE.INSIDE_CONE) {
-            Color color = new Color(1f, 1f, 1f, 1f);
+            Color color = new Color(1f, 1f, 1f, .75f);
             light = getConeLight(Vector2.Zero, Config.getDimensions().WORLD_WIDTH / 2f, numRays, color, 0, 30);
             light.setSoftnessLength(Config.TILE_SIZE_X);
         } else {

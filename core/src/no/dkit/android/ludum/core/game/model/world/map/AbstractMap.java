@@ -49,6 +49,7 @@ public abstract class AbstractMap {
     public static final int END_HINT = -3; // Empty, but unavailable
     public static final int START_HINT = -2; // Empty, but unavailable
     public static final int OCCUPIED = -1; // Empty, but unavailable
+    public static final int OUTSIDEBORDERS = -4; // Empty, but unavailable
 
     public static final int CLEAR = 0; // Empty space, outdoor
     public static final int CHASM = 3;
@@ -126,6 +127,12 @@ public abstract class AbstractMap {
     public abstract AbstractMap createMap(int level, boolean inside, boolean platforms);
 
     protected void clearOccupied(int clear) {
+        for (int x = 0; x < sizeX; x++)
+            for (int y = 0; y < sizeY; y++)
+                if (map2d[x][y] == AbstractMap.OCCUPIED) map2d[x][y] = clear;
+    }
+
+    protected void clearItemOccupied(int clear) {
         for (int x = 0; x < sizeX; x++)
             for (int y = 0; y < sizeY; y++)
                 if (map2d[x][y] == AbstractMap.OCCUPIED) map2d[x][y] = clear;
@@ -384,6 +391,10 @@ public abstract class AbstractMap {
         map2d[sizeX - 1][0] = value;
     }
 
+    public void printMap() {
+        printMap(map2d);
+    }
+
     protected void printMap(int[][] map) {
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++)
@@ -429,6 +440,9 @@ public abstract class AbstractMap {
                 break;
             case OCCUPIED:
                 System.out.print("@");
+                break;
+            case OUTSIDEBORDERS:
+                System.out.print("O");
                 break;
             case CORRIDOR:
                 System.out.print("C");
@@ -982,7 +996,6 @@ public abstract class AbstractMap {
         placeAllItems(level, levelType, space, surface, inside, platforms);
 
         clearOccupied(ROOM);
-
         printMap(map2d);
     }
 

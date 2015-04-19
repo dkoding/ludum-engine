@@ -48,7 +48,7 @@ public class EnergyBallBody extends WeaponBody {
         emitter.getTint().setColors(colors);
 
         addLight(LightFactory.getInstance().getLight(position.x, position.y, Config.TILE_SIZE_X * 2, 6,
-                new Color(colors[0], colors[1], colors[2], 1f)));
+                new Color(colors[0], colors[1], colors[2], .75f)));
         light.setStaticLight(false);
     }
 

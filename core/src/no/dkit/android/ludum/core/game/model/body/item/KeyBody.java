@@ -21,7 +21,7 @@ public class KeyBody extends GameBody {
         addLight(LightFactory.getInstance().getLight(position.x, position.y, halfTileSizeX, 6, Color.WHITE));
         light.setStaticLight(false);
         lightMod = .2f;
-        rotationMod = 3;
+        rotationMod = 0;
         bodyType = BODY_TYPE.METAL;
     }
 
@@ -39,8 +39,8 @@ public class KeyBody extends GameBody {
                 body.getPosition().x - radius, body.getPosition().y - radius,
                 radius, radius,
                 radius * 2, radius * 2,
-                1, 1,
-                rotation,
+                .75f, .75f,
+                +90,
                 true);
 
         spriteBatch.setColor(Color.WHITE);

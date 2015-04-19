@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerBody extends AgentBody implements GameEventListener {
+    public long timeOfDeath = 0;
+
     private boolean hasCollided = false;
     private Vector2 collidePos;
     private Body collideBody;
@@ -132,6 +134,8 @@ public class PlayerBody extends AgentBody implements GameEventListener {
         SoundFactory.getInstance().playDieSound(bodyType);
         EffectFactory.getInstance().addDieEffect(position, bodyType);
         SoundFactory.getInstance().playMusic(SoundFactory.MUSIC_TYPE.LOSE);
+
+        timeOfDeath = System.currentTimeMillis();
 
         TextFactory.getInstance().addTexts(0,
                 new TextItem("YOU DIED!!!", 0, Config.getDimensions().SCREEN_HEIGHT / 3, Color.RED),

@@ -1,5 +1,6 @@
 package no.dkit.android.ludum.core.game.model.body.scenery;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -46,10 +47,12 @@ public class BlockBody extends DirectionalGameBody {
                 body.getPosition().x - Config.TILE_SIZE_X, body.getPosition().y - Config.TILE_SIZE_Y,
                 Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
                 Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
-                1f,1f,
+                1f, 1f,
                 MathUtils.radiansToDegrees * body.getAngle(),
                 0, 0, texture.getWidth(), texture.getHeight(),
                 false, false);
+
+        spriteBatch.setColor(Color.WHITE);
     }
 
     public int getDirection() {

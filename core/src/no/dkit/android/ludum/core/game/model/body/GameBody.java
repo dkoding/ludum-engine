@@ -25,6 +25,10 @@ public abstract class GameBody {
 
     protected Color color = Color.WHITE;
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     public enum BODY_TYPE {
         HUMANOID,
         ALIEN,
@@ -237,16 +241,12 @@ public abstract class GameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive() || image == null) return;
 
-        spriteBatch.setColor(color);
-
         spriteBatch.draw(image,
                 position.x - radius, position.y - radius,
                 radius, radius,
                 radius * 2, radius * 2,
                 scale, scale,
                 rotation + 90, true);
-
-        spriteBatch.setColor(Color.WHITE);
     }
 
     public void setActive(boolean active) {

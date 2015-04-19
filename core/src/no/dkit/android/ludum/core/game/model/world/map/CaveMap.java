@@ -32,7 +32,7 @@ public class CaveMap extends AbstractMap {
 
         int largest = fillSmallCaves();
 
-        if (largest < Config.CAVE_SIZE * 3) {
+        if (largest < Config.CAVE_SIZE * 5) {
             level++;
             return createMap(level, inside, platforms);
         }
@@ -54,7 +54,6 @@ public class CaveMap extends AbstractMap {
                 replaceAll(CLEAR, ROOM, map2d);
         }
 
-        // TODO: Fix bug with water outside the cave
         for (int x = 1; x < sizeX - 1; x++) {
             if (map2d[x][1] == CLEAR) {
                 item[x][1] = ITEM_LIQUID_SS;
@@ -62,6 +61,8 @@ public class CaveMap extends AbstractMap {
                 mapDirection[x+1][1] = NO_DIRECTION;
             }
         }
+
+        replaceAll(OCCUPIED, OUTSIDEBORDERS, map2d);
 
         printMap(map2d);
         return this;
