@@ -249,7 +249,7 @@ public class GameScreen implements Screen, InputProcessor {
         stack.add(travelTopdownButton);
         stack.add(upgradeButton);
         uiWindow.pack();
-        uiWindow.setPosition(Config.getDimensions().SCREEN_WIDTH / 2 - travelSidescrollButton.getWidth() / 2, Config.getDimensions().SCREEN_HEIGHT / 2 + travelSidescrollButton.getHeight() / 2);
+        uiWindow.setPosition(Config.getDimensions().SCREEN_WIDTH / 2 - travelSidescrollButton.getWidth() / 2, Config.getDimensions().SCREEN_HEIGHT *.60f + travelSidescrollButton.getHeight() / 2);
         stage.addActor(uiWindow);
 
         multiplexer = new InputMultiplexer(stage, processor, this);

@@ -395,7 +395,7 @@ public class GameView {
         spriteBatch.setColor(Color.WHITE);
     }
 
-    private void drawJumpArrow(SpriteBatch spriteBatch, TextureRegion glow, TextureRegion beam, TextureRegion end, TextureRegion endGlow) {
+    private void drawJumpArrow(SpriteBatch spriteBatch, TextureRegion beamGlow, TextureRegion beam, TextureRegion end, TextureRegion endGlow) {
         Color glowColor = Color.RED;
         Color beamColor = Color.WHITE;
 
@@ -408,6 +408,7 @@ public class GameView {
         //glowColor.lerp(Color.CLEAR, .1f);
         spriteBatch.setColor(glowColor);
 
+        // Finger position
         spriteBatch.draw(endGlow,
                 gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y - Config.TILE_SIZE_X,
                 Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
@@ -416,6 +417,7 @@ public class GameView {
                 0,
                 true);
 
+        // Centered on player
         spriteBatch.draw(endGlow,
                 gameModel.getPlayerBody().position.x - Config.TILE_SIZE_X, gameModel.getPlayerBody().position.y - Config.TILE_SIZE_X,
                 Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
@@ -424,7 +426,8 @@ public class GameView {
                 0,
                 true);
 
-        spriteBatch.draw(glow,
+        // Beam Glow
+        spriteBatch.draw(beamGlow,
                 gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y,
                 Config.TILE_SIZE_X, 0,
                 Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
@@ -435,6 +438,7 @@ public class GameView {
         //beamColor.lerp(Color.CLEAR, .2f);
         spriteBatch.setColor(beamColor);
 
+        // Finger position
         spriteBatch.draw(end,
                 gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y - Config.TILE_SIZE_X,
                 Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
@@ -443,6 +447,7 @@ public class GameView {
                 0,
                 true);
 
+        // Centered on player
         spriteBatch.draw(end,
                 gameModel.getPlayerBody().position.x - Config.TILE_SIZE_X, gameModel.getPlayerBody().position.y - Config.TILE_SIZE_X,
                 Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
@@ -451,20 +456,21 @@ public class GameView {
                 0,
                 true);
 
+        // Entire beam
+        spriteBatch.draw(beam,
+                gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y,
+                Config.TILE_SIZE_X, 0,
+                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
+                .1f, firingDirection.len() * 2,
+                firingAngle,
+                true);
+
         spriteBatch.draw(end,
                 firingDirection.x - Config.TILE_SIZE_X, firingDirection.y - Config.TILE_SIZE_X,
                 Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
                 Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
                 .1f, .1f,
                 0,
-                true);
-
-             spriteBatch.draw(beam,
-                gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y,
-                Config.TILE_SIZE_X, 0,
-                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
-                .1f, firingDirection.len() * 2,
-                firingAngle,
                 true);
 
         spriteBatch.setColor(Color.WHITE);

@@ -22,6 +22,7 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
 
     float blobSizeXMod = 1f;
     float blobSizeYMod = 1f;
+    float eyeSizeMod = 1f;
 
     public BlobPlayerBody(Body body, float radius, PlayerData data, TextureRegion image, TextureRegion eye, TextureRegion pupil, TextureRegion mouth, CONTROL_MODE controlMode, BODY_TYPE type) {
         super(body, radius, data, image, controlMode, type);
@@ -37,9 +38,15 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
         blobSizeXMod = 1f;
         blobSizeYMod = 1f;
 
+        eyeSizeMod = 1f;
+
         if(state == STATE.JUMPING) {
             blobSizeXMod = 0.9f;
             blobSizeYMod = 1.1f;
+        }
+
+        if(state == STATE.HURTING) {
+            eyeSizeMod = 1.2f;
         }
 
         if(state == STATE.LANDING || state == STATE.STARTJUMP) {
@@ -61,7 +68,7 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                 position.x - radius, position.y - radius - .1f,
                 radius, radius,
                 radius * 2, radius * 2,
-                .25f, .25f,
+                .25f * eyeSizeMod, .25f * eyeSizeMod,
                 0,
                 true);
 
@@ -73,7 +80,7 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                 position.x - radius - eyeBase, position.y - radius + eyeBase,
                 radius, radius,
                 radius * 2, radius * 2,
-                .5f, .5f,
+                .5f * eyeSizeMod, .5f * eyeSizeMod,
                 0,
                 true);
 
@@ -81,7 +88,7 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                 position.x - radius + eyeBase, position.y - radius + eyeBase,
                 radius, radius,
                 radius * 2, radius * 2,
-                .5f, .5f,
+                .5f * eyeSizeMod, .5f * eyeSizeMod,
                 0,
                 true);
 
@@ -90,7 +97,7 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                 position.x - radius - eyeBase, position.y - radius + eyeBase,
                 radius, radius,
                 radius * 2, radius * 2,
-                .25f, .25f,
+                .25f * eyeSizeMod, .25f * eyeSizeMod,
                 0,
                 true);
 
@@ -98,7 +105,7 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                 position.x - radius + eyeBase, position.y - radius + eyeBase,
                 radius, radius,
                 radius * 2, radius * 2,
-                .25f, .25f,
+                .25f * eyeSizeMod, .25f * eyeSizeMod,
                 0,
                 true);
 

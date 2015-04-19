@@ -1047,7 +1047,7 @@ public class BodyFactory {
              if (i > 0 && i < particles)
                  BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], .1f, -.01f); // ANCHOR CAN NOT BE 0!!!!
              if (i == particles - 1)
-                 BodyFactory.getInstance().connectRope(owner, rest[i], .01f, .01f);
+                 BodyFactory.getInstance().connectRope(owner, rest[i], .01f, .08f);
          }
 
          tongue = new TongueBody(tip, rest, bulletFixture.shape.getRadius(), ResourceFactory.getInstance().getBulletImage("tongue"), null, null, 0, 1);
