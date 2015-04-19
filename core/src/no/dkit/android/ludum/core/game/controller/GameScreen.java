@@ -231,8 +231,10 @@ public class GameScreen implements Screen, InputProcessor {
         scoreWindow.add(keysImage).size(Config.getDimensions().SCREEN_HEIGHT / 20);
         scoreWindow.add(keys).width(Config.getDimensions().SCREEN_WIDTH / 10);
         scoreWindow.row();
-        scoreWindow.add(fpsLabel);
-        scoreWindow.add(fps).width(Config.getDimensions().SCREEN_WIDTH / 10);
+        if(Config.DEBUG) {
+            scoreWindow.add(fpsLabel);
+            scoreWindow.add(fps).width(Config.getDimensions().SCREEN_WIDTH / 10);
+        }
         scoreWindow.pack();
         scoreWindow.setPosition(Config.getDimensions().SCREEN_WIDTH - scoreWindow.getWidth(), Config.getDimensions().SCREEN_HEIGHT - scoreWindow.getHeight());
 
@@ -442,9 +444,7 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.BACK || keycode == Input.Keys.BACKSPACE) {
-            XXXX.changeScreen(XXXX.SCREEN.UPGRADE);
-        } else if (keycode == Input.Keys.ESCAPE) {
+        if (keycode == Input.Keys.ESCAPE) {
             Gdx.app.exit();
         }
 

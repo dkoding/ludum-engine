@@ -179,7 +179,7 @@ public class MenuScreenModel {
     }
 
     private String getLevelLabel() {
-        return "Drag mouse to jump. Tap mouse to slurp and lick! Save your children and find the exit.";
+        return "Drag mouse to jump. Tap to lick! Save your children, find the exit!";
     }
 
     private void updateMapImage() {
@@ -198,7 +198,7 @@ public class MenuScreenModel {
         Gdx.gl20.glClearColor(0.2f, 0.2f, 0.2f, 1);
         Gdx.gl20.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        fpsLabel.setText("FPS: " + Gdx.graphics.getFramesPerSecond());
+        fpsLabel.setText("Made in 48 hours for Ludum Dare 32 using ludum-engine");
         drawBackground();
 
         stage.act(Gdx.graphics.getDeltaTime());
