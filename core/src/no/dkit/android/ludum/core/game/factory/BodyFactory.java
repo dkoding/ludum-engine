@@ -1040,9 +1040,9 @@ public class BodyFactory {
              rest[i] = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y, 0, 0, true, .1f / ((i * .1f) + 1f));
 
              if (i == 0)
-                 BodyFactory.getInstance().connectRope(tip, rest[0], .1f);
+                 BodyFactory.getInstance().connectRope(tip, rest[0], .1f, .1f); // ANCHOR CAN NOT BE 0!!!!
              if (i > 0 && i < particles)
-                 BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], .1f);
+                 BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], .1f, .1f); // ANCHOR CAN NOT BE 0!!!!
              if (i == particles - 1)
                  BodyFactory.getInstance().connectRope(owner, rest[i], .01f, .02f);
          }

@@ -605,7 +605,8 @@ public class GameModel {
         if (playerBody.isDead()) {
             if(System.currentTimeMillis() - 5000 > playerBody.timeOfDeath)
                 afterGameOver();
-            else return;
+            else
+                return;
         }
 
         touchPos.set(x, y, 0);
@@ -618,9 +619,10 @@ public class GameModel {
         lastTap = System.currentTimeMillis();
 
         if (playerBody.isDead()) {
-            if(System.currentTimeMillis() - 5000 > playerBody.timeOfDeath)
+            if(System.currentTimeMillis() - 3000 > playerBody.timeOfDeath)
                 afterGameOver();
-            else return;
+            else
+                return;
         }
 
         touchPos.set(x, y, 0);
