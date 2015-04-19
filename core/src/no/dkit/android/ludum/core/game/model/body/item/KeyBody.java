@@ -33,9 +33,7 @@ public class KeyBody extends GameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive() || image == null) return;
 
-        if (alpha != 0) {
-            spriteBatch.setColor(1, 1, 1, alpha);
-        }
+        spriteBatch.setColor(color);
 
         spriteBatch.draw(image,
                 body.getPosition().x - radius, body.getPosition().y - radius,
@@ -44,6 +42,8 @@ public class KeyBody extends GameBody {
                 1, 1,
                 rotation,
                 true);
+
+        spriteBatch.setColor(Color.WHITE);
     }
 
     @Override

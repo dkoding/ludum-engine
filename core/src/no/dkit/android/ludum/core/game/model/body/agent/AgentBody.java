@@ -227,19 +227,16 @@ public class AgentBody extends PoolableGameBody {
         }
 */
 
-        boolean flip = false;
-
-        if (body.isFixedRotation() && body.getLinearVelocity().x < 0)
-            flip = true;
+        image.flip(body.getLinearVelocity().x < 0, false);
 
         spriteBatch.setColor(color);
 
         spriteBatch.draw(image,
-                body.getPosition().x - radius, body.getPosition().y - radius,
+                position.x - radius, position.y - radius,
                 radius, radius,
-                flip ? radius * -2 : radius * 2, radius * 2,
+                radius * 2, radius * 2,
                 scale, scale,
-                angle,
+                90,
                 true);
 
         spriteBatch.setColor(Color.WHITE);
@@ -428,8 +425,8 @@ public class AgentBody extends PoolableGameBody {
 
     protected void updateEmission() {
         trailEmitter.setPosition(position.x, position.y);
-        trailEmitter.getAngle().setHigh(angle - emitterArc+180, angle + emitterArc+180);
-        trailEmitter.getAngle().setLow(angle - emitterArc+180, angle + emitterArc+180);
+        trailEmitter.getAngle().setHigh(angle - emitterArc + 180, angle + emitterArc + 180);
+        trailEmitter.getAngle().setLow(angle - emitterArc + 180, angle + emitterArc + 180);
         trailEmitter.getVelocity().setHigh(unconscious ? 0 : speed / 2, unconscious ? 0 : speed);
         trailEmitter.getVelocity().setLow(0, unconscious ? 0 : speed / 4);
         trailEmitter.getEmission().setLow(0, 0);

@@ -6,6 +6,7 @@ import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.SoundFactory;
+import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
 import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
@@ -56,7 +57,7 @@ public abstract class Weapon extends Loot {
     }
 
     final public void fire1(Vector2 position, Vector2 target) {
-        if (ammo < 2 && playerOwner)
+        if (ammo < 1 && playerOwner)
             onGunEmpty();
         else {
             if (isReady1()) {
@@ -68,7 +69,7 @@ public abstract class Weapon extends Loot {
     }
 
     final public void fire2(Vector2 position, Vector2 target) {
-        if (ammo < 2 && playerOwner)
+        if (ammo < 1 && playerOwner)
             onGunEmpty();
         else {
             if (isReady2()) {
@@ -113,6 +114,7 @@ public abstract class Weapon extends Loot {
 
     private void onGunEmpty() {
         SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.GUNEMPTY);
+        TextFactory.getInstance().addText("Out of ammo!");
     }
 
     public boolean isReady2() {

@@ -29,7 +29,7 @@ public class Config {
 
     public static final long OUCH_RATE = 2000;
     public static final long DEGUG_THRESHOLD_MILLIS = 0;
-    public static final int MAX_EXPLOSIONS = 3;
+    public static final int MAX_EXPLOSIONS = 2;
     public static final int GROUP_SIZE = 5;
 
     public static final int UNIVERSE_SIZE = 4;
@@ -39,7 +39,7 @@ public class Config {
     public static final int CITY_SIZE = 25;
 
     public static final float FPS = 60f;
-    public static final int NUM_PARTICLES = 50;
+    public static final int NUM_PARTICLES = 30;
     public static final float ENEMY_CHANCE = .1f;
 
     public static final int PLAYER_START_HEALTH = 100;
@@ -50,7 +50,7 @@ public class Config {
 
     public static final int TURRET_TURN_SPEED = 3;
 
-    public static final int MAX_ENEMIES = 1;
+    public static final int MAX_ENEMIES = 10;
     public static final int MAX_CHASMS = 3;
     public static final int MAX_LOOT = 3;
     public static final int MAX_FEATURES = 50;
@@ -70,7 +70,7 @@ public class Config {
     public static final float CANNON_CHANCE = .2f;
     public static final float BULLET_RATE_LOW = .1f;
     public static final float BULLET_RATE_MEDIUM = .2f;
-    public static final float BULLET_RATE_HIGH = .00003f;
+    public static final float BULLET_RATE_HIGH = .3f;
     public static final int NUM_STARS = 25;
     public static final long RANDOM_SEED = 666;
     public static final int MAX_KEYS = 10;
@@ -96,8 +96,8 @@ public class Config {
 
     public static final float SHIP_RADIUS = Config.TILE_SIZE_X / 3f;
     public static final float SHIP_DENSITY = 3f;
-    public static final float WALKER_RADIUS = Config.TILE_SIZE_X / 5f;
-    public static final float WALKER_DENSITY = 3f;
+    public static final float WALKER_RADIUS = Config.TILE_SIZE_X / 3f;
+    public static final float WALKER_DENSITY = 5f;
     public static final float FLYER_RADIUS = Config.TILE_SIZE_X / 3f;
     public static final float FLYER_DENSITY = 3f;
     public static final float ZOMBIE_RADIUS = Config.TILE_SIZE_X / 5f;
@@ -169,9 +169,9 @@ public class Config {
     public static final int BOX_VELOCITY_ITERATIONS = 3;
     public static final float BOX_STEP = 1 / 25f;
 
-    public static final float PLAYER_MAX_SPEED = 5f;
+    public static final float PLAYER_MAX_SPEED = 3f;
     public static final float PLAYER_MIN_SPEED = 0f;
-    public static final float MAX_SPEED = 1f;
+    public static final float MAX_SPEED = .5f;
     public static final float LOOT_SPEED = .1f;
     public static final float MIN_SPEED = .01f;
     public static final float ROTATE_SPEED = 5f;

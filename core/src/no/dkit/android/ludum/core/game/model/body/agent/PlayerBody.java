@@ -37,6 +37,12 @@ public class PlayerBody extends AgentBody implements GameEventListener {
     private boolean justJumped;
     private long lastJump;
 
+    public void onLick() {
+    }
+
+    public void onSlurp() {
+    }
+
     public enum CONTROL_MODE {NEWTONIAN, DIRECT, VEHICLE}
 
     CONTROL_MODE controlMode = CONTROL_MODE.NEWTONIAN;
@@ -223,11 +229,16 @@ public class PlayerBody extends AgentBody implements GameEventListener {
         } else if (other instanceof BlockBody || other instanceof CannonBody || other instanceof LampBody) { // Walls
             justJumped = System.currentTimeMillis() - 50 < lastJump;
             if (hasCollided || justJumped) return;
+            onLanded();
             hasCollided = true;
             collidePos = position;
             collideBody = other.getBody();
             //BodyFactory.getInstance().weld(other.getBody(), this.getBody());
         }
+    }
+
+    protected void onLanded() {
+
     }
 
     private void loosenGrip() {

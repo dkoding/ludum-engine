@@ -101,6 +101,8 @@ public class LootBody extends PoolableGameBody {
                 1, 1,
                 rotation,
                 true);
+
+        spriteBatch.setColor(Color.WHITE);
     }
 
     @Override

@@ -15,11 +15,15 @@ public class TongueBody extends WeaponBody {
     TextureRegion pupilImage;
     Body tip;
     Body[] rest;
+    private final float mod;
+    private Color tongueColor;
 
     public TongueBody(Body tip, Body[] rest, float radius, TextureRegion image, TextureRegion eyeImage, TextureRegion pupilImage, float angle, int damage) {
         super(tip, radius, image, angle, damage);
         final MassData massData = new MassData();
         massData.mass = 0f;
+
+        mod = 1f / rest.length;
 
         this.tip = tip;
         this.eyeImage = eyeImage;
@@ -82,19 +86,22 @@ public class TongueBody extends WeaponBody {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        spriteBatch.setColor(this.color);
+        tongueColor = Color.RED.cpy();
 
-        for (int i = 1; i < rest.length; i++) {
+        for (int i = 0; i < rest.length; i++) {
+            tongueColor.set(1f - (i * mod), 0, 0, 1f);
+            spriteBatch.setColor(tongueColor);
+
             spriteBatch.draw(image,
                     rest[i].getPosition().x - radius, rest[i].getPosition().y - radius,
                     radius, radius,
                     radius * 2, radius * 2,
-                    2f/((i*.05f)+1f), 2f/((i*.05f)+1f),
+                    4f/((i * .3f) + 1f), 4f/((i * .3f) + 1f),
                     0,
                     true);
         }
 
-        spriteBatch.setColor(this.color);
+        spriteBatch.setColor(Color.RED);
 
         spriteBatch.draw(image,
                 body.getPosition().x - radius, body.getPosition().y - radius,

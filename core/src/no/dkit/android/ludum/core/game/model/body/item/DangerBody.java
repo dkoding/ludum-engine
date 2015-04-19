@@ -53,7 +53,8 @@ public class DangerBody extends GameBody {
 
         if (alpha != 0) {
             spriteBatch.setColor(1, 1, 1, alpha);
-        }
+        } else
+            spriteBatch.setColor(Color.WHITE);
 
         spriteBatch.draw(image,
                 body.getPosition().x - radius, body.getPosition().y - radius,

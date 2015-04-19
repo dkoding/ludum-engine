@@ -101,7 +101,7 @@ public abstract class Level {
             case SHIP_2:
                 return Loot.LOOT_TYPE.ROCKET;
             case WALKER_1:
-                return Loot.LOOT_TYPE.FLAME_THROWER;
+                return Loot.LOOT_TYPE.LASER;
             case WALKER_2:
                 return Loot.LOOT_TYPE.ROCKET;
         }

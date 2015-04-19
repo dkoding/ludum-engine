@@ -16,11 +16,11 @@ public class Tongue extends Weapon {
 
     @Override
     public void fire1() {
-        BodyFactory.getInstance().lick(GameModel.getPlayer().position, firingDirection);
+        BodyFactory.getInstance().lick(GameModel.getPlayer(), firingDirection);
     }
 
     @Override
     public void fire2() {
-        BodyFactory.getInstance().slurp(GameModel.getPlayer().position);
+        BodyFactory.getInstance().slurp(GameModel.getPlayer());
     }
 }

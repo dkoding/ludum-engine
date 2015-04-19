@@ -17,8 +17,8 @@ public class AnimatedAgentBody extends AgentBody {
 
     Animation walk;
 
-    public AnimatedAgentBody(Body body, float radius, Array<TextureAtlas.AtlasRegion> images) {
-        super(body, radius);
+    public AnimatedAgentBody(Body body, float radius, Array<TextureAtlas.AtlasRegion> images, TextureAtlas.AtlasRegion image) {
+        super(body, radius, image);
         this.images = images;
         walk = new Animation(.1f, images);
         animTimer = 0;
@@ -46,6 +46,13 @@ public class AnimatedAgentBody extends AgentBody {
         currentFrame = walk.getKeyFrame(animTimer, true);
 
         spriteBatch.draw(currentFrame,
+                body.getPosition().x - radius, body.getPosition().y + radius,
+                radius, radius,
+                radius * 2, radius * 2,
+                scale, scale*.5f,
+                0);
+
+        spriteBatch.draw(image,
                 body.getPosition().x - radius, body.getPosition().y - radius,
                 radius, radius,
                 radius * 2, radius * 2,
@@ -53,16 +60,5 @@ public class AnimatedAgentBody extends AgentBody {
                 angle - 90);
 
         spriteBatch.setColor(Color.WHITE);
-
-        if (weapon != null)
-            if (weaponImage == null)
-                throw new RuntimeException("NO WEAPON FOR WEAPON" + weapon.getImageName());
-            else
-                spriteBatch.draw(weaponImage,
-                        body.getPosition().x - radius * .5f, body.getPosition().y,
-                        radius * .5f, 0,
-                        radius * 2, radius * 2,
-                        scale * .5f, scale * .5f,
-                        angle);
     }
 }
