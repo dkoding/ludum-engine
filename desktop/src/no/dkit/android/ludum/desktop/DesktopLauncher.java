@@ -14,6 +14,6 @@ public class DesktopLauncher {
 
         cfg.width = Config.getDimensions().SCREEN_LONGEST;
         cfg.height = Config.getDimensions().SCREEN_SHORTEST;
-        new LwjglApplication(new XXXX(Config.PERFORMANCE.LOW), cfg);
+        new LwjglApplication(new XXXX(Config.PERFORMANCE.HIGH), cfg);
     }
 }

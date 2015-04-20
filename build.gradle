@@ -105,7 +105,6 @@ project(":html") {
         compile "com.badlogicgames.gdx:gdx-controllers-gwt:$gdxVersion:sources"
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion:sources"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion:sources"
-        compile "com.kotcrab.vis:vis-ui:0.7.1:sources"
     }
 }
 
@@ -119,7 +118,6 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
-        compile "com.kotcrab.vis:vis-ui:0.7.1"
     }
 }
 
