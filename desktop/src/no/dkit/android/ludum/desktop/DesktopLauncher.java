@@ -10,10 +10,10 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "Ludum-Engine";
 
-        Config.initialize(900, 600);
+        Config.initialize(1280, 720);
 
         cfg.width = Config.getDimensions().SCREEN_LONGEST;
         cfg.height = Config.getDimensions().SCREEN_SHORTEST;
-        new LwjglApplication(new XXXX(Config.PERFORMANCE.HIGH), cfg);
+        new LwjglApplication(new XXXX(Config.PERFORMANCE.LOW), cfg);
     }
 }
