@@ -33,7 +33,6 @@ public class TongueBody extends WeaponBody {
         ttl = 2000; // MS
         bounce = true;
         this.damage = damage;
-        speed = Config.TONGUE_SPEED;
 
         tip.setMassData(massData);
 
@@ -86,6 +85,9 @@ public class TongueBody extends WeaponBody {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
+        float slice = .15f / rest.length * Config.getDimensions().SCREEN_ON_WORLD_FACTOR;
+        float max = rest.length * slice;
+
         tongueColor = Color.RED.cpy();
 
         for (int i = rest.length - 1; i > -1; i--) {
@@ -96,7 +98,7 @@ public class TongueBody extends WeaponBody {
                     rest[i].getPosition().x - radius, rest[i].getPosition().y - radius,
                     radius, radius,
                     radius * 2, radius * 2,
-                    4f / ((i * .2f) + 1f), 4f / ((i * .2f) + 1f),
+                    max - (slice*i), max - (slice*i),
                     0,
                     true);
         }
@@ -107,31 +109,9 @@ public class TongueBody extends WeaponBody {
                 body.getPosition().x - radius, body.getPosition().y - radius,
                 radius, radius,
                 radius * 2, radius * 2,
-                2, 2,
+                max, max,
                 0,
                 true);
-
-        spriteBatch.setColor(Color.WHITE);
-
-        if (eyeImage != null)
-            spriteBatch.draw(eyeImage,
-                    rest[0].getPosition().x - radius, rest[0].getPosition().y - radius,
-                    radius, radius,
-                    radius * 2, radius * 2,
-                    2, 2,
-                    0,
-                    true);
-
-        spriteBatch.setColor(Config.COLOR_4_BLUE_LIGHT);
-
-        if (pupilImage != null)
-            spriteBatch.draw(pupilImage,
-                    rest[0].getPosition().x - radius, rest[0].getPosition().y - radius,
-                    radius, radius,
-                    radius * 2, radius * 2,
-                    1, 1,
-                    0,
-                    true);
 
         spriteBatch.setColor(Color.WHITE);
     }
@@ -166,23 +146,18 @@ public class TongueBody extends WeaponBody {
         return DRAW_LAYER.FRONT;
     }
 
-    @Override
-    public void collidedWith(GameBody other) {
-        super.collidedWith(other);
-    }
-
-    public void lick(Vector2 target, Vector2 firingDirection) {
+    public void lick(Vector2 target, Vector2 firingDirection, float speed) {
         slurp(target);
-        tip.applyForceToCenter(firingDirection.nor().scl(speed), true);
-        for (int i = rest.length - 1; i > 0; i--) {
+        for (int i = rest.length / 2; i > 0; i--) {
             rest[i].applyForceToCenter(firingDirection.nor().scl(speed), true);
         }
+        tip.applyForceToCenter(firingDirection.nor().scl(speed), true);
     }
 
     public void slurp(Vector2 target) {
-        tip.setTransform(target.x, target.y, 0);
         tip.setAngularVelocity(0);
         tip.setLinearVelocity(0, 0);
+        tip.setTransform(target.x, target.y, 0);
 
         for (int i = rest.length - 1; i > 0; i--) {
             rest[i].setAngularVelocity(0);

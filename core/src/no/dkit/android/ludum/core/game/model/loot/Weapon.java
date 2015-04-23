@@ -47,7 +47,7 @@ public abstract class Weapon extends Loot {
         super(type, imageName);
         this.cooldown1 = 3000;
         this.cooldown2 = 3000;
-        ammo = MathUtils.random(50, 99);
+        ammo = MathUtils.random(50, 99); // not used
 
         emitters = 1;
         sideAngle = 0;
@@ -81,25 +81,17 @@ public abstract class Weapon extends Loot {
     }
 
     public void prepareFire1(Vector2 position, Vector2 target) {
-        ammo--;
         lastFire1 = System.currentTimeMillis();
         origin.set(position);
 
         prepareAngles(position, target);
-
-        if (playerOwner)
-            XXXX.updateWeaponButton(this);
     }
 
     public void prepareFire2(Vector2 position, Vector2 target) {
-        ammo -= 2;
         lastFire2 = System.currentTimeMillis();
         origin.set(position);
 
         prepareAngles(position, target);
-
-        if (playerOwner)
-            XXXX.updateWeaponButton(this);
     }
 
     private void prepareAngles(Vector2 position, Vector2 target) {
@@ -131,9 +123,6 @@ public abstract class Weapon extends Loot {
 
         this.owner = owner;
         playerOwner = this.owner instanceof PlayerBody;
-
-        if (playerOwner)
-            XXXX.updateGameScreen();
     }
 
     @Override

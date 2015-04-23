@@ -111,13 +111,9 @@ public class PlayerBody extends AgentBody implements GameEventListener {
     public void hit(int damage) {
         if (isDead()) return;
 
-        if (data.getArmor() > 0) {
-            data.removeArmor(damage);
-            if (data.getArmor() < 0) data.setArmor(0);
-        } else {
-            health -= damage;
-            data.setHealth(health);
-        }
+        health -= damage;
+        if(health < 0) health = 0;
+        data.setHealth(health);
 
         //SoundFactory.getInstance().playHitSound(bodyType);
 
@@ -138,16 +134,11 @@ public class PlayerBody extends AgentBody implements GameEventListener {
         timeOfDeath = System.currentTimeMillis();
 
         final int i = Config.getDimensions().SCREEN_HEIGHT / 20;
-        final int total =
-                getData().getCredits() * 100
-                        + getData().getOrbs() * 1000
-                        + getData().getRescues() * 10000;
+        final int total = getData().getRescues() * 10000;
 
         TextFactory.getInstance().addTexts(0,
                 new TextItem("TOTAL: : " + total, 0, i * 3, Color.WHITE),
                 new TextItem(getData().getRescues() + " Rescues x 10000: " + getData().getRescues() * 10000, 0, i * 4, Color.WHITE),
-                new TextItem(getData().getOrbs() + " Orbs x 1000: " + getData().getOrbs() * 1000, 0, i * 5, Color.WHITE),
-                new TextItem(getData().getCredits() + " Treasure x 100: " + getData().getCredits() * 100, 0, i * 6, Color.WHITE),
                 new TextItem("Final Score", 0, i * 7, Color.WHITE),
                 new TextItem("YOU DIED!!!", 0, i * 8, Color.WHITE)
         );
@@ -177,29 +168,10 @@ public class PlayerBody extends AgentBody implements GameEventListener {
         return data.getOrbs();
     }
 
-    public void addArmor(int armor) {
-        data.addArmor(armor);
-    }
-
-    public int getArmor() {
-        return data.getArmor();
-    }
-
-    public int getCredits() {
-        return data.getCredits();
-    }
-
     public int getKeys() {
         return data.getKeys();
     }
 
-    public void addCredits(int credits) {
-        this.data.addCredits(credits);
-    }
-
-    public void removeCredits(int credits) {
-        data.removeCredits(credits);
-    }
 
     public void addOrbs(int orbs) {
         data.addOrbs(orbs);

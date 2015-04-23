@@ -3,27 +3,28 @@ package no.dkit.android.ludum.core.game.transition;
 import com.badlogic.gdx.Screen;
 
 public abstract class TransitionEffect {
-    protected float start;
-    protected float duration;
+    protected double start;
+    protected double end;
+    protected double duration;
 
     // returns a value between 0 and 1 representing the level of completion of the transition.
-    protected float getAlpha() {
-        return 1f-duration/start;
-    }
-
-    protected void update(float delta) {
-        duration -= delta;
-        if (duration < 0) duration = 0;
+    protected float getDelta() {
+        return (float)(System.currentTimeMillis()-start)/(float)duration;
     }
 
     protected abstract void render(Screen current, Screen next);
 
     protected boolean isFinished() {
-        return duration == 0;
+        return System.currentTimeMillis() > end;
     }
 
-    public TransitionEffect(float duration) {
+    public TransitionEffect(long duration) {
         this.duration = duration;
-        this.start = duration;
+        init();
+    }
+
+    public void init() {
+        this.start = System.currentTimeMillis();
+        this.end = this.start + duration;
     }
 }

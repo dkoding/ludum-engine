@@ -1,13 +1,10 @@
 package no.dkit.android.ludum.core.game.model.body.weapon;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
-import no.dkit.android.ludum.core.game.factory.ParticleBox2D;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 
-public class TongueRest extends GameBody {
+public class TongueRest extends WeaponBody {
     public TongueRest(Body body, float radius) {
         super(body, radius);
     }
@@ -36,14 +33,6 @@ public class TongueRest extends GameBody {
 
     @Override
     public void setDisabled(boolean disabled) {
-    }
-
-    @Override
-    public void collidedWith(ParticleBox2D other) {
-    }
-
-    @Override
-    public void collidedWith(GameBody other) {
     }
 
     @Override

@@ -26,7 +26,7 @@ public class CrateBody extends GameBody {
             this.health = 10;
         } else if (type < .66f) {
             image = ResourceFactory.getInstance().getItemImage("crate");
-            bodyType = BODY_TYPE.WOOD;
+            bodyType = BODY_TYPE.STONE;
             this.health = 20;
         } else {
             image = ResourceFactory.getInstance().getItemImage("crate");
@@ -55,7 +55,12 @@ public class CrateBody extends GameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive()) return;
 
-        spriteBatch.setColor(Config.COLOR_3_BLUE_MEDIUM);
+        if(bodyType == BODY_TYPE.WOOD)
+            spriteBatch.setColor(Config.COLOR_5_BLUE_LIGHTEST);
+        else if(bodyType == BODY_TYPE.STONE)
+            spriteBatch.setColor(Config.COLOR_4_BLUE_LIGHT);
+        else if(bodyType == BODY_TYPE.METAL)
+            spriteBatch.setColor(Config.COLOR_3_BLUE_MEDIUM);
 
         spriteBatch.disableBlending();
         spriteBatch.draw(image,

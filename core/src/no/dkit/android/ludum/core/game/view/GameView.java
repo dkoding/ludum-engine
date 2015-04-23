@@ -70,7 +70,7 @@ public class GameView {
         MathUtils.random.setSeed(Config.RANDOM_SEED + LevelFactory.level);
 
         if (Config.DEBUG)
-            worldRenderer = new Box2DDebugRenderer(true, true, true, true, true, true);
+            worldRenderer = new Box2DDebugRenderer(true, true, false, false, false, false);
 
         spriteBatch = new SpriteBatch();
         spriteBatch.setProjectionMatrix(camera.combined);
@@ -373,10 +373,9 @@ public class GameView {
     private void drawCrosshairs() {
         if (gameModel.panning) {
             drawJumpArrow(spriteBatch,
-                    ResourceFactory.getInstance().getItemImage("laserglow"),
                     ResourceFactory.getInstance().getItemImage("laserbeam"),
                     ResourceFactory.getInstance().getItemImage("laserend"),
-                    ResourceFactory.getInstance().getItemImage("laserendglow")
+                    ResourceFactory.getInstance().getItemImage("arrow")
             );
         }
 
@@ -395,9 +394,8 @@ public class GameView {
         spriteBatch.setColor(Color.WHITE);
     }
 
-    private void drawJumpArrow(SpriteBatch spriteBatch, TextureRegion beamGlow, TextureRegion beam, TextureRegion end, TextureRegion endGlow) {
-        Color glowColor = Color.RED;
-        Color beamColor = Color.WHITE;
+    private void drawJumpArrow(SpriteBatch spriteBatch, TextureRegion beam, TextureRegion finger, TextureRegion tip) {
+        Color beamColor = new Color(Color.rgba8888(.5f,.5f,0,.5f));
 
         Vector2 firingDirection = new Vector2();
         firingDirection.set(gameModel.getPointPos().x - gameModel.getPlayerBody().position.x, gameModel.getPointPos().y - gameModel.getPlayerBody().position.y);
@@ -405,11 +403,10 @@ public class GameView {
 
         spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 
-        //glowColor.lerp(Color.CLEAR, .1f);
-        spriteBatch.setColor(glowColor);
+        spriteBatch.setColor(beamColor);
 
         // Finger position
-        spriteBatch.draw(endGlow,
+        spriteBatch.draw(finger,
                 gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y - Config.TILE_SIZE_X,
                 Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
                 Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
@@ -418,41 +415,11 @@ public class GameView {
                 true);
 
         // Centered on player
-        spriteBatch.draw(endGlow,
+        spriteBatch.draw(finger,
                 gameModel.getPlayerBody().position.x - Config.TILE_SIZE_X, gameModel.getPlayerBody().position.y - Config.TILE_SIZE_X,
                 Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
                 Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
-                .1f, .1f,
-                0,
-                true);
-
-        // Beam Glow
-        spriteBatch.draw(beamGlow,
-                gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y,
-                Config.TILE_SIZE_X, 0,
-                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
-                .1f, firingDirection.len() * 2,
-                firingAngle,
-                true);
-
-        //beamColor.lerp(Color.CLEAR, .2f);
-        spriteBatch.setColor(beamColor);
-
-        // Finger position
-        spriteBatch.draw(end,
-                gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y - Config.TILE_SIZE_X,
-                Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
-                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
-                .1f, .1f,
-                0,
-                true);
-
-        // Centered on player
-        spriteBatch.draw(end,
-                gameModel.getPlayerBody().position.x - Config.TILE_SIZE_X, gameModel.getPlayerBody().position.y - Config.TILE_SIZE_X,
-                Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
-                Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
-                .1f, .1f,
+                .2f, .2f,
                 0,
                 true);
 
@@ -461,16 +428,19 @@ public class GameView {
                 gameModel.getPointPos().x - Config.TILE_SIZE_X, gameModel.getPointPos().y,
                 Config.TILE_SIZE_X, 0,
                 Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
-                .1f, firingDirection.len() * 2,
+                .5f, firingDirection.len() * 2,
                 firingAngle,
                 true);
 
-        spriteBatch.draw(end,
-                firingDirection.x - Config.TILE_SIZE_X, firingDirection.y - Config.TILE_SIZE_X,
+        // Arrow
+        tmpVector.set(gameModel.getPlayerBody().position).add(firingDirection.rotate(180));
+
+        spriteBatch.draw(tip,
+                tmpVector.x - Config.TILE_SIZE_X, tmpVector.y - Config.TILE_SIZE_X,
                 Config.TILE_SIZE_X, Config.TILE_SIZE_Y,
                 Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2,
-                .1f, .1f,
-                0,
+                .5f, .5f,
+                firingAngle,
                 true);
 
         spriteBatch.setColor(Color.WHITE);

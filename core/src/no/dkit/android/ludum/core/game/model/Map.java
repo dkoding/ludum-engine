@@ -67,8 +67,6 @@ public class Map {
     // For drawing the first map
     private Color getColorForItem(int val) {
         switch (val) {
-            case UniverseMap.ITEM_UPGRADE:
-                return Color.GREEN;
             case UniverseMap.ITEM_ENTRANCE_SURFACE:
                 return Color.GREEN;
             case UniverseMap.ITEM_ENTRANCE_UNIVERSE:

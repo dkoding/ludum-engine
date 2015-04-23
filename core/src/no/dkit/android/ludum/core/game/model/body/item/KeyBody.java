@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
 import no.dkit.android.ludum.core.game.factory.LightFactory;
@@ -14,10 +15,12 @@ import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.factory.TextItem;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
-import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
 
 public class KeyBody extends GameBody {
+    float mod = 1f;
     long lastSound = System.currentTimeMillis();
+    private Vector2 effectPosition = new Vector2();
+    private Vector2 originalPosition = new Vector2();
 
     public KeyBody(Body body, float halfTileSizeX, TextureRegion image) {
         super(body, halfTileSizeX, image);
@@ -26,6 +29,7 @@ public class KeyBody extends GameBody {
         lightMod = .2f;
         rotationMod = 0;
         bodyType = BODY_TYPE.METAL;
+        this.originalPosition.set(position);
     }
 
     @Override
@@ -33,13 +37,23 @@ public class KeyBody extends GameBody {
         return DRAW_LAYER.FRONT;
     }
 
+    @Override
+    public void update() {
+        if(!active) return;
+        body.setTransform(this.originalPosition.x, this.originalPosition.y + MathUtils.sin(MathUtils.PI*mod), 0);
+        this.position.set(this.originalPosition.x, this.originalPosition.y + MathUtils.sin(MathUtils.PI*mod));
+    }
+
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive() || image == null) return;
 
         spriteBatch.setColor(color);
 
+        mod-=.01f;
+        if(mod<=0) mod =1;
+
         spriteBatch.draw(image,
-                body.getPosition().x - radius, body.getPosition().y - radius,
+                position.x - radius, position.y - radius,
                 radius, radius,
                 radius * 2, radius * 2,
                 .75f, .75f,
@@ -51,7 +65,7 @@ public class KeyBody extends GameBody {
 
     @Override
     public void collidedWith(GameBody other) { // Will always be playerbody because of collission bits
-        ((PlayerBody) other).getData().addKey();
+        XXXX.playerData.addKey();
 
         TextFactory.getInstance().addText(new TextItem("BABY RESCUED! FIND THE EXIT!"), 0f);
 
@@ -61,11 +75,12 @@ public class KeyBody extends GameBody {
         SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.CASH);
 
         while (counter < 50) {
-            Vector2 position = other.position;
-            position.add(MathUtils.random(-Config.getDimensions().WORLD_WIDTH / 2, Config.getDimensions().WORLD_WIDTH / 2),
+            effectPosition.set(other.position);
+            effectPosition.add(MathUtils.random(-Config.getDimensions().WORLD_WIDTH / 2, Config.getDimensions().WORLD_WIDTH / 2),
                     MathUtils.random(-Config.getDimensions().WORLD_HEIGHT / 2, Config.getDimensions().WORLD_HEIGHT / 2));
-            EffectFactory.getInstance().addEffect(position, EffectFactory.EFFECT_TYPE.ACHIEVE);
-            Light light = LightFactory.getInstance().getLight(position.x, position.y, Config.TILE_SIZE_X * 2, 6, new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1));
+            EffectFactory.getInstance().addEffect(effectPosition, EffectFactory.EFFECT_TYPE.ACHIEVE);
+            Light light = LightFactory.getInstance().getLight(effectPosition.x, effectPosition.y, Config.TILE_SIZE_X * 2, 6,
+                    new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1));
             light.setStaticLight(true);
             counter++;
         }

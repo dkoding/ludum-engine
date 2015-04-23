@@ -22,74 +22,71 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
 
     float blobSizeXMod = 1f;
     float blobSizeYMod = 1f;
-    float eyeSizeMod = 1f;
+    float faceMod = 1f;
+
+    float currentFace = faceMod;
+    float currentX = blobSizeXMod;
+    float currentY = blobSizeYMod;
 
     public BlobPlayerBody(Body body, float radius, PlayerData data, TextureRegion image, TextureRegion eye, TextureRegion pupil, TextureRegion mouth, CONTROL_MODE controlMode, BODY_TYPE type) {
         super(body, radius, data, image, controlMode, type);
         this.eye = eye;
         this.pupil = pupil;
         this.mouth = mouth;
+        rotationMod = .1f;
     }
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive()) return;
 
-        blobSizeXMod = 1f;
-        blobSizeYMod = 1f;
+        if(currentX < blobSizeXMod) currentX+=.01f;
+        if(currentY < blobSizeYMod) currentY+=.01f;
+        if(currentFace < faceMod) currentFace +=.01f;
 
-        eyeSizeMod = 1f;
-
-        if(state == STATE.JUMPING) {
-            blobSizeXMod = 0.9f;
-            blobSizeYMod = 1.1f;
-        }
-
-        if(state == STATE.HURTING) {
-            eyeSizeMod = 1.2f;
-        }
-
-        if(state == STATE.LANDING || state == STATE.STARTJUMP) {
-            blobSizeXMod = 1.1f;
-            blobSizeYMod = 0.9f;
-        }
+        if(currentX > blobSizeXMod) currentX-=.01f;
+        if(currentY > blobSizeYMod) currentY-=.01f;
+        if(currentFace > faceMod) currentFace -=.01f;
 
         spriteBatch.setColor(Config.COLOR_5_BLUE_LIGHTEST);
         spriteBatch.draw(image,
                 position.x - radius, position.y - radius,
                 radius, radius,
                 radius * 2, radius * 2,
-                1 * blobSizeXMod, 1 * blobSizeYMod,
-                0,
-                true);
-
-        spriteBatch.setColor(Color.RED);
-        spriteBatch.draw(mouth,
-                position.x - radius, position.y - radius - .1f,
-                radius, radius,
-                radius * 2, radius * 2,
-                .25f * eyeSizeMod, .25f * eyeSizeMod,
+                1 * currentX, 1 * currentY,
                 0,
                 true);
 
         spriteBatch.setColor(Color.WHITE);
+        spriteBatch.draw(mouth,
+                position.x - radius, position.y - radius - .1f,
+                radius, radius,
+                radius * 2, radius * 2,
+                .25f * currentFace, .25f * currentFace,
+                90,
+                true);
 
-        eyeBase = .15f;
+        if(health > 20)
+            spriteBatch.setColor(Color.WHITE);
+        else
+            spriteBatch.setColor(Color.RED);
+
+        eyeBase = .1f;
 
         spriteBatch.draw(eye,
                 position.x - radius - eyeBase, position.y - radius + eyeBase,
                 radius, radius,
                 radius * 2, radius * 2,
-                .5f * eyeSizeMod, .5f * eyeSizeMod,
-                0,
+                .3f * currentFace, .3f * currentFace,
+                -90,
                 true);
 
         spriteBatch.draw(eye,
                 position.x - radius + eyeBase, position.y - radius + eyeBase,
                 radius, radius,
                 radius * 2, radius * 2,
-                .5f * eyeSizeMod, .5f * eyeSizeMod,
-                0,
+                .3f * currentFace, .3f * currentFace,
+                -90,
                 true);
 
         spriteBatch.setColor(Config.COLOR_5_BLUE_LIGHTEST);
@@ -97,7 +94,7 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                 position.x - radius - eyeBase, position.y - radius + eyeBase,
                 radius, radius,
                 radius * 2, radius * 2,
-                .25f * eyeSizeMod, .25f * eyeSizeMod,
+                .2f * currentFace, .2f * currentFace,
                 0,
                 true);
 
@@ -105,7 +102,7 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                 position.x - radius + eyeBase, position.y - radius + eyeBase,
                 radius, radius,
                 radius * 2, radius * 2,
-                .25f * eyeSizeMod, .25f * eyeSizeMod,
+                .2f * currentFace, .2f * currentFace,
                 0,
                 true);
 
@@ -117,24 +114,29 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
         super.hit(damage);
         stateTimer = System.currentTimeMillis();
         state = STATE.HURTING;
+        faceMod = 1.2f;
     }
 
     @Override
     public void onLick() {
         stateTimer = System.currentTimeMillis();
         state = STATE.LICKING;
+        faceMod = 1.2f;
     }
 
     @Override
     public void onSlurp() {
         stateTimer = System.currentTimeMillis();
         state = STATE.LICKING;
+        faceMod = 1.2f;
     }
 
     @Override
     public void onLanded() {
         stateTimer = System.currentTimeMillis();
         state = STATE.LANDING;
+        blobSizeXMod = 1.1f;
+        blobSizeYMod = 0.9f;
     }
 
     @Override
@@ -143,6 +145,12 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
 
         if (state != STATE.NORMAL && System.currentTimeMillis() - 250 > stateTimer) {
             state = STATE.NORMAL;
+            blobSizeXMod = 1f;
+            blobSizeYMod = 1f;
+            faceMod = 1;
+            currentFace = faceMod;
+            currentX = blobSizeXMod;
+            currentY = blobSizeYMod;
         }
     }
 
@@ -151,6 +159,8 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
         super.scheduleJump(x,y);
         stateTimer = System.currentTimeMillis();
         state = STATE.STARTJUMP;
+        blobSizeXMod = 1.1f;
+        blobSizeYMod = 0.9f;
     }
 
     @Override
@@ -158,5 +168,7 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
         super.jump(x, y);
         stateTimer = System.currentTimeMillis();
         state = STATE.JUMPING;
+        blobSizeXMod = 0.9f;
+        blobSizeYMod = 1.1f;
     }
 }

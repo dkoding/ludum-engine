@@ -77,9 +77,7 @@ public class DangerBody extends GameBody {
         SoundFactory.getInstance().playDieSound(bodyType);
         EffectFactory.getInstance().addDieEffect(position, bodyType);
         BodyFactory.getInstance().createLoot(position, Loot.LOOT_TYPE.ORB);
-        BodyFactory.getInstance().createLoot(position, Loot.LOOT_TYPE.TREASURE);
         BodyFactory.getInstance().createLoot(position, Loot.LOOT_TYPE.MEDPACK);
-        BodyFactory.getInstance().createLoot(position, Loot.LOOT_TYPE.ARMOR);
         GameModel.onEvent(GameEvent.EVENT_TYPE.KILLED, this);
         delete();
     }

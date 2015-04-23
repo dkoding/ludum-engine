@@ -26,11 +26,10 @@ public class TransitionScreen implements Screen {
         this.currentTransitionEffect = 0;
         transitionEffects = new ArrayList<TransitionEffect>();
         transitionEffects.add(new FadeOutEffect(500, Color.BLACK));
-        transitionEffects.add(new FadeInEffect(500, Color.BLACK));
     }
 
     public void render(float delta) {
-        if (currentTransitionEffect == 0) {
+        if (currentTransitionEffect == transitionEffects.size()) {
             game.setScreen(next);
 
             if (!(current instanceof GameScreen))
@@ -41,11 +40,12 @@ public class TransitionScreen implements Screen {
             return;
         }
 
-        transitionEffects.get(currentTransitionEffect).update(Gdx.graphics.getDeltaTime());
         transitionEffects.get(currentTransitionEffect).render(current, next);
 
         if (transitionEffects.get(currentTransitionEffect).isFinished()) {
             currentTransitionEffect++;
+            if (currentTransitionEffect < transitionEffects.size())
+                transitionEffects.get(currentTransitionEffect).init();
         }
     }
 

@@ -5,13 +5,16 @@ import box2dLight.Light;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
+import no.dkit.android.ludum.core.game.factory.LevelFactory;
 import no.dkit.android.ludum.core.game.factory.LootFactory;
 import no.dkit.android.ludum.core.game.factory.ParticleBox2D;
 import no.dkit.android.ludum.core.game.factory.SoundFactory;
@@ -147,7 +150,10 @@ public abstract class GameBody {
     public void onDeath() {
         SoundFactory.getInstance().playDieSound(bodyType);
         EffectFactory.getInstance().addDieEffect(position, bodyType);
-        BodyFactory.getInstance().createLoot(position, LootFactory.getInstance().getRandomLootType());
+
+        if(MathUtils.random.nextFloat() < (Config.LOOT_CHANCE / (float)LevelFactory.level))
+            BodyFactory.getInstance().createLoot(position, LootFactory.getInstance().getRandomLootType());
+
         GameModel.onEvent(GameEvent.EVENT_TYPE.KILLED, this);
         delete();
     }

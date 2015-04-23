@@ -39,6 +39,12 @@ public class Limb extends AgentBody {
 
     @Override
     public void collidedWith(GameBody other) {
+
+    }
+
+    @Override
+    public void hit(int damage) {
+        head.hit(damage);
     }
 
     @Override

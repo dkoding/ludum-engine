@@ -54,4 +54,9 @@ public class LampBody extends DirectionalGameBody {
     public DRAW_LAYER getDrawLayer() {
         return DRAW_LAYER.BACK;
     }
+
+    @Override
+    public void hit(int damage) {
+
+    }
 }

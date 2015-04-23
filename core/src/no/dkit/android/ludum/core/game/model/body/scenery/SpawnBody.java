@@ -5,8 +5,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
+import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
+import no.dkit.android.ludum.core.game.factory.LevelFactory;
 import no.dkit.android.ludum.core.game.factory.LightFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
@@ -26,7 +28,7 @@ public class SpawnBody extends GameBody {
     public void update() {
         super.update();
 
-        if (GameModel.getNumEnemies() < Config.MAX_ENEMIES && MathUtils.random() < Config.ENEMY_CHANCE) {
+        if (GameModel.getNumEnemies() < Config.MAX_ENEMIES && MathUtils.random() < Config.ENEMY_CHANCE * LevelFactory.level) {
             BodyFactory.getInstance().createAgent(Level.getInstance().getRandomEnemyType(),
                     position.cpy().add(
                             MathUtils.random(-Config.TILE_SIZE_X, Config.TILE_SIZE_X),

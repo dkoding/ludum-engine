@@ -4,16 +4,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import no.dkit.android.ludum.core.game.Config;
-import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
-import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
-import no.dkit.android.ludum.core.game.model.body.scenery.SpawnBody;
-import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class LaserBody {
     long startTime;
@@ -104,28 +99,11 @@ public class LaserBody {
     }
 
     public void collidedWith(GameBody other, Vector2 end) {
-        if (other instanceof SpawnBody) {
+        other.hit(damage);
+        if (other instanceof AgentBody) {
             EffectFactory.getInstance().addHitEffect(end, other.bodyType, rotation - 90);
-
-            ((SpawnBody) other).rotationMod += 2;
-            ((SpawnBody) other).lightMod += .1f;
-            ((SpawnBody) other).alphaMod += .1f;
-
-            if (((SpawnBody) other).rotationMod > 20) {
-                other.delete();
-                EffectFactory.getInstance().addEffect(other.position, EffectFactory.EFFECT_TYPE.BIGEXPLOSION);
-
-                if (GameModel.getNumEnemies() < Config.MAX_ENEMIES && MathUtils.random() < Config.ENEMY_CHANCE) {
-                    BodyFactory.getInstance().createAgent(Level.getInstance().getRandomEnemyType(), other.position);
-                }
-            }
         } else {
-            other.hit(damage);
-            if (other instanceof AgentBody) {
-                EffectFactory.getInstance().addHitEffect(end, other.bodyType, rotation-90);
-            } else {
-                EffectFactory.getInstance().addHitEffect(end, other.bodyType, rotation - 270);
-            }
+            EffectFactory.getInstance().addHitEffect(end, other.bodyType, rotation - 270);
         }
     }
 }

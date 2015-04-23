@@ -1,12 +1,11 @@
 package no.dkit.android.ludum.core.game;
 
 import com.badlogic.gdx.graphics.Color;
-import no.dkit.android.ludum.core.game.model.PlayerData;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class Config {
-    public static int rescues = 0;      // Ugly but what the hell...
-    public static final float TONGUE_SPEED = 30f;
+    public static final float TONGUE_SPEED = 50f;
+    public static final float LOOT_CHANCE = 1f;
     public static Color COLOR_1_PURPLE = Color.valueOf("7a00ff");
     public static Color COLOR_2_BLUE_DARK = Color.valueOf("2a0ce8");
     public static Color COLOR_3_BLUE_MEDIUM = Color.valueOf("0031ff");
@@ -15,7 +14,7 @@ public class Config {
 
     public static final int MAX_LEVEL = 10000;
     public static boolean DEBUG = false;
-    public static final float DEBUG_SCALE = 1f;
+    public static final float DEBUG_SCALE = .5f;
     public static boolean DEBUGTEXT = false;
 
     public static final boolean SANDBOX = false;
@@ -42,7 +41,7 @@ public class Config {
 
     public static final float FPS = 60f;
     public static final int NUM_PARTICLES = 30;
-    public static final float ENEMY_CHANCE = .1f;
+    public static final float ENEMY_CHANCE = .01f;
 
     public static final int PLAYER_START_HEALTH = 100;
     public static final int PLAYER_START_ARMOR = 100;
@@ -63,7 +62,7 @@ public class Config {
     public static final int MAX_MINES = 20;
     public static final int MAX_ROCKS = UNIVERSE_SIZE * 4;
     public static final int MAX_CANNONS = 10;
-    public static final int MAX_LAMPS = 10;
+    public static final int MAX_LAMPS = 25;
     public static final int MAX_CRATES = 10;
 
     public static final long ITEM_TTL = 5000;
@@ -75,7 +74,7 @@ public class Config {
     public static final float BULLET_RATE_HIGH = .3f;
     public static final int NUM_STARS = 25;
     public static final long RANDOM_SEED = 666;
-    public static final int MAX_KEYS = 10;
+    public static final int MAX_KEYS = 1;
     public static final int MAX_EXITS = 1;
     public static final int MAX_LIQUID = 10;
 
@@ -149,7 +148,7 @@ public class Config {
             SCREEN_SHORTEST = SCREEN_HEIGHT > SCREEN_WIDTH ? SCREEN_WIDTH : SCREEN_HEIGHT;
             ASPECT_RATIO = (float) SCREEN_SHORTEST / (float) SCREEN_LONGEST;
 
-            WORLD_WIDTH = 10;   // Number of tiles across screen
+            WORLD_WIDTH = 8;   // Number of tiles across screen
             WORLD_HEIGHT = (int) (WORLD_WIDTH * ASPECT_RATIO);
 
             float fraction = (WORLD_WIDTH * ASPECT_RATIO) - WORLD_HEIGHT;
@@ -171,9 +170,9 @@ public class Config {
     public static final int BOX_VELOCITY_ITERATIONS = 3;
     public static final float BOX_STEP = 1 / 25f;
 
-    public static final float PLAYER_MAX_SPEED = 3f;
+    public static final float PLAYER_MAX_SPEED = 5f;
     public static final float PLAYER_MIN_SPEED = 0f;
-    public static final float MAX_SPEED = .5f;
+    public static final float MAX_SPEED = 1f;
     public static final float LOOT_SPEED = .1f;
     public static final float MIN_SPEED = .01f;
     public static final float ROTATE_SPEED = 5f;

@@ -46,6 +46,7 @@ import no.dkit.android.ludum.core.game.model.body.scenery.PlatformBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.LaserBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.ParticleBody;
+import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.model.world.level.SandboxLevel;
@@ -226,7 +227,7 @@ public class GameModel {
                     playerBody = BodyFactory.getInstance().createTopDownPlayerVehicle(level.getStartPosition());
         }
 
-        final Weapon weapon = LootFactory.getInstance().getWeapon(level.getWeaponTypes().get(0));
+        final Weapon weapon = LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.TONGUE);
         weapon.onPickup(playerBody);
 
         playerBody.getBody().setLinearVelocity(0, 0);
@@ -772,10 +773,6 @@ public class GameModel {
         return playerBody.getOrbs();
     }
 
-    public int getGold() {
-        return playerBody.getCredits();
-    }
-
     public int getKeys() {
         return playerBody.getKeys();
     }
@@ -889,7 +886,4 @@ public class GameModel {
         getPlayer().removeKeyPress(i);
     }
 
-    public int getArmor() {
-        return playerBody.getArmor();
-    }
 }

@@ -41,7 +41,7 @@ public class AnimatedAgentBody extends AgentBody {
         if(flying)
             animTimer += Gdx.graphics.getDeltaTime();
         else
-            animTimer += speed/30f;
+            animTimer += speed/60f;
 
         currentFrame = walk.getKeyFrame(animTimer, true);
 
@@ -49,7 +49,7 @@ public class AnimatedAgentBody extends AgentBody {
                 body.getPosition().x - radius, body.getPosition().y + radius,
                 radius, radius,
                 radius * 2, radius * 2,
-                scale, scale*.5f,
+                scale, scale*.25f,
                 0);
 
         spriteBatch.draw(image,
@@ -57,7 +57,7 @@ public class AnimatedAgentBody extends AgentBody {
                 radius, radius,
                 radius * 2, radius * 2,
                 scale, scale,
-                angle - 90);
+                0);
 
         spriteBatch.setColor(Color.WHITE);
     }

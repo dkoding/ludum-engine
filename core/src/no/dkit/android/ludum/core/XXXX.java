@@ -10,7 +10,6 @@ import no.dkit.android.ludum.core.game.controller.HelpScreen;
 import no.dkit.android.ludum.core.game.controller.LoadingScreen;
 import no.dkit.android.ludum.core.game.controller.MenuScreen;
 import no.dkit.android.ludum.core.game.controller.SplashScreen;
-import no.dkit.android.ludum.core.game.controller.UpgradeScreen;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
 import no.dkit.android.ludum.core.game.factory.LightFactory;
@@ -29,7 +28,7 @@ public class XXXX extends ApplicationAdapter {
     private static boolean isChanging = false;
     private static Game game;
     private static Screen existingGameScreen;
-    public static PlayerData playerData;
+    public static PlayerData playerData = new PlayerData();
 
     public static Config.PERFORMANCE performance;
 
@@ -41,22 +40,12 @@ public class XXXX extends ApplicationAdapter {
         return game;
     }
 
-    public static void updateGameScreen() {
-        if (game.getScreen() instanceof GameScreen) // Safeguard
-            ((GameScreen) game.getScreen()).update();
-    }
-
-    public static void updateWeaponButton(Weapon weapon) {
-        if (game.getScreen() instanceof GameScreen) // Safeguard
-            ((GameScreen) game.getScreen()).updateWeaponButton(weapon);
-    }
-
     public static void setScreen(Screen screen) {
         game.setScreen(screen);
         isChanging = false;
     }
 
-    public enum SCREEN {SPLASH, STARTMENU, GAME, WIN_LEVEL, UPGRADE, AFTER_UPGRADE, WIN_GAME, HELP}
+    public enum SCREEN {SPLASH, STARTMENU, GAME, WIN_LEVEL, WIN_GAME, HELP}
 
     public enum AIM_MODE {DIRECTION, FOCUSED}
 
@@ -111,11 +100,6 @@ public class XXXX extends ApplicationAdapter {
             newScreen = new MenuScreen();
         } else if (to.equals(SCREEN.HELP)) {
             newScreen = new HelpScreen();
-        } else if (to.equals(SCREEN.UPGRADE)) {
-            newScreen = new UpgradeScreen();
-            existingGameScreen = oldScreen;
-        } else if (to.equals(SCREEN.AFTER_UPGRADE)) {
-            newScreen = existingGameScreen;
         } else if (to.equals(SCREEN.STARTMENU)) {
             newScreen = new MenuScreen();
         }
@@ -123,7 +107,6 @@ public class XXXX extends ApplicationAdapter {
         game.setScreen(new TransitionScreen(game, oldScreen, newScreen, new DoneCallback() {
             public void done(Screen oldScreen, Screen newScreen) {
                 isChanging = false;
-                XXXX.updateGameScreen();
             }
         }));
     }
@@ -137,7 +120,6 @@ public class XXXX extends ApplicationAdapter {
             @Override
             public void done(Screen oldScreen, Screen newScreen) {
                 isChanging = false;
-                XXXX.updateGameScreen();
             }
         }));
     }

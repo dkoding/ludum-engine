@@ -3,6 +3,7 @@ package no.dkit.android.ludum.core.game.model.world.level;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
+import no.dkit.android.ludum.core.game.factory.LevelFactory;
 import no.dkit.android.ludum.core.game.factory.LightFactory;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
@@ -214,9 +215,12 @@ public abstract class Level {
 
         enemyTypes.addAll(
                 Arrays.asList(
-                        BodyFactory.ENEMY_TYPE.BLOB,
+                        BodyFactory.ENEMY_TYPE.WALKER_SINGLE,
+                        BodyFactory.ENEMY_TYPE.WALKER_SINGLE,
+                        BodyFactory.ENEMY_TYPE.WALKER_SINGLE,
                         BodyFactory.ENEMY_TYPE.FLYER_SINGLE,
-                        BodyFactory.ENEMY_TYPE.WALKER_SINGLE
+                        BodyFactory.ENEMY_TYPE.FLYER_SINGLE,
+                        BodyFactory.ENEMY_TYPE.BLOB
                 )
         );
         walkers.addAll(
@@ -236,15 +240,9 @@ public abstract class Level {
         weaponTypes.clear();
         lootTypes.clear();
 
-        weaponTypes.addAll(
-                Arrays.asList(
-                        Loot.LOOT_TYPE.TONGUE
-                ));
         lootTypes.addAll(
                 Arrays.asList(
                         Loot.LOOT_TYPE.MEDPACK,
-                        Loot.LOOT_TYPE.TREASURE,
-                        Loot.LOOT_TYPE.ARMOR,
                         Loot.LOOT_TYPE.ORB
                 )
         );
@@ -296,7 +294,10 @@ public abstract class Level {
     }
 
     public BodyFactory.ENEMY_TYPE getRandomEnemyType() {
-        return enemyTypes.get(MathUtils.random(enemyTypes.size() - 1));
+        int max = LevelFactory.level;
+        if(max > enemyTypes.size() -1) max = enemyTypes.size()-1;
+
+        return enemyTypes.get(MathUtils.random(max));
     }
 
     public BodyFactory.FEATURE_TYPE getRandomIndoorFeatureType() {

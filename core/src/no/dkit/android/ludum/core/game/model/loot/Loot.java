@@ -8,15 +8,12 @@ public abstract class Loot {
         GUN,
         ROCKET,
         TONGUE,
-        DONGUE,
         FIREBALL,
         FLAME_THROWER,
         LASER,
 
         MEDPACK,
-        ORB,
-        TREASURE,
-        ARMOR
+        ORB
     }
 
     LOOT_TYPE type;

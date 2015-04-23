@@ -1,8 +1,6 @@
 package no.dkit.android.ludum.core.game.factory;
 
-import no.dkit.android.ludum.core.game.model.loot.Armor;
 import no.dkit.android.ludum.core.game.model.loot.Bomb;
-import no.dkit.android.ludum.core.game.model.loot.Dongue;
 import no.dkit.android.ludum.core.game.model.loot.Fireball;
 import no.dkit.android.ludum.core.game.model.loot.Flamethrower;
 import no.dkit.android.ludum.core.game.model.loot.Gun;
@@ -12,7 +10,6 @@ import no.dkit.android.ludum.core.game.model.loot.Medpack;
 import no.dkit.android.ludum.core.game.model.loot.Orb;
 import no.dkit.android.ludum.core.game.model.loot.Rocket;
 import no.dkit.android.ludum.core.game.model.loot.Tongue;
-import no.dkit.android.ludum.core.game.model.loot.Treasure;
 import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
@@ -39,12 +36,8 @@ public class LootFactory {
         weapons.add(Loot.LOOT_TYPE.GUN);
         weapons.add(Loot.LOOT_TYPE.LASER);
         weapons.add(Loot.LOOT_TYPE.ROCKET);
-        weapons.add(Loot.LOOT_TYPE.TONGUE);
-        weapons.add(Loot.LOOT_TYPE.DONGUE);
 
         loot.addAll(weapons);
-        loot.add(Loot.LOOT_TYPE.TREASURE);
-        loot.add(Loot.LOOT_TYPE.ARMOR);
         loot.add(Loot.LOOT_TYPE.MEDPACK);
         loot.add(Loot.LOOT_TYPE.ORB);
     }
@@ -55,10 +48,6 @@ public class LootFactory {
 
     public Loot getLoot(Loot.LOOT_TYPE type) {
         switch (type) {
-            case TREASURE:
-                return new Treasure();
-            case ARMOR:
-                return new Armor();
             case MEDPACK:
                 return new Medpack();
             case ORB:
@@ -84,8 +73,6 @@ public class LootFactory {
                 return new Rocket();
             case TONGUE:
                 return new Tongue();
-            case DONGUE:
-                return new Dongue();
             default:
                 throw new RuntimeException("DERP..." + type);
         }

@@ -56,7 +56,7 @@ public class SoundFactory implements AssetErrorListener {
         musicFileNames.put(MUSIC_TYPE.LOSE, "dead");
         musicFileNames.put(MUSIC_TYPE.WIN, "win");
         musicFileNames.put(MUSIC_TYPE.MENU, "menu");
-        musicFileNames.put(MUSIC_TYPE.GAME, "menu");
+        musicFileNames.put(MUSIC_TYPE.GAME, "game");
 
         soundFileNames = new HashMap<SOUND_TYPE, String>();
 

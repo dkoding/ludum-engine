@@ -76,10 +76,8 @@ public class LootBody extends PoolableGameBody {
     public void draw(SpriteBatch spriteBatch) {
         if (!isActive() || image == null) return;
 
-        if(type == Loot.LOOT_TYPE.TREASURE) color = Config.COLOR_5_BLUE_LIGHTEST;
-        else if(type == Loot.LOOT_TYPE.MEDPACK) color = Config.COLOR_1_PURPLE;
-        else if(type == Loot.LOOT_TYPE.ORB) color = Config.COLOR_4_BLUE_LIGHT;
-        else if(type == Loot.LOOT_TYPE.ARMOR) color = Config.COLOR_3_BLUE_MEDIUM;
+        if(type == Loot.LOOT_TYPE.MEDPACK) color = Color.RED;
+        else if(type == Loot.LOOT_TYPE.ORB) color = Color.RED;
         else if(type == Loot.LOOT_TYPE.TONGUE) color = Color.RED;
 
 /*

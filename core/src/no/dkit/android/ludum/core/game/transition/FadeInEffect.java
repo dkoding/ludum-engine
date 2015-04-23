@@ -7,11 +7,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class FadeInEffect extends TransitionEffect {
-
     Color color = new Color();
     ShapeRenderer spriteBatch;
 
-    public FadeInEffect(float duration, Color color) {
+    public FadeInEffect(long duration, Color color) {
         super(duration);
         this.color = color;
 
@@ -26,7 +25,7 @@ public class FadeInEffect extends TransitionEffect {
         Gdx.gl20.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         spriteBatch.begin(ShapeRenderer.ShapeType.Filled);
-        spriteBatch.setColor(0, 0, 0, 1 - getAlpha());
+        spriteBatch.setColor(0, 0, 0, 1f - getDelta());
         spriteBatch.rect(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         spriteBatch.end();
         Gdx.gl20.glDisable(GL20.GL_BLEND);

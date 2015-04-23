@@ -18,7 +18,14 @@ public class CaveMap extends AbstractMap {
     public CaveMap createMap(int level, boolean inside, boolean platforms) {
         MathUtils.random = new Random(Config.RANDOM_SEED + level);
 
-        initVariables(Config.CAVE_SIZE, Config.CAVE_SIZE);
+        if(level == 1)
+            initVariables(Config.CAVE_SIZE/3, Config.CAVE_SIZE/3);
+        else if (level == 2) {
+            initVariables(Config.CAVE_SIZE/2, Config.CAVE_SIZE/2);
+        } else {
+            initVariables(Config.CAVE_SIZE, Config.CAVE_SIZE);
+        }
+
 
         float fillProb = .4f;
         init(map2d, fillProb);

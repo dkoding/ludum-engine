@@ -68,7 +68,6 @@ public abstract class AbstractMap {
         public static final int ITEM_REWARD = 13; // Pickup
     */
     public static final int ITEM_CANNON = 14; // Cannon
-    public static final int ITEM_UPGRADE = 15; // Upgrade
     public static final int ITEM_ENTRANCE_SURFACE = 16; // Exit
     public static final int ITEM_KEY = 17; // Key
     public static final int ITEM_ENTRANCE_CAVE = 18; // Exit
@@ -1009,33 +1008,15 @@ public abstract class AbstractMap {
             placeItemsOnSurface(Config.MAX_KEYS, ITEM_KEY, N, space, surface);
             placeItemsWithinEmptySpace(Config.MAX_LOOT, ITEM_LOOT, space);
             placeLamps(space, surface);
-            placeCannons(level, space, surface);
-        } else if (levelType == Level.LEVEL_TYPE.TOPDOWN) {
-            placeItemsWithinEmptySpace(Config.MAX_EXITS, ITEM_ENTRANCE_UNIVERSE, space);
-            placeItemsWithinEmptySpace(Config.MAX_EXITS, ITEM_ENTRANCE_SURFACE, space);
-            placeItemsWithinEmptySpace(Config.MAX_EXITS, ITEM_ENTRANCE_CAVE, space);
-            if (!inside && (!chasms && space == AbstractMap.ROOM))
-                placeItemsWithinEmptySpace(Config.MAX_LIQUID, ITEM_LIQUID_TD, space);
-            placeItemsWithinEmptySpace(Config.MAX_LOOT, ITEM_LOOT, space);
-            if (!chasms && space == AbstractMap.ROOM)
-                placeItemsWithinEmptySpace(Config.MAX_FEATURES, ITEM_FEATURE, space);
-            placeLamps(space, surface);
-            placeCannons(level, space, surface);
-        } else if (levelType == Level.LEVEL_TYPE.UNIVERSE) {
-            placeItemsWithinEmptySpace(Config.MAX_EXITS, ITEM_ENTRANCE_UNIVERSE, space);
-            placeItemsWithinEmptySpace(Config.MAX_EXITS, ITEM_UPGRADE, space);
-            placeItemsWithinEmptySpace(Config.MAX_LOOT, ITEM_LOOT, space);
-            placeItemsWithinEmptySpace(Config.MAX_SPACE_FEATURES, ITEM_FEATURE, space);
-            placeItemsWithinEmptySpace(Config.MAX_ROCKS, ITEM_ROCK, space); // Create clusters
-
-            map2d[sizeX / 2][sizeY / 2] = OCCUPIED;
-            item[sizeX / 2][sizeY / 2] = ITEM_ENTRANCE_SURFACE;
+            if (level > 2)
+                placeCannons(level, space, surface);
         }
-
-        placeItemsWithinEmptySpace(level > Config.MAX_MINES ? Config.MAX_MINES :
-                level < Config.MIN_MINES ? Config.MIN_MINES : level, ITEM_MINE, space); // TODO: Cluster
-        placeItemsWithinEmptySpace(level > Config.MAX_SPAWN ? Config.MAX_SPAWN :
-                level < Config.MIN_SPAWN ? Config.MIN_SPAWN : level, ITEM_SPAWN, space); // TODO: Add starting enemies
+        if (level > 3)
+            placeItemsWithinEmptySpace(level > Config.MAX_MINES ? Config.MAX_MINES :
+                    level < Config.MIN_MINES ? Config.MIN_MINES : level, ITEM_MINE, space); // TODO: Cluster
+        if (level > 1)
+            placeItemsWithinEmptySpace(level > Config.MAX_SPAWN ? Config.MAX_SPAWN :
+                    level < Config.MIN_SPAWN ? Config.MIN_SPAWN : level, ITEM_SPAWN, space); // TODO: Add starting enemies
     }
 
     private void placeCannons(int level, int clear, int surface) {
