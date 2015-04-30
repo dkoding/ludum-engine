@@ -130,6 +130,8 @@ public class GameModel {
     private Body bodyA;
     private Body bodyB;
     final Level level;
+    private Iterator<Body> bodyIterator;
+    private Array<Contact> contactList;
 
     public GameModel(int worldWidth, int worldHeight) {
         this.worldWidth = worldWidth;
@@ -383,7 +385,8 @@ public class GameModel {
             if (Config.DEBUGTEXT)
                 System.out.println("worldBodies.size = " + worldBodies.size);
 
-            Iterator<Body> bodyIterator = worldBodies.iterator();
+            bodyIterator = worldBodies.iterator();
+
             Body currentBody;
             GameBody gameBody;
 
@@ -398,6 +401,7 @@ public class GameModel {
 
                 if (userData != null) {
                     gameBody = ((GameBody) userData);
+
                     if (gameBody instanceof AgentBody)
                         totalNumAgents++;
 
@@ -552,7 +556,7 @@ public class GameModel {
                     System.out.println("Number of contacts: " + world.getContactCount());
                 }
 
-                Array<Contact> contactList = world.getContactList();
+                contactList = world.getContactList();
 
                 for (Contact contact : contactList) {
                     if (!contact.isTouching()) continue;

@@ -189,7 +189,7 @@ public class Config {
     public static short CATEGORY_PLATFORM = 0x400;
     public static short CATEGORY_LOOT = 0x800;
 
-    public static final int JUMP_STRENGTH = 5;
+    public static final int JUMP_STRENGTH = 10;
 
     public static final float EPSILON = .01f;
 

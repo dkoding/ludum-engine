@@ -781,7 +781,11 @@ public class BodyFactory {
         else if (type == AbstractMap.BORDER)
             return new BorderBody(body, Config.TILE_SIZE_X, ResourceFactory.getInstance().getWorldTypeImage("border"));
         else
-            return new BlockBody(body, x, y, type, fixtureDef.shape.getRadius(), direction, wallTexture, GameBody.BODY_TYPE.STONE);
+            return new BlockBody(body, x, y, type, fixtureDef.shape.getRadius(), direction, getRandomWallTexture(), GameBody.BODY_TYPE.STONE);
+    }
+
+    private Texture getRandomWallTexture() {
+        return ResourceFactory.getInstance().getTexture("tile" + MathUtils.random(2,5));
     }
 
     public GameBody createItem(float x, float y, int type) {
