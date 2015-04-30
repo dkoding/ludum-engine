@@ -16,7 +16,7 @@ public abstract class AbstractShader implements RenderOperations {
 
     protected PRECISION precision = PRECISION.LOW;
 
-    protected boolean wrapped = true;
+    protected boolean wrapped = false;
     boolean enabled = true;
     private Mesh mesh;
     float time = 0;
@@ -198,6 +198,7 @@ public abstract class AbstractShader implements RenderOperations {
         shader.begin();
         shader.setUniformf("time", this.time);
         performTextureBindings();
+
         if (wrapped) {
             Gdx.gl20.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_REPEAT);
             Gdx.gl20.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_REPEAT);
@@ -205,6 +206,7 @@ public abstract class AbstractShader implements RenderOperations {
             Gdx.gl20.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_S, GL20.GL_CLAMP_TO_EDGE);
             Gdx.gl20.glTexParameteri(GL20.GL_TEXTURE_2D, GL20.GL_TEXTURE_WRAP_T, GL20.GL_CLAMP_TO_EDGE);
         }
+
         mesh.render(shader, GL20.GL_TRIANGLES);
         shader.end();
     }

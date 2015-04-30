@@ -227,7 +227,12 @@ public class AgentBody extends PoolableGameBody {
         }
 */
 
-        image.flip(body.getLinearVelocity().x < 0, false);
+        final boolean goingLeft = body.getLinearVelocity().x < 0;
+
+        if(goingLeft && !image.isFlipX())
+            image.flip(true, false);
+        else if (!goingLeft && image.isFlipX())
+            image.flip(true, false);
 
         spriteBatch.setColor(color);
 

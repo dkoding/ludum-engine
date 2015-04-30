@@ -25,6 +25,7 @@ public class BlockBody extends DirectionalGameBody {
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.color = new Color(Color.rgba8888(MathUtils.random(), MathUtils.random(), MathUtils.random(), .5f + MathUtils.random(.5f)));
     }
 
     public int getX() {
@@ -42,6 +43,8 @@ public class BlockBody extends DirectionalGameBody {
 
     public void draw(SpriteBatch spriteBatch, Texture texture) {
         if (!isActive()) return;
+
+        spriteBatch.setColor(color);
 
         spriteBatch.draw(texture,
                 body.getPosition().x - Config.TILE_SIZE_X, body.getPosition().y - Config.TILE_SIZE_Y,

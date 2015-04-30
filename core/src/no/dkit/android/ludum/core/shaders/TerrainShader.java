@@ -1,5 +1,6 @@
 package no.dkit.android.ludum.core.shaders;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
@@ -7,6 +8,7 @@ public class TerrainShader {
     Texture dirmask;
     Texture angleMask;
     Texture texture;
+    Color color = Color.WHITE;
     private ShaderProgram shader;
 
     public TerrainShader(Texture dirmask, Texture anglemask) {
@@ -41,6 +43,7 @@ public class TerrainShader {
                         + "#endif\n" + //
                         "varying LOWP vec4 vColor;\n" +
                         "varying vec2 vTexCoord;\n" +
+                        "uniform vec4 color;\n" +
                         "uniform sampler2D u_texture;\n" +
                         "uniform sampler2D u_mask;\n" +
                         "void main(void) {\n" +
@@ -49,7 +52,7 @@ public class TerrainShader {
                         "	//get the mask; we will only use the alpha channel\n" +
                         "	float mask = texture2D(u_mask, vTexCoord).a;\n" +
                         "	//Calculate color and mask\n" +
-                        "	gl_FragColor = texColor0 * mask;\n" +
+                        "	gl_FragColor = texColor0 * mask * color;\n" +
                         "}";
 
         ShaderProgram.pedantic = false;
@@ -62,6 +65,7 @@ public class TerrainShader {
         shader.begin();
         shader.setUniformi("u_mask", 1);
         shader.setUniformi("u_texture", 0);
+        shader.setUniformf("color", color);
         shader.end();
     }
 
@@ -79,6 +83,11 @@ public class TerrainShader {
     public void bind(Texture texture) {
         this.texture = texture;
         this.texture.bind(0);
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+        shader.setUniformf("color", color);
     }
 
     public Texture getTexture() {

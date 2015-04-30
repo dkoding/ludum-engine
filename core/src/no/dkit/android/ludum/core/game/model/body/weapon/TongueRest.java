@@ -3,6 +3,7 @@ package no.dkit.android.ludum.core.game.model.body.weapon;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
+import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
 
 public class TongueRest extends WeaponBody {
     public TongueRest(Body body, float radius) {
@@ -47,5 +48,13 @@ public class TongueRest extends WeaponBody {
 
     @Override
     protected void hurt() {
+    }
+
+    @Override
+    protected void hitNonAgentEffect(GameBody other) {
+    }
+
+    @Override
+    protected void hitAgentEffect(AgentBody other) {
     }
 }

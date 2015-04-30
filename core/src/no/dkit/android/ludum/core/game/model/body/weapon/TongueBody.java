@@ -91,14 +91,14 @@ public class TongueBody extends WeaponBody {
         tongueColor = Color.RED.cpy();
 
         for (int i = rest.length - 1; i > -1; i--) {
-            tongueColor.set(1f - (i * mod), 0, 0, .9f);
+            tongueColor.set(1f - (i * mod), 0, 0, 1f);
             spriteBatch.setColor(tongueColor);
 
             spriteBatch.draw(image,
                     rest[i].getPosition().x - radius, rest[i].getPosition().y - radius,
                     radius, radius,
                     radius * 2, radius * 2,
-                    max - (slice*i), max - (slice*i),
+                    max - (slice * i), max - (slice * i),
                     0,
                     true);
         }
@@ -118,27 +118,6 @@ public class TongueBody extends WeaponBody {
 
     @Override
     public void delete() {
-/*
-        body.setUserData(new DiscardBody(body));
-
-        for (Body rest : this.rest) {
-            rest.setUserData(new DiscardBody(rest));
-*/
-/*
-            Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                    Body limb = rest[x];
-                    limb.setUserData(new DiscardBody(limb));
-
-                    if (x == rest.length)
-                        body.setUserData(new DiscardBody(body));
-                }
-            }, .05f * i);
-*//*
-
-        }
-*/
     }
 
     @Override
@@ -146,23 +125,25 @@ public class TongueBody extends WeaponBody {
         return DRAW_LAYER.FRONT;
     }
 
-    public void lick(Vector2 target, Vector2 firingDirection, float speed) {
-        slurp(target);
-        for (int i = rest.length / 2; i > 0; i--) {
+    public void lick(Vector2 playerPos, Vector2 firingDirection, float speed) {
+        slurp(playerPos);
+
+        for (int i = rest.length / 2; i >= 0; i--) {
             rest[i].applyForceToCenter(firingDirection.nor().scl(speed), true);
         }
+
         tip.applyForceToCenter(firingDirection.nor().scl(speed), true);
     }
 
-    public void slurp(Vector2 target) {
+    public void slurp(Vector2 playerPos) {
         tip.setAngularVelocity(0);
         tip.setLinearVelocity(0, 0);
-        tip.setTransform(target.x, target.y, 0);
+        tip.setTransform(playerPos.x, playerPos.y, 0);
 
         for (int i = rest.length - 1; i > 0; i--) {
             rest[i].setAngularVelocity(0);
             rest[i].setLinearVelocity(0, 0);
-            rest[i].setTransform(target.x, target.y, 0);
+            rest[i].setTransform(playerPos.x, playerPos.y, 0);
         }
     }
 

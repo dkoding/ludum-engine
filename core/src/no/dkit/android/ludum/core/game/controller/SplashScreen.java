@@ -16,11 +16,19 @@ public class SplashScreen implements Screen {
     boolean ready = false;
     boolean ready2 = false;
 
+    float xPos;
+    float yPos;
+
     public SplashScreen() {
         spriteBatch = new SpriteBatch();
         splash = new Texture(Gdx.files.internal("images/dkit.png"));
         ResourceFactory.createForUI();
         SoundFactory.getInstance();
+
+        xPos = Config.getDimensions().SCREEN_WIDTH / 2 - splash.getWidth() / 2;
+        yPos = Config.getDimensions().SCREEN_HEIGHT / 2 - splash.getHeight() / 2;
+
+        // WTF..........    Plutselig vises ingen ting i WEB versjonen etter 1.5.6... ARGH!
     }
 
     public void render(float delta) {
@@ -31,9 +39,7 @@ public class SplashScreen implements Screen {
         Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         spriteBatch.begin();
-        spriteBatch.draw(splash,
-                Config.getDimensions().SCREEN_WIDTH / 2 - splash.getWidth() / 2,
-                Config.getDimensions().SCREEN_HEIGHT / 2 - splash.getHeight() / 2);
+        spriteBatch.draw(splash, xPos, yPos);
         spriteBatch.end();
 
         if (ready && ready2) {

@@ -32,6 +32,10 @@ public abstract class GameBody {
         this.color = color;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
     public enum BODY_TYPE {
         HUMANOID,
         ALIEN,

@@ -23,7 +23,9 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
     float blobSizeXMod = 1f;
     float blobSizeYMod = 1f;
     float faceMod = 1f;
+    float mouthMod = 1f;
 
+    float currentMouth = mouthMod;
     float currentFace = faceMod;
     float currentX = blobSizeXMod;
     float currentY = blobSizeYMod;
@@ -43,10 +45,12 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
         if(currentX < blobSizeXMod) currentX+=.01f;
         if(currentY < blobSizeYMod) currentY+=.01f;
         if(currentFace < faceMod) currentFace +=.01f;
+        if(currentMouth < mouthMod) currentMouth +=.01f;
 
         if(currentX > blobSizeXMod) currentX-=.01f;
         if(currentY > blobSizeYMod) currentY-=.01f;
         if(currentFace > faceMod) currentFace -=.01f;
+        if(currentMouth > mouthMod) currentMouth -=.01f;
 
         spriteBatch.setColor(Config.COLOR_5_BLUE_LIGHTEST);
         spriteBatch.draw(image,
@@ -62,7 +66,7 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
                 position.x - radius, position.y - radius - .1f,
                 radius, radius,
                 radius * 2, radius * 2,
-                .25f * currentFace, .25f * currentFace,
+                .3f * currentMouth, .3f * currentMouth,
                 90,
                 true);
 
@@ -122,13 +126,15 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
         stateTimer = System.currentTimeMillis();
         state = STATE.LICKING;
         faceMod = 1.2f;
+        mouthMod = 0.8f;
     }
 
     @Override
     public void onSlurp() {
         stateTimer = System.currentTimeMillis();
         state = STATE.LICKING;
-        faceMod = 1.2f;
+        faceMod = 0.8f;
+        mouthMod = 1.2f;
     }
 
     @Override
@@ -147,10 +153,14 @@ public class BlobPlayerBody extends PlayerBody implements GameEventListener {
             state = STATE.NORMAL;
             blobSizeXMod = 1f;
             blobSizeYMod = 1f;
-            faceMod = 1;
+            faceMod = 1f;
+            mouthMod = 1f;
+/*
             currentFace = faceMod;
             currentX = blobSizeXMod;
             currentY = blobSizeYMod;
+            currentMouth = mouthMod;
+*/
         }
     }
 

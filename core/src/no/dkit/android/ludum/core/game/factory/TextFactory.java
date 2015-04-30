@@ -3,6 +3,7 @@ package no.dkit.android.ludum.core.game.factory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Array;
 
@@ -18,6 +19,7 @@ public class TextFactory {
     int height;
     float alpha;
     float alphaMod;
+    private GlyphLayout glyphLayout = new GlyphLayout();
 
     public static TextFactory getInstance() {
         if (instance == null)
@@ -35,7 +37,7 @@ public class TextFactory {
 
         texts = new Array<TextItem>();
         font = getFont(50);
-        font.setScale(1f);
+        font.getData().scale(1f);
         fontCache = new BitmapFontCache(font);
     }
 
@@ -82,8 +84,8 @@ public class TextFactory {
         fontCache.clear();
 
         for (TextItem text : texts) {
-            BitmapFont.TextBounds bounds = font.getBounds(text.getText());
-            fontCache.addText(text.getText(), text.getPosition().x - (bounds.width / 2), text.getPosition().y + (bounds.height / 4));
+            glyphLayout.setText(font, text.getText());
+            fontCache.addText(text.getText(), text.getPosition().x - (glyphLayout.width / 2), text.getPosition().y + (glyphLayout.height / 4));
             fontCache.setColor(text.getColor());
         }
     }

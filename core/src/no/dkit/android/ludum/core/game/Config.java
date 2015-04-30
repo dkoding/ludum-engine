@@ -98,9 +98,9 @@ public class Config {
     public static final float SHIP_RADIUS = Config.TILE_SIZE_X / 3f;
     public static final float SHIP_DENSITY = 3f;
     public static final float WALKER_RADIUS = Config.TILE_SIZE_X / 3f;
-    public static final float WALKER_DENSITY = 5f;
+    public static final float WALKER_DENSITY = 100f;
     public static final float FLYER_RADIUS = Config.TILE_SIZE_X / 3f;
-    public static final float FLYER_DENSITY = 3f;
+    public static final float FLYER_DENSITY = 100f;
     public static final float ZOMBIE_RADIUS = Config.TILE_SIZE_X / 5f;
     public static final float ZOMBIE_DENSITY = 3f;
     public static final float BLOB_RADIUS = Config.TILE_SIZE_X / 4f;

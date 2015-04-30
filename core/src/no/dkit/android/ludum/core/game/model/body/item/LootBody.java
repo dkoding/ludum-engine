@@ -53,7 +53,7 @@ public class LootBody extends PoolableGameBody {
             if (!((AgentBody) other).active) return;
             if (other instanceof PlayerBody) {
                 collected = true;
-                SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.ARMOR);
+                SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.CASH);
                 TextFactory.getInstance().addText(new TextItem("Collect LOOT", 0, Config.getDimensions().SCREEN_HEIGHT / 3, Color.WHITE), -.01f);
                 final Loot loot = LootFactory.getInstance().getLoot(type);
                 ((PlayerBody) other).addLoot(loot);

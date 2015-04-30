@@ -22,8 +22,6 @@ import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.Array;
 import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
-import no.dkit.android.ludum.core.game.ai.behaviors.single.WalkerFlee;
-import no.dkit.android.ludum.core.game.ai.behaviors.single.WalkerSeek;
 import no.dkit.android.ludum.core.game.ai.mind.PrioritizingMind;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.DiscardBody;
@@ -70,10 +68,10 @@ import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
 import no.dkit.android.ludum.core.shaders.RenderOperations;
 
 public class BodyFactory {
-    public static final short LIGHT_BITS = (short) (Config.CATEGORY_SCENERY);
+    public static final short LIGHT_BITS = (short) (Config.CATEGORY_SCENERY | Config.CATEGORY_ENEMY);
     public static final short PLAYER_BITS = (short) (Config.CATEGORY_ENEMY | Config.CATEGORY_ENEMY_BULLET | Config.CATEGORY_SCENERY | Config.CATEGORY_ITEM | Config.CATEGORY_TRIGGER | Config.CATEGORY_PARTICLE | Config.CATEGORY_PLATFORM | Config.CATEGORY_LOOT);
     public static final short PLAYER_BULLET_BITS = (short) (Config.CATEGORY_ENEMY | Config.CATEGORY_SCENERY | Config.CATEGORY_ITEM);
-    public static final short ENEMY_BITS = (short) (Config.CATEGORY_SCENERY | Config.CATEGORY_ITEM | Config.CATEGORY_BULLET | Config.CATEGORY_PLAYER | Config.CATEGORY_PARTICLE | Config.CATEGORY_PLATFORM | Config.CATEGORY_LOOT);
+    public static final short ENEMY_BITS = (short) (Config.CATEGORY_SCENERY | Config.CATEGORY_ITEM | Config.CATEGORY_BULLET | Config.CATEGORY_PLAYER | Config.CATEGORY_PARTICLE | Config.CATEGORY_PLATFORM | Config.CATEGORY_LOOT | Config.CATEGORY_LIGHT);
     public static final short ENEMY_BULLET_BITS = (short) (Config.CATEGORY_SCENERY | Config.CATEGORY_ITEM | Config.CATEGORY_PLAYER);
     public static final short ITEM_BITS = (short) (Config.CATEGORY_SCENERY | Config.CATEGORY_ITEM | Config.CATEGORY_PLAYER | Config.CATEGORY_ENEMY | Config.CATEGORY_ENEMY_BULLET | Config.CATEGORY_BULLET | Config.CATEGORY_PARTICLE | Config.CATEGORY_LOOT);
     public static final short LOOT_BITS = (short) (Config.CATEGORY_SCENERY | Config.CATEGORY_ITEM | Config.CATEGORY_PLAYER | Config.CATEGORY_ENEMY);
@@ -188,7 +186,7 @@ public class BodyFactory {
         createWarpAttributes(createCircleShape(Config.TILE_SIZE_X));
         createLampAttributes(createCircleShape(Config.TILE_SIZE_X / 4));
         createTurretAttributes(createTurretShape());
-        createAgentAttributes(createCircleShape(Config.TILE_SIZE_X / 3), 3);
+        createAgentAttributes(createCircleShape(Config.TILE_SIZE_X / 3), 100);
 
         setupCategories();
 /*
@@ -272,8 +270,8 @@ public class BodyFactory {
     private void createAgentAttributes(Shape shape, float density) {
         agentFixture.shape = shape;
         agentFixture.density = density;
-        agentFixture.friction = 0.5f;
-        agentFixture.restitution = 0.5f;
+        agentFixture.friction = 1f;
+        agentFixture.restitution = 1f;
         agentFixture.isSensor = false;
     }
 
@@ -1006,8 +1004,7 @@ public class BodyFactory {
     }
 
     public PlayerBody createSidescrollPlayer(Vector2 playerPosition) {
-        //XXXX.playerData.setKeys(0);
-
+        XXXX.playerData.setKeys(0);
         Body body = getDefaultPlayerBody(playerPosition, true);
         createTongue(body);
         //createDongue(body);
@@ -1021,26 +1018,22 @@ public class BodyFactory {
     }
 
     private void createTongue(Body owner) {
-        Body tip = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y, 0, 0, true, .1f);
+        final float maxRadius = .1f;
+        Body tip = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y, 0, 0, true, maxRadius);
         int particles = 20;
         Body[] rest = new Body[particles];
 
-        float slice = .15f / particles;
-        float max = particles * slice;
-
-        float mod = 1;
+        float slice = maxRadius / particles;
 
         for (int i = 0; i < particles; i++) {
-            mod *= -1;
-
-            rest[i] = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y, 0, 0, true, max - (slice * i));
+            rest[i] = getBulletBody(Loot.LOOT_TYPE.TONGUE, owner.getPosition().x, owner.getPosition().y, 0, 0, true, maxRadius - (slice * i));
 
             if (i == 0)
-                BodyFactory.getInstance().connectRope(tip, rest[0], max - (slice * i));
+                BodyFactory.getInstance().connectRope(tip, rest[0], maxRadius - (slice * i));
             if (i > 0 && i < particles)
-                BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], max - (slice * i));
+                BodyFactory.getInstance().connectRope(rest[i - 1], rest[i], maxRadius - (slice * i));
             if (i == particles - 1)
-                BodyFactory.getInstance().connectRopeToBody(owner, rest[i], max - (slice * i));
+                BodyFactory.getInstance().connectRopeToBody(owner, rest[i], maxRadius - (slice * i));
         }
 
         tongue = new TongueBody(tip, rest, bulletFixture.shape.getRadius(), ResourceFactory.getInstance().getBulletImage("tongue"), null, null, 0, 1);
@@ -1415,25 +1408,26 @@ public class BodyFactory {
                 case WALKER_SINGLE:
                     final ENEMY_IMAGE walkerType = MathUtils.random(2) == 1 ? ENEMY_IMAGE.WALKER_1 : ENEMY_IMAGE.WALKER_2;
 
-                    AgentBody walkerSingle = new AgentBody(getAgentBody(def.getPosition(), true, false, createCircleShape(Config.WALKER_RADIUS), Config.WALKER_DENSITY, 1f), Config.TILE_SIZE_X / 2,
+                    AgentBody walkerSingle = new AgentBody(getAgentBody(def.getPosition(), false, false, createCircleShape(Config.WALKER_RADIUS), Config.WALKER_DENSITY, 1f), Config.TILE_SIZE_X / 2,
                             ResourceFactory.getInstance().getWorldTypeImage(walkerType == ENEMY_IMAGE.WALKER_1 ? "enemy1" : "enemy2"));
                     walkerSingle.bodyType = GameBody.BODY_TYPE.HUMANOID;
                     walkerSingle.setMind(new PrioritizingMind());
-                    BehaviorFactory.setupDefaultMindBehaviors(target, walkerSingle);
+/*                    BehaviorFactory.setupDefaultMindBehaviors(target, walkerSingle);
 
                     walkerSingle.getMind().addBehavior(new WalkerSeek(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE));
                     walkerSingle.getMind().addAttackBehavior(new WalkerSeek(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE));
                     walkerSingle.getMind().addDefendBehavior(new WalkerFlee(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE));
+*/
 
                     walkerSingle.getBody().setLinearVelocity(
-                            MathUtils.random(walkerSingle.minSpeed * 2) - walkerSingle.minSpeed,
+                            MathUtils.random(walkerSingle.maxSpeed * 2) - walkerSingle.maxSpeed,
                             0f);
 
                     LootFactory.getInstance().getWeapon(Level.getInstance().getWeaponFor(walkerType)).onPickup(walkerSingle);
                     break;
                 case FLYER_SINGLE:
                     ENEMY_ANIM randomFlyer = Level.getInstance().getRandomFlyer();
-                    AnimatedAgentBody flyerSingle = new AnimatedAgentBody(getAgentBody(def.getPosition(), true, true, createCircleShape(Config.FLYER_RADIUS), Config.FLYER_DENSITY), Config.TILE_SIZE_X / 2,
+                    AnimatedAgentBody flyerSingle = new AnimatedAgentBody(getAgentBody(def.getPosition(), true, true, createCircleShape(Config.FLYER_RADIUS), Config.FLYER_DENSITY, 0), Config.TILE_SIZE_X / 2,
                             ResourceFactory.getInstance().getFlyerAnimation(randomFlyer), ResourceFactory.getInstance().getWorldTypeImage("enemy2"));
                     flyerSingle.flying = true;
                     flyerSingle.bodyType = GameBody.BODY_TYPE.HUMANOID;
@@ -1642,15 +1636,15 @@ public class BodyFactory {
         }
     }
 
-    public void lick(PlayerBody target, Vector2 firingDirection) {
-        target.onLick();
-        tongue.lick(target.position, firingDirection, Config.TONGUE_SPEED + (XXXX.playerData.getOrbs() * 5));
+    public void lick(PlayerBody player, Vector2 firingDirection) {
+        player.onLick();
+        tongue.lick(player.position, firingDirection, Config.TONGUE_SPEED + (XXXX.playerData.getOrbs() * 5));
     }
 
-    public void slurp(PlayerBody target) {
-        target.onSlurp();
-        tongue.slurp(target.position);
-        //dongue.slurp(target);
+    public void slurp(PlayerBody player) {
+        player.onSlurp();
+        tongue.slurp(player.position);
+        //dongue.slurp(player);
     }
 
 /*

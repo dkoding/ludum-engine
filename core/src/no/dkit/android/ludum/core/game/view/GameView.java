@@ -29,8 +29,6 @@ import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.LaserBody;
 import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
 
-import java.util.Random;
-
 public class GameView {
     int fpsCounter = 0;
     long start;
@@ -39,7 +37,7 @@ public class GameView {
     GameModel gameModel;
     SpriteBatch spriteBatch;
     ShapeRenderer shapeRenderer;
-    Box2DDebugRenderer worldRenderer;
+    Box2DDebugRenderer debugRenderer;
 
     TextureRegion crosshairImage;
     TextureRegion targetImage;
@@ -70,7 +68,7 @@ public class GameView {
         MathUtils.random.setSeed(Config.RANDOM_SEED + LevelFactory.level);
 
         if (Config.DEBUG)
-            worldRenderer = new Box2DDebugRenderer(true, true, false, false, false, false);
+            debugRenderer = new Box2DDebugRenderer(true, true, false, false, false, false);
 
         spriteBatch = new SpriteBatch();
         spriteBatch.setProjectionMatrix(camera.combined);
@@ -118,7 +116,7 @@ public class GameView {
             startMeasure();
 
         if (Config.DEBUG)
-            worldRenderer.render(gameModel.getWorld(), camera.combined);
+            debugRenderer.render(gameModel.getWorld(), camera.combined);
 
         if (Config.DEBUGTEXT)
             endMeasure("Debug");
@@ -210,6 +208,8 @@ public class GameView {
 
         spriteBatch.begin();
         drawObscuringLayer(gameModel.getObscuringFeatureLayer());
+        spriteBatch.end();
+        spriteBatch.begin();
         drawShadedLayer(gameModel.getObscuringShadedLayer());
         spriteBatch.end();
 
@@ -284,53 +284,27 @@ public class GameView {
     private void drawTerrainLayer(Array<BlockBody> layer) {
         if (layer.size == 0 || gameModel.getTerrainShader() == null) return;
 
-        spriteBatch.end();
-
-        spriteBatch.setShader(gameModel.getTerrainShader().getShader());
-
-        gameModel.getTerrainShader().setUseAngle(true);
-
-        spriteBatch.begin();
-
         for (BlockBody body : layer) {
-            gameModel.getTerrainShader().bind(body.getTexture());
             if (body.getDirection() == AbstractMap.NE || body.getDirection() == AbstractMap.NW || body.getDirection() == AbstractMap.SE || body.getDirection() == AbstractMap.SW) {
-                body.draw(spriteBatch, gameModel.getTerrainShader().getTexture());
+                spriteBatch.setShader(gameModel.getTerrainShader().getShader());
+                gameModel.getTerrainShader().setUseAngle(true);
+                gameModel.getTerrainShader().bind(body.getTexture());
+                gameModel.getTerrainShader().setColor(body.getColor());
+            } else if (body.getDirection() == AbstractMap.E || body.getDirection() == AbstractMap.W || body.getDirection() == AbstractMap.S || body.getDirection() == AbstractMap.N) {
+                spriteBatch.setShader(gameModel.getTerrainShader().getShader());
+                gameModel.getTerrainShader().setUseAngle(false);
+                gameModel.getTerrainShader().bind(body.getTexture());
+                gameModel.getTerrainShader().setColor(body.getColor());
+            } else if(body.getDirection() == AbstractMap.NO_DIRECTION) {
+                spriteBatch.setShader(null);
+                Gdx.gl20.glActiveTexture(GL20.GL_TEXTURE0);
             }
+
+            body.draw(spriteBatch);
         }
-
-        spriteBatch.end();
-
-        gameModel.getTerrainShader().setUseAngle(false);
-
-        spriteBatch.begin();
-
-        for (BlockBody body : layer) {
-            gameModel.getTerrainShader().bind(body.getTexture());
-            if (body.getDirection() == AbstractMap.E || body.getDirection() == AbstractMap.W || body.getDirection() == AbstractMap.S || body.getDirection() == AbstractMap.N) {
-                body.draw(spriteBatch, gameModel.getTerrainShader().getTexture());
-            }
-        }
-
-        spriteBatch.end();
 
         spriteBatch.setShader(null);
         Gdx.gl20.glActiveTexture(GL20.GL_TEXTURE0);
-
-        spriteBatch.begin();
-
-        for (BlockBody body : layer) {
-            if (body.getDirection() == AbstractMap.NO_DIRECTION) {
-                body.draw(spriteBatch);
-            }
-        }
-
-        spriteBatch.end();
-
-        spriteBatch.setShader(null);
-        Gdx.gl20.glActiveTexture(GL20.GL_TEXTURE0);
-
-        spriteBatch.begin();
     }
 
     private void drawShadedLayer(Array<ShadedBody> layer) {
@@ -450,7 +424,7 @@ public class GameView {
     public void dispose() {
         spriteBatch.dispose();
         if (Config.DEBUG)
-            worldRenderer.dispose();
+            debugRenderer.dispose();
     }
 
     private void startMeasure() {
