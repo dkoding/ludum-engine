@@ -12,6 +12,7 @@ public class DesktopLauncher {
 
         Config.initialize(1280, 720);
 
+        cfg.useGL30=false;
         cfg.width = Config.getDimensions().SCREEN_LONGEST;
         cfg.height = Config.getDimensions().SCREEN_SHORTEST;
         new LwjglApplication(new XXXX(Config.PERFORMANCE.HIGH), cfg);

@@ -67,14 +67,14 @@ exit_to_cave
   orig: 128, 128
   offset: 0, 0
   index: -1
-exit_to_surface
+exit_to_space
   rotate: false
   xy: 200, 0
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: -1
-exit_to_space
+exit_to_surface
   rotate: false
   xy: 200, 0
   size: 128, 128

@@ -123,13 +123,6 @@ start
   orig: 130, 130
   offset: 0, 0
   index: -1
-sticky
-  rotate: false
-  xy: 792, 424
-  size: 120, 120
-  orig: 120, 120
-  offset: 0, 0
-  index: -1
 travelsidescroll
   rotate: false
   xy: 130, 282
@@ -160,7 +153,7 @@ vibrate
   index: -1
 wrench
   rotate: false
-  xy: 754, 290
+  xy: 792, 424
   size: 120, 120
   orig: 120, 120
   offset: 0, 0

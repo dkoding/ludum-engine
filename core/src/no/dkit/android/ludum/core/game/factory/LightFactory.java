@@ -44,7 +44,7 @@ public class LightFactory {
     }
 
     private LightFactory(World world) {
-        Light.setContactFilter(BodyFactory.lightFilter);
+        Light.setGlobalContactFilter(BodyFactory.lightFilter);
         RayHandler.useDiffuseLight(true);
         rayHandler = new RayHandler(world);
         rayHandler.setCulling(false);
