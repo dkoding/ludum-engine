@@ -56,6 +56,8 @@ public class MonsterPlayerBody extends PlayerBody {
                 1, 1,
                 getAngle(),
                 true);
+
+        System.out.println(getAngle());
     }
 
     public void addTail(Body[] tail) {

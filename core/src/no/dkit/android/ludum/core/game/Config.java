@@ -182,7 +182,7 @@ public class Config {
     public static short CATEGORY_PLATFORM = 0x400;
     public static short CATEGORY_LOOT = 0x800;
 
-    public static final float EPSILON = .01f;
+    public static final float EPSILON = .03f;
 
     public enum PERFORMANCE {LOW, MEDIUM, HIGH}
 }

@@ -82,12 +82,6 @@ public class AgentBody extends PoolableGameBody {
         return angle;
     }
 
-    public void setAngle(float angle) {
-        this.angle = angle;
-        angleVector.set(MathUtils.cos(angle), MathUtils.sin(angle));
-        body.setTransform(body.getPosition().x, body.getPosition().y, angle * MathUtils.degreesToRadians);
-    }
-
     public static float getShortestAngle(float angle1, float angle2) {
         float difference = angle2 - angle1;
         float lower = -180.0f;
