@@ -25,6 +25,7 @@ import no.dkit.android.ludum.core.game.model.body.scenery.FloorBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringFeatureBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.LaserBody;
+import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
 
 import java.util.Random;
@@ -43,6 +44,8 @@ public class GameView {
     TextureRegion targetImage;
 
     Array<LaserBody> lasers;
+
+    Decals decals;
 
     Camera camera;
 
@@ -79,6 +82,9 @@ public class GameView {
 
         crosshairImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "crosshair");
         targetImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "target");
+
+        decals = new Decals(Level.getInstance().getMap().getWidth() * Config.getDimensions().SCREEN_ON_WORLD_FACTOR,
+                Level.getInstance().getMap().getHeight() * Config.getDimensions().SCREEN_ON_WORLD_FACTOR);
 
         gameModel.setCamera(camera);
     }
@@ -194,14 +200,6 @@ public class GameView {
         if (Config.DEBUGTEXT)
             startMeasure();
         spriteBatch.begin();
-        gameModel.getPlayerBody().draw(spriteBatch);
-        spriteBatch.end();
-        if (Config.DEBUGTEXT)
-            endMeasure("Player");
-
-        if (Config.DEBUGTEXT)
-            startMeasure();
-        spriteBatch.begin();
         EffectFactory.getInstance().drawEffects(spriteBatch, GameBody.DRAW_LAYER.FRONT);
         spriteBatch.end();
         if (Config.DEBUGTEXT)
@@ -244,7 +242,27 @@ public class GameView {
             endMeasure("Draw Effects on BACK layer");
 
         drawLayer(gameModel.getMediumLayer());
+        spriteBatch.end();
+
+        decals.record();
+        spriteBatch.begin();
+        drawOnDecal(gameModel.getFrontLayer());
+        spriteBatch.end();
+        decals.end();
+
+        spriteBatch.begin();
         drawLayer(gameModel.getFrontLayer());
+        spriteBatch.enableBlending();
+        decals.render(spriteBatch, camera.position.x - Config.getDimensions().WORLD_WIDTH / 2f, camera.position.y - Config.getDimensions().WORLD_HEIGHT / 2f,
+                (float) Config.getDimensions().WORLD_WIDTH, (float) Config.getDimensions().WORLD_HEIGHT);
+    }
+
+    private void drawOnDecal(Array<GameBody> layer) {
+        if (layer.size == 0) return;
+
+        for (GameBody gameBody : layer) {
+            gameBody.draw(spriteBatch, camera.position.x - (Config.getDimensions().WORLD_WIDTH / 2f), camera.position.y - (Config.getDimensions().WORLD_HEIGHT / 2f));
+        }
     }
 
     private void drawLayer(Array<GameBody> layer) {

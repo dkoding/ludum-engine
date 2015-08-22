@@ -242,6 +242,17 @@ public abstract class GameBody {
                 rotation + 90, true);
     }
 
+    public void draw(SpriteBatch spriteBatch, float x, float y) {
+        if (!isActive() || image == null) return;
+
+        spriteBatch.draw(image,
+                x + position.x - radius, y + position.y - radius,
+                radius, radius,
+                radius * 2, radius * 2,
+                scale, scale,
+                rotation + 90, true);
+    }
+
     public void setActive(boolean active) {
         this.active = active;
         this.body.setAwake(active); // Do no deactivate bodies as they then won't trigger collissions
