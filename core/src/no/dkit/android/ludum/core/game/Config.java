@@ -121,6 +121,7 @@ public class Config {
         public int WORLD_HEIGHT;
         public float PAD_RIGHT_LEFT;
         public float PAD_TOP_BOTTOM;
+        public float SCREEN_PIXELS_PER_TILE;
         public float SCREEN_ON_WORLD_FACTOR;
         public float WORLD_ON_SCREEN_FACTOR;
         public float WORLD_ON_SCREEN_FACTOR_Y;
@@ -149,6 +150,7 @@ public class Config {
 
             SCREEN_ON_WORLD_FACTOR = (float) SCREEN_LONGEST / (float) WORLD_WIDTH;
             WORLD_ON_SCREEN_FACTOR = (float) WORLD_WIDTH / (float) SCREEN_LONGEST;
+            SCREEN_PIXELS_PER_TILE = SCREEN_ON_WORLD_FACTOR;
             AGENT_BOX_WIDTH = (int) (TILE_SIZE_X * 5); // Square
             AGENT_BOX_HEIGHT = (int) (TILE_SIZE_Y * 5); // Square
 

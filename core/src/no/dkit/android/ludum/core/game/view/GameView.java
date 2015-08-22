@@ -83,9 +83,7 @@ public class GameView {
         crosshairImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "crosshair");
         targetImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "target");
 
-        decals = new Decals(Level.getInstance().getMap().getWidth() * Config.getDimensions().SCREEN_ON_WORLD_FACTOR,
-                Level.getInstance().getMap().getHeight() * Config.getDimensions().SCREEN_ON_WORLD_FACTOR);
-
+        decals = new Decals(Level.getInstance().getMap().getWidth()-1, Level.getInstance().getMap().getHeight()-1, 1);
         gameModel.setCamera(camera);
     }
 
@@ -253,15 +251,14 @@ public class GameView {
         spriteBatch.begin();
         drawLayer(gameModel.getFrontLayer());
         spriteBatch.enableBlending();
-        decals.render(spriteBatch, camera.position.x - Config.getDimensions().WORLD_WIDTH / 2f, camera.position.y - Config.getDimensions().WORLD_HEIGHT / 2f,
-                (float) Config.getDimensions().WORLD_WIDTH, (float) Config.getDimensions().WORLD_HEIGHT);
+        decals.render(spriteBatch);
     }
 
     private void drawOnDecal(Array<GameBody> layer) {
         if (layer.size == 0) return;
 
         for (GameBody gameBody : layer) {
-            gameBody.draw(spriteBatch, camera.position.x - (Config.getDimensions().WORLD_WIDTH / 2f), camera.position.y - (Config.getDimensions().WORLD_HEIGHT / 2f));
+            gameBody.draw(spriteBatch, 0, 0);
         }
     }
 
