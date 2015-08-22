@@ -37,10 +37,10 @@ public class AnimatedPlayerBody extends PlayerBody implements GameEventListener 
 
         spriteBatch.setColor(beforeAlpha.r, beforeAlpha.g, beforeAlpha.b, alpha);
 
-        if(flying)
+        if (flying)
             animTimer += Gdx.graphics.getDeltaTime();
         else
-            animTimer += speed/30f;
+            animTimer += speed / 30f;
 
         currentFrame = walk.getKeyFrame(animTimer, true);
 
@@ -52,16 +52,5 @@ public class AnimatedPlayerBody extends PlayerBody implements GameEventListener 
                 angle - 90);
 
         spriteBatch.setColor(Color.WHITE);
-
-        if (weapon != null)
-            if (weaponImage == null)
-                throw new RuntimeException("NO WEAPON FOR WEAPON" + weapon.getImageName());
-            else
-                spriteBatch.draw(weaponImage,
-                        body.getPosition().x - radius * .5f, body.getPosition().y,
-                        radius * .5f, 0,
-                        radius * 2, radius * 2,
-                        scale * .5f, scale * .5f,
-                        angle);
     }
 }

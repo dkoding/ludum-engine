@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.utils.Array;
@@ -20,11 +21,14 @@ import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
+import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.BlockBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.FloorBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringFeatureBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.LaserBody;
+import no.dkit.android.ludum.core.game.model.body.weapon.WeaponBody;
+import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
 
@@ -83,7 +87,7 @@ public class GameView {
         crosshairImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "crosshair");
         targetImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "target");
 
-        decals = new Decals(Level.getInstance().getMap().getWidth()-1, Level.getInstance().getMap().getHeight()-1, 1);
+        decals = new Decals(Level.getInstance().getMap().getWidth(), Level.getInstance().getMap().getHeight());
         gameModel.setCamera(camera);
     }
 
@@ -250,16 +254,28 @@ public class GameView {
 
         spriteBatch.begin();
         drawLayer(gameModel.getFrontLayer());
+        spriteBatch.end();
+
+        spriteBatch.begin();
         spriteBatch.enableBlending();
-        decals.render(spriteBatch);
+
+        decals.render(spriteBatch, camera.position.x, camera.position.y, gameModel.translateVector.x, gameModel.translateVector.y);
     }
 
     private void drawOnDecal(Array<GameBody> layer) {
         if (layer.size == 0) return;
 
+        final Matrix4 oldMatrix = spriteBatch.getTransformMatrix().cpy();
+        oldMatrix.translate(camera.position.x-Config.getDimensions().WORLD_WIDTH/2f,camera.position.y-Config.getDimensions().WORLD_HEIGHT/2f, 0);
+        spriteBatch.setTransformMatrix(oldMatrix);
+
         for (GameBody gameBody : layer) {
-            gameBody.draw(spriteBatch, 0, 0);
+//            if (gameBody instanceof WeaponBody)
+                gameBody.draw(spriteBatch);
         }
+
+        oldMatrix.translate(-camera.position.x+Config.getDimensions().WORLD_WIDTH/2f,-camera.position.y+Config.getDimensions().WORLD_HEIGHT/2f, 0);
+        spriteBatch.setTransformMatrix(oldMatrix);
     }
 
     private void drawLayer(Array<GameBody> layer) {

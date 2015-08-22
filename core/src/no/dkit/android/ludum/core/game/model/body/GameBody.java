@@ -9,12 +9,15 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
 import no.dkit.android.ludum.core.game.factory.LootFactory;
 import no.dkit.android.ludum.core.game.factory.ParticleBox2D;
 import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
+import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
+import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.quest.GameEvent;
 
 public abstract class GameBody {
@@ -146,7 +149,7 @@ public abstract class GameBody {
     }
 
     public void hit(int damage) {
-        if(isDead()) return;
+        if (isDead()) return;
         this.health -= damage;
         if (isDead()) onDeath();
     }
@@ -226,7 +229,7 @@ public abstract class GameBody {
 
     public void delete() {
         this.active = false;
-        body.setLinearVelocity(0,0);
+        body.setLinearVelocity(0, 0);
         dispose();
         body.setUserData(new DiscardBody(body));
     }
@@ -236,17 +239,6 @@ public abstract class GameBody {
 
         spriteBatch.draw(image,
                 position.x - radius, position.y - radius,
-                radius, radius,
-                radius * 2, radius * 2,
-                scale, scale,
-                rotation + 90, true);
-    }
-
-    public void draw(SpriteBatch spriteBatch, float x, float y) {
-        if (!isActive() || image == null) return;
-
-        spriteBatch.draw(image,
-                x + position.x - radius, y + position.y - radius,
                 radius, radius,
                 radius * 2, radius * 2,
                 scale, scale,
