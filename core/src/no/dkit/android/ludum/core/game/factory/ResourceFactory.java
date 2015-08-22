@@ -36,7 +36,7 @@ public class ResourceFactory implements AssetErrorListener {
 
     public static void create(Level.LEVEL_TYPE level_type) {
         if (resourceFactory == null || level_type != ResourceFactory.level_type) {
-            if(resourceFactory != null)
+            if (resourceFactory != null)
                 resourceFactory.dispose();
             resourceFactory = new ResourceFactory(level_type);
         }
@@ -78,12 +78,8 @@ public class ResourceFactory implements AssetErrorListener {
         List<String> atlases = new ArrayList<String>();
         atlases.addAll(Arrays.asList(MASK, UI, ITEM));
 
-        if (level_type == Level.LEVEL_TYPE.SIDESCROLL)
-            atlases.add(Level.LEVEL_TYPE.SIDESCROLL.toString().toLowerCase());
-        else if (level_type == Level.LEVEL_TYPE.TOPDOWN)
+        if (level_type == Level.LEVEL_TYPE.TOPDOWN)
             atlases.add(Level.LEVEL_TYPE.TOPDOWN.toString().toLowerCase());
-        else if (level_type == Level.LEVEL_TYPE.UNIVERSE)
-            atlases.add(Level.LEVEL_TYPE.UNIVERSE.toString().toLowerCase());
 
         for (String fileName : atlases) {
             manager.load(baseDir + fileName + ".pack.atlas", TextureAtlas.class);
@@ -218,37 +214,9 @@ public class ResourceFactory implements AssetErrorListener {
     }
 
     public RenderOperations getBackground(Level level, RenderOperations.BACKGROUND_TYPE type, int worldWidth, int worldHeight, int mapWidth, int mapHeight) {
-        switch (type) {  // For NON-shader backgrounds
-            case DARKROCK:
-                return new SidescrollBackground(ResourceFactory.getInstance().getTexture("darkrock"),
-                        ResourceFactory.getInstance().getTransparentTexture("fog3"),
-                        worldWidth, worldHeight, mapWidth, mapHeight);
-            case GROUND:
-                if (level.isPlatforms()) // Todo: Water background as well would be cool... :-)
-                    return new ChasmBackground(ResourceFactory.getInstance().getTransparentTexture("fog1"),
-                            worldWidth, worldHeight, mapWidth, mapHeight);
-                else
-                    return new GroundBackground(ResourceFactory.getInstance().getTexture("grass"),
-                            ResourceFactory.getInstance().getTransparentTexture("fog1"),
-                            worldWidth, worldHeight, mapWidth, mapHeight);
-            case UNIVERSE:
-                return new UniverseBackground(ResourceFactory.getInstance().getTransparentTexture("fog3"),
-                        ResourceFactory.getInstance().getTransparentTexture("fog3"),
-                        ResourceFactory.getInstance().getFeatureImage(level.getRandomPlanetFeatureType()),
-                        ResourceFactory.getInstance().getWorldTypeImage("star"),
-                        worldWidth, worldHeight, mapWidth, mapHeight);
-            default:
-                return ShaderFactory.getInstance().getShader(type, worldWidth, worldHeight);
-        }
-    }
-
-    public RenderOperations getForeground(Level level, RenderOperations.FOREGROUND_TYPE type, int worldWidth, int worldHeight, int mapWidth, int mapHeight) {
-        switch (type) {
-            case FOG:
-            default:
-                return new ChasmBackground(ResourceFactory.getInstance().getTransparentTexture("fog3"),
-                        worldWidth, worldHeight, mapWidth, mapHeight);
-        }
+        return new GroundBackground(ResourceFactory.getInstance().getTexture("stone"),
+                                 ResourceFactory.getInstance().getTransparentTexture("fog1"),
+                                 worldWidth, worldHeight, mapWidth, mapHeight);
     }
 
     public float getPercentComplete() {

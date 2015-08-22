@@ -52,14 +52,4 @@ public class ExitBody extends ShadedBody {
     @Override
     public void collidedWith(GameBody other) {
     }
-
-    @Override
-    public void beginContact(Contact contact) {
-        GameScreen.enableTravelMenu(exitType);
-    }
-
-    @Override
-    public void endContact(Contact contact) {
-        GameScreen.disableTravelMenu(exitType);
-    }
 }

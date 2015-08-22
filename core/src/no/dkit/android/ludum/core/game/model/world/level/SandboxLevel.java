@@ -25,7 +25,7 @@ public class SandboxLevel extends Level {
         getDefaultImagesFor(worldType);
         getDefaultFeaturesFor(worldType);
 
-        map.item[(int)startPosition.x][(int)startPosition.y] = AbstractMap.ITEM_LIQUID_SS;
+        //map.item[(int)startPosition.x][(int)startPosition.y] = AbstractMap.ITEM_LIQUID_SS;
 
         enemyTypes.clear();
         enemyTypes.add(BodyFactory.ENEMY_TYPE.WALKER_SINGLE);

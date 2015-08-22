@@ -22,14 +22,7 @@ public class SandboxMap extends AbstractMap {
 
         clearOccupied(CLEAR);
 
-        if (inside) {
-            replaceAll(CLEAR, ROOM, map2d);
-            replaceSomeTiles(10, ROOM, CHASM);
-        }
-
-        placeItemsWithinEmptySpace(5, ITEM_CANNON, CLEAR);
         //placeItemsWithinEmptySpace(10, ITEM_LAMP, CLEAR);
-
 /*
         placeItemsWithinEmptySpace(5, ITEM_CANNON, CLEAR);
         placeItemsOnSurface(5,ITEM_CANNON, AbstractMap.N, CLEAR, SOLID);
@@ -39,7 +32,6 @@ public class SandboxMap extends AbstractMap {
         placeItemsOnSurface(5, ITEM_FEATURE, N, CLEAR, SOLID);
         placeItemsWithinEmptySpace(1, ITEM_CANNON, CLEAR);
 */
-
         clearOccupied(CLEAR);
 
         start = new int[]{sizeX / 4, sizeY / 4};

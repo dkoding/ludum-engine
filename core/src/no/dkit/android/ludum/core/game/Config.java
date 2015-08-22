@@ -4,12 +4,12 @@ import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class Config {
     public static final int MAX_LEVEL = 100;
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
     public static final float DEBUG_SCALE = 1f;
     public static boolean DEBUGTEXT = false;
 
-    public static final boolean SANDBOX = false;
-    public static final Level.LEVEL_TYPE SANDBOX_TYPE = Level.LEVEL_TYPE.SIDESCROLL;
+    public static final boolean SANDBOX = true;
+    public static final Level.LEVEL_TYPE SANDBOX_TYPE = Level.LEVEL_TYPE.TOPDOWN;
 
     public static final float AGENT_SPOT_CHANCE = .9f;
     public static final float AGENT_SPOT_ARC = 45;
@@ -99,8 +99,8 @@ public class Config {
     public static final float BLOBLIMB_RADIUS = Config.TILE_SIZE_X / 8f;
     public static final float BLOBLIMB_DENSITY = 3f;
 
-    public static final boolean music = true;
-    public static final boolean sound = true;
+    public static final boolean music = false;
+    public static final boolean sound = false;
 
     public static Dimensions getDimensions() {
         return dimensions;
@@ -139,7 +139,7 @@ public class Config {
             SCREEN_SHORTEST = SCREEN_HEIGHT > SCREEN_WIDTH ? SCREEN_WIDTH : SCREEN_HEIGHT;
             ASPECT_RATIO = (float) SCREEN_SHORTEST / (float) SCREEN_LONGEST;
 
-            WORLD_WIDTH = 6;   // Number of tiles across screen
+            WORLD_WIDTH = 16;   // Number of tiles across screen
             WORLD_HEIGHT = (int) (WORLD_WIDTH * ASPECT_RATIO);
 
             float fraction = (WORLD_WIDTH * ASPECT_RATIO) - WORLD_HEIGHT;

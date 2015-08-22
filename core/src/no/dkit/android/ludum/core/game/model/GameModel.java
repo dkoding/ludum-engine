@@ -118,7 +118,6 @@ public class GameModel {
     private Vector2 aimPos;
     private float zoom;
     private RenderOperations background;
-    private RenderOperations foreground;
 
     protected TerrainShader terrainShader;
 
@@ -170,10 +169,6 @@ public class GameModel {
                 level.getBackgroundType(), Config.getDimensions().WORLD_WIDTH, Config.getDimensions().WORLD_HEIGHT,
                 level.getMap().getWidth(), level.getMap().getHeight());
 
-        foreground = ResourceFactory.getInstance().getForeground(level,
-                level.getForegroundType(), Config.getDimensions().WORLD_WIDTH, Config.getDimensions().WORLD_HEIGHT,
-                level.getMap().getWidth(), level.getMap().getHeight());
-
         createPlayer(level);
         setupPlayerLights(level);
 
@@ -186,11 +181,6 @@ public class GameModel {
     }
 
     private void setupTerrainShader() {
-        if (LevelFactory.getInstance().getCurrentLevel().getWorldType() == Level.LEVEL_TYPE.UNIVERSE) {
-            terrainShader = null;
-            return;
-        }
-
         if (terrainShader == null)
             terrainShader = new TerrainShader(
                     ResourceFactory.getInstance().getShaderComponentTexture("dirmask"),
@@ -216,17 +206,8 @@ public class GameModel {
 
     private void createPlayer(Level level) {
         switch (level.getWorldType()) {
-            case UNIVERSE:
-                playerBody = BodyFactory.getInstance().createShipPlayer(level.getStartPosition());
-                break;
-            case SIDESCROLL:
-                playerBody = BodyFactory.getInstance().createSidescrollPlayer(level.getStartPosition());
-                break;
             case TOPDOWN:
-                if (level.isInside() || level.isPlatforms())
-                    playerBody = BodyFactory.getInstance().createTopDownPlayer(level.getStartPosition());
-                else
-                    playerBody = BodyFactory.getInstance().createTopDownPlayerVehicle(level.getStartPosition());
+                playerBody = BodyFactory.getInstance().createTopDownPlayer(level.getStartPosition());
         }
 
         final Weapon weapon = LootFactory.getInstance().getWeapon(level.getWeaponTypes().get(0));
@@ -518,11 +499,6 @@ public class GameModel {
     }
 
     private boolean isOffScreen(GameBody gameBody, float measureSizeX, float measureSizeY) {
-        if (level.getWorldType().equals(Level.LEVEL_TYPE.UNIVERSE) && gameBody instanceof AgentBody) {
-            measureSizeX *= 2;
-            measureSizeY *= 2;
-        }
-
         testPoint.set(gameBody.position.x, gameBody.position.y, 0);
 
         return testPoint.x + measureSizeX < leftBorder
@@ -663,7 +639,6 @@ public class GameModel {
         gameView.updateCamera();
         worldMap.pan(translateVector.x, translateVector.y);
         background.update(camera.position.x, camera.position.y, translateVector.x, translateVector.y, translateVector.x, translateVector.y);
-        foreground.update(camera.position.x, camera.position.y, translateVector.x, translateVector.y, translateVector.x, translateVector.y);
     }
 
     private void updateBorders() {
@@ -770,10 +745,6 @@ public class GameModel {
 
     public RenderOperations getBackground() {
         return background;
-    }
-
-    public RenderOperations getForeground() {
-        return foreground;
     }
 
     public static PlayerBody getPlayer() {

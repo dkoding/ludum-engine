@@ -1258,17 +1258,7 @@ public class BodyFactory {
                     ResourceFactory.getInstance().getWorldTypeImage("exit_to_surface"),
                     ShaderFactory.getInstance().getShader(RenderOperations.BACKGROUND_TYPE.BEACON, shaderRadius, shaderRadius),
                     ResourceFactory.getInstance().getImage(ResourceFactory.MASK, "orb"));
-        } else if (type == AbstractMap.ITEM_ENTRANCE_UNIVERSE)
-            return new ExitBody(body, fixtureDef.shape.getRadius(), Level.LEVEL_TYPE.UNIVERSE,
-                    ResourceFactory.getInstance().getWorldTypeImage("exit_to_space"),
-                    ShaderFactory.getInstance().getShader(RenderOperations.BACKGROUND_TYPE.SHININGSTARSCROLL, shaderRadius, shaderRadius),
-                    ResourceFactory.getInstance().getImage(ResourceFactory.MASK, "orb"));
-        else if (type == AbstractMap.ITEM_ENTRANCE_CAVE)
-            return new ExitBody(body, fixtureDef.shape.getRadius(), Level.LEVEL_TYPE.SIDESCROLL,
-                    ResourceFactory.getInstance().getWorldTypeImage("exit_to_cave"),
-                    ShaderFactory.getInstance().getShader(RenderOperations.BACKGROUND_TYPE.NEONCROSS, shaderRadius, shaderRadius),
-                    ResourceFactory.getInstance().getImage(ResourceFactory.MASK, "orb"));
-        else
+        } else
             throw new RuntimeException("What are you trying to do!?");
     }
 

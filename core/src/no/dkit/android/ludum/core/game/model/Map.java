@@ -48,11 +48,11 @@ public class Map {
             case UniverseMap.CLEAR:
                 return Color.valueOf("00000080");
             case UniverseMap.BORDER:
-                return Color.BLACK;
+                return Color.WHITE;
             case UniverseMap.CHASM:
                 return Color.RED;
             case UniverseMap.SOLID:
-                return Color.BLACK;
+                return Color.WHITE;
             case UniverseMap.DOOR:
                 return Color.DARK_GRAY;
             case UniverseMap.CORRIDOR:
@@ -60,7 +60,7 @@ public class Map {
             case UniverseMap.ROOM:
                 return Color.LIGHT_GRAY;
             default:
-                return Color.CLEAR;
+                return Color.WHITE;
         }
     }
 

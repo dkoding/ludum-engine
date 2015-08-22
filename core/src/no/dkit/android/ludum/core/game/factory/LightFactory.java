@@ -79,8 +79,8 @@ public class LightFactory {
             light.setSoftnessLength(Config.getDimensions().WORLD_WIDTH / 2f);
         } else if (type == LIGHT_TYPE.SMALL_PLAYER_LIGHT) {
             Color color = new Color(1f, 1f, 1f, 1f);
-            light = getLight(0, 0, Config.getDimensions().WORLD_WIDTH / 2f, numRays, color);
-            light.setSoftnessLength(Config.getDimensions().WORLD_WIDTH / 4f);
+            light = getLight(0, 0, Config.getDimensions().WORLD_WIDTH, numRays, color);
+            light.setSoftnessLength(Config.getDimensions().WORLD_WIDTH / 2f);
         } else if (type == LIGHT_TYPE.EFFECT_LIGHT) {
             Color color = new Color(1f, 1f, 1f, 1f);
             light = getLight(0, 0, Config.TILE_SIZE_X, numRays, color);
@@ -111,20 +111,9 @@ public class LightFactory {
                 entry.getValue().setDirection(angle);
             } else if (entry.getKey() == LIGHT_TYPE.INSIDE_CONE) {
                 entry.getValue().setDirection(angle);
-
-                if (currentTileType == AbstractMap.ROOM || currentTileType == AbstractMap.DOOR || currentTileType == AbstractMap.CHASM) {
-                    entry.getValue().setActive(true);
-                } else {
-                    entry.getValue().setActive(false);
-                }
             } else if (entry.getKey() == LIGHT_TYPE.LARGE_PLAYER_LIGHT) {
 
             } else if (entry.getKey() == LIGHT_TYPE.SMALL_PLAYER_LIGHT) {
-                if (currentTileType == AbstractMap.ROOM || currentTileType == AbstractMap.DOOR || currentTileType == AbstractMap.CHASM) {
-                    entry.getValue().setDistance(1);
-                } else {
-                    entry.getValue().setDistance(Config.getDimensions().WORLD_WIDTH / 2);
-                }
             }
         }
     }

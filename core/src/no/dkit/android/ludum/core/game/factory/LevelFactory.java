@@ -34,7 +34,7 @@ public class LevelFactory {
         if (Config.SANDBOX)
             currentLevel = nextLevel(Config.SANDBOX_TYPE);
         else
-            currentLevel = nextLevel(Level.LEVEL_TYPE.UNIVERSE);
+            currentLevel = nextLevel(Level.LEVEL_TYPE.TOPDOWN);
 
     }
 
@@ -53,14 +53,7 @@ public class LevelFactory {
 
     private Level.LEVEL_TYPE getRandomLevelType() {
         Level.LEVEL_TYPE levelType;
-        float type = MathUtils.random();
-
-        if (type < .33)
-            levelType = Level.LEVEL_TYPE.SIDESCROLL;
-        else if (type < .66)
-            levelType = Level.LEVEL_TYPE.TOPDOWN;
-        else
-            levelType = Level.LEVEL_TYPE.UNIVERSE;
+        levelType = Level.LEVEL_TYPE.TOPDOWN;
         return levelType;
     }
 

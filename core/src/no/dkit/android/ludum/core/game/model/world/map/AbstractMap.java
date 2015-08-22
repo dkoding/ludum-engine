@@ -956,30 +956,17 @@ public abstract class AbstractMap {
         }
     }
 
-    public void createStandardFeatures(int level, Level.LEVEL_TYPE levelType, boolean inside, boolean platforms) {
+    public void createStandardFeatures(int level, Level.LEVEL_TYPE levelType) {
         int surface = SOLID;
 
         int space;
 
-        if (levelType == Level.LEVEL_TYPE.TOPDOWN && platforms)
-            space = PLATFORM;
-        else
-            space = CLEAR;
+        space = CLEAR;
 
-        placeAllItems(level, levelType, space, surface, inside, platforms);
-
-        if (levelType == Level.LEVEL_TYPE.TOPDOWN && platforms)
-            clearOccupied(PLATFORM);
-        else
-            clearOccupied(CLEAR);
+        clearOccupied(CLEAR);
 
         space = ROOM;
         surface = SOLID;
-
-        if (platforms)
-            replaceSomeTiles(Config.MAX_CHASMS, ROOM, CHASM);
-
-        placeAllItems(level, levelType, space, surface, inside, platforms);
 
         clearOccupied(ROOM);
 
@@ -987,59 +974,9 @@ public abstract class AbstractMap {
     }
 
     private void placeAllItems(int level, Level.LEVEL_TYPE levelType, int space, int surface, boolean inside, boolean chasms) {
-        if (levelType == Level.LEVEL_TYPE.SIDESCROLL) {
-            placeItemsOnSurface(Config.MAX_EXITS, ITEM_ENTRANCE_SURFACE, N, space, surface);
-            placeItemsOnSurface(Config.MAX_EXITS, ITEM_ENTRANCE_CAVE, N, space, surface);
-            placeItemsOnSurface(Config.MAX_EXITS, ITEM_ENTRANCE_UNIVERSE, N, space, surface);
-            if (!inside)
-                placeItemsEncasedFacing(Config.MAX_LIQUID, ITEM_LIQUID_SS, N, space, surface);
-            placeItemsOnSurface(Config.MAX_FEATURES, ITEM_FEATURE, N, space, surface); // TODO: THIS SHOULD NOT BE ITEM, THIS SHOULD BE TILE
-            placeItemsOnSurface(Config.MAX_CRATES, ITEM_CRATE, N, space, surface);
-            placeItemsWithinEmptySpace(Config.MAX_LOOT, ITEM_LOOT, space);
-            placeLamps(space, surface);
-            placeCannons(level, space, surface);
-        } else if (levelType == Level.LEVEL_TYPE.TOPDOWN) {
-            placeItemsWithinEmptySpace(Config.MAX_EXITS, ITEM_ENTRANCE_UNIVERSE, space);
-            placeItemsWithinEmptySpace(Config.MAX_EXITS, ITEM_ENTRANCE_SURFACE, space);
-            placeItemsWithinEmptySpace(Config.MAX_EXITS, ITEM_ENTRANCE_CAVE, space);
-            if (!inside && (!chasms && space == AbstractMap.ROOM))
-                placeItemsWithinEmptySpace(Config.MAX_LIQUID, ITEM_LIQUID_TD, space);
-            placeItemsWithinEmptySpace(Config.MAX_LOOT, ITEM_LOOT, space);
-            if (!chasms && space == AbstractMap.ROOM)
-                placeItemsWithinEmptySpace(Config.MAX_FEATURES, ITEM_FEATURE, space);
-            placeLamps(space, surface);
-            placeCannons(level, space, surface);
-        } else if (levelType == Level.LEVEL_TYPE.UNIVERSE) {
-            placeItemsWithinEmptySpace(Config.MAX_EXITS, ITEM_ENTRANCE_UNIVERSE, space);
-            placeItemsWithinEmptySpace(Config.MAX_EXITS, ITEM_UPGRADE, space);
-            placeItemsWithinEmptySpace(Config.MAX_LOOT, ITEM_LOOT, space);
-            placeItemsWithinEmptySpace(Config.MAX_SPACE_FEATURES, ITEM_FEATURE, space);
-            placeItemsWithinEmptySpace(Config.MAX_ROCKS, ITEM_ROCK, space); // Create clusters
-
-            map2d[sizeX / 2][sizeY / 2] = OCCUPIED;
-            item[sizeX / 2][sizeY / 2] = ITEM_ENTRANCE_SURFACE;
+        if (levelType == Level.LEVEL_TYPE.TOPDOWN) {
+            // Place nothing yet
         }
-
-        placeItemsWithinEmptySpace(level > Config.MAX_MINES ? Config.MAX_MINES :
-                level < Config.MIN_MINES ? Config.MIN_MINES : level, ITEM_MINE, space); // TODO: Cluster
-        placeItemsWithinEmptySpace(level > Config.MAX_SPAWN ? Config.MAX_SPAWN :
-                level < Config.MIN_SPAWN ? Config.MIN_SPAWN : level, ITEM_SPAWN, space); // TODO: Add starting enemies
-    }
-
-    private void placeCannons(int level, int clear, int surface) {
-        placeItemsWithinEmptySpace(Config.MAX_CANNONS, ITEM_CANNON, clear);
-        placeItemsOnSurface(level > Config.MAX_CANNONS ? Config.MAX_CANNONS : level, ITEM_CANNON, N, clear, surface);
-        placeItemsOnSurface(level > Config.MAX_CANNONS ? Config.MAX_CANNONS : level, ITEM_CANNON, S, clear, surface);
-        placeItemsOnSurface(level > Config.MAX_CANNONS ? Config.MAX_CANNONS : level, ITEM_CANNON, E, clear, surface);
-        placeItemsOnSurface(level > Config.MAX_CANNONS ? Config.MAX_CANNONS : level, ITEM_CANNON, W, clear, surface);
-    }
-
-    private void placeLamps(int space, int surface) {
-        placeItemsWithinEmptySpace(Config.MAX_LAMPS, ITEM_LAMP, space);
-        placeItemsOnSurface(Config.MAX_LAMPS, ITEM_LAMP, N, space, surface);
-        placeItemsOnSurface(Config.MAX_LAMPS, ITEM_LAMP, S, space, surface);
-        placeItemsOnSurface(Config.MAX_LAMPS, ITEM_LAMP, E, space, surface);
-        placeItemsOnSurface(Config.MAX_LAMPS, ITEM_LAMP, W, space, surface);
     }
 
     public void createSpecialFeatures(int level, Level.LEVEL_TYPE levelType, boolean inside, boolean chasms) {

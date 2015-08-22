@@ -191,13 +191,6 @@ public class MenuScreenModel {
         if(level.worldType == Level.LEVEL_TYPE.TOPDOWN) {
             background = new SimpleCloudShader();
             ((AbstractShader)background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        } else if(level.worldType == Level.LEVEL_TYPE.UNIVERSE) {
-            background = new ShiningStarScrollShader();
-            ((AbstractShader)background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        } else if(level.worldType == Level.LEVEL_TYPE.SIDESCROLL) {
-            background = new TunnellShader();
-            ((AbstractTextureShader)background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
-                    ResourceFactory.getInstance().getTexture("stone"));
         }
     }
 

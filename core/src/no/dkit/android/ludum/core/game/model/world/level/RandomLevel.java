@@ -3,7 +3,6 @@ package no.dkit.android.ludum.core.game.model.world.level;
 import com.badlogic.gdx.math.MathUtils;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.MapFactory;
-import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
 
 import java.util.Random;
 
@@ -25,11 +24,6 @@ public class RandomLevel extends Level {
         getDefaultPlayerStartPosition(worldType);
 
         this.map.removeAllHints();
-
-        // Must sanity check random maps
-        if (!sanityChecked()) {
-            throw new RuntimeException("Sanity check failed!");
-        }
     }
 
     @Override

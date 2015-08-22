@@ -6,7 +6,6 @@ import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.LightFactory;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
-import no.dkit.android.ludum.core.game.model.world.map.UniverseMap;
 import no.dkit.android.ludum.core.shaders.RenderOperations;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public abstract class Level {
 
     private static Level instance;
 
-    public enum LEVEL_TYPE {UNIVERSE, TOPDOWN, SIDESCROLL}
+    public enum LEVEL_TYPE {TOPDOWN}
 
     public List<BodyFactory.ENEMY_ANIM> walkers = new ArrayList<BodyFactory.ENEMY_ANIM>();
     public List<BodyFactory.ENEMY_ANIM> flyers = new ArrayList<BodyFactory.ENEMY_ANIM>();
@@ -78,12 +77,10 @@ public abstract class Level {
     }
 
     protected void getDefaultPlayerStartPosition(LEVEL_TYPE worldType) {
-        if (worldType == LEVEL_TYPE.SIDESCROLL)
-            setStartPositionToItem(AbstractMap.ITEM_ENTRANCE_CAVE);
-        else if (worldType == LEVEL_TYPE.TOPDOWN)
-            setStartPositionToItem(AbstractMap.ITEM_ENTRANCE_SURFACE);
-        else if (worldType == LEVEL_TYPE.UNIVERSE)
-            setStartPositionToItem(AbstractMap.ITEM_ENTRANCE_UNIVERSE);
+        if (worldType == LEVEL_TYPE.TOPDOWN) {
+            if (!setStartPositionToItem(AbstractMap.START_HINT))
+                setStartPositionTo(Level.getInstance().getMap().getWidth() / 2, Level.getInstance().getMap().getHeight() / 2);
+        }
     }
 
     protected void getSpecialFeaturesFor(int level, LEVEL_TYPE levelType, boolean inside, boolean platforms) {
@@ -91,7 +88,7 @@ public abstract class Level {
     }
 
     protected void getStandardFeaturesFor(int level, LEVEL_TYPE levelType, boolean inside, boolean platforms) {
-        map.createStandardFeatures(level, levelType, inside, platforms);
+        map.createStandardFeatures(level, levelType);
     }
 
     public Loot.LOOT_TYPE getWeaponFor(BodyFactory.ENEMY_IMAGE enemy) {
@@ -118,83 +115,46 @@ public abstract class Level {
         indoorFeatureTypes.clear();
         outdoorFeatureTypes.clear();
 
-        switch (worldType) {
-            case SIDESCROLL:
-                indoorFeatureTypes.addAll(
-                        Arrays.asList(BodyFactory.FEATURE_TYPE.SIDESCROLL_OBSCURING_FEATURE_1));
-                outdoorFeatureTypes.addAll(
-                        Arrays.asList(BodyFactory.FEATURE_TYPE.SIDESCROLL_OBSCURING_FEATURE_1));
-                break;
-            case TOPDOWN:
-                indoorFeatureTypes.addAll(
-                        Arrays.asList(
-                                BodyFactory.FEATURE_TYPE.FLOOR_FEATURE_1
-                        ));
-                outdoorFeatureTypes.addAll(
-                        Arrays.asList(
-                                BodyFactory.FEATURE_TYPE.TOPDOWN_OBSCURING_FEATURE_1,
-                                BodyFactory.FEATURE_TYPE.OUTDOOR_FEATURE_1,
-                                BodyFactory.FEATURE_TYPE.SLIMEPOOL
-                        ));
-                break;
-            case UNIVERSE:
-                indoorFeatureTypes.addAll(
-                        Arrays.asList(
-                                BodyFactory.FEATURE_TYPE.PLANET_FEATURE_1));
-                outdoorFeatureTypes.addAll(
-                        Arrays.asList(BodyFactory.FEATURE_TYPE.NEBULA_FEATURE_1
-                        ));
-                break;
-        }
+        indoorFeatureTypes.addAll(
+                Arrays.asList(
+                        BodyFactory.FEATURE_TYPE.FLOOR_FEATURE_1
+                ));
+        outdoorFeatureTypes.addAll(
+                Arrays.asList(
+                        BodyFactory.FEATURE_TYPE.TOPDOWN_OBSCURING_FEATURE_1,
+                        BodyFactory.FEATURE_TYPE.OUTDOOR_FEATURE_1,
+                        BodyFactory.FEATURE_TYPE.SLIMEPOOL
+                ));
     }
 
     protected void getDefaultLightsFor(LEVEL_TYPE worldType) {
         lightTypes.clear();
 
         switch (worldType) {
-            case SIDESCROLL:
-                lightTypes.addAll(Arrays.asList(LightFactory.LIGHT_TYPE.ALWAYS_CONE, LightFactory.LIGHT_TYPE.SMALL_PLAYER_LIGHT));
-                break;
             case TOPDOWN:
-                lightTypes.addAll(Arrays.asList(LightFactory.LIGHT_TYPE.INSIDE_CONE, LightFactory.LIGHT_TYPE.SMALL_PLAYER_LIGHT));
-                break;
-            case UNIVERSE:
-                lightTypes.add(LightFactory.LIGHT_TYPE.LARGE_PLAYER_LIGHT);
+                lightTypes.addAll(Arrays.asList(LightFactory.LIGHT_TYPE.ALWAYS_CONE, LightFactory.LIGHT_TYPE.LARGE_PLAYER_LIGHT));
                 break;
         }
     }
 
     protected void getDefaultBackgroundFor(LEVEL_TYPE worldType) {
         switch (worldType) {
-            case SIDESCROLL:
-                background = RenderOperations.BACKGROUND_TYPE.DARKROCK;
-                break;
             case TOPDOWN:
                 background = RenderOperations.BACKGROUND_TYPE.GROUND;
                 break;
-            case UNIVERSE:
-                background = RenderOperations.BACKGROUND_TYPE.UNIVERSE;
         }
     }
 
     protected void getDefaultForegroundFor(LEVEL_TYPE worldType) {
         switch (worldType) {
-            case SIDESCROLL:
-                foreground = RenderOperations.FOREGROUND_TYPE.FOG;
-                break;
             case TOPDOWN:
                 foreground = RenderOperations.FOREGROUND_TYPE.FOG;
                 break;
-            case UNIVERSE:
-                foreground = RenderOperations.FOREGROUND_TYPE.FOG;
         }
     }
 
     protected void getDefaultGravityFor(LEVEL_TYPE worldType) {
-        if (worldType.equals(LEVEL_TYPE.SIDESCROLL))
-            gravity.set(0, -1);
-        else
-            gravity.set(0, 0);
+        gravity.set(0, 0);
     }
 
     public static Vector2 getGravity() {
@@ -209,20 +169,11 @@ public abstract class Level {
         enemyTypes.clear();
 
         switch (worldType) {
-            case SIDESCROLL:
-                enemyTypes.addAll(
-                        Arrays.asList(
-                                BodyFactory.ENEMY_TYPE.BLOB
-                        )
-                );
-                break;
             case TOPDOWN:
                 enemyTypes.addAll(
                         Arrays.asList(
                                 BodyFactory.ENEMY_TYPE.WALKER_SINGLE,
-                                BodyFactory.ENEMY_TYPE.WALKER_GROUP,
-                                BodyFactory.ENEMY_TYPE.FLYER_SINGLE,
-                                BodyFactory.ENEMY_TYPE.FLYER_GROUP
+                                BodyFactory.ENEMY_TYPE.WALKER_GROUP
                         )
                 );
                 walkers.addAll(
@@ -236,20 +187,6 @@ public abstract class Level {
                         )
                 );
                 break;
-            case UNIVERSE:
-                enemyTypes.addAll(
-                        Arrays.asList(
-                                BodyFactory.ENEMY_TYPE.SHIP_SINGLE,
-                                BodyFactory.ENEMY_TYPE.SHIP_GROUP
-                        )
-                );
-                ships.addAll(
-                        Arrays.asList(
-                                BodyFactory.ENEMY_IMAGE.SHIP_1,
-                                BodyFactory.ENEMY_IMAGE.SHIP_2
-                        )
-                );
-                break;
         }
     }
 
@@ -258,15 +195,6 @@ public abstract class Level {
         lootTypes.clear();
 
         switch (worldType) {
-            case SIDESCROLL: // First weapon is default weapon
-                weaponTypes.addAll(
-                        Arrays.asList(
-                                Loot.LOOT_TYPE.GUN,
-                                Loot.LOOT_TYPE.BOMB,
-                                Loot.LOOT_TYPE.FIREBALL,
-                                Loot.LOOT_TYPE.FLAME_THROWER
-                        ));
-                break;
             case TOPDOWN: // First weapon is default weapon
                 weaponTypes.addAll(
                         Arrays.asList(
@@ -274,12 +202,6 @@ public abstract class Level {
                                 Loot.LOOT_TYPE.BOMB,
                                 Loot.LOOT_TYPE.FIREBALL,
                                 Loot.LOOT_TYPE.FLAME_THROWER));
-                break;
-            case UNIVERSE: // First weapon is default weapon
-                weaponTypes.addAll(
-                        Arrays.asList(
-                                Loot.LOOT_TYPE.LASER,
-                                Loot.LOOT_TYPE.ROCKET));
                 break;
         }
 
@@ -296,26 +218,12 @@ public abstract class Level {
 
     protected void getDefaultImagesFor(LEVEL_TYPE worldType) {
         switch (worldType) {
-            case SIDESCROLL:
-                wallTexture = "earthwall";
-                indoorImage = "indoor";
-                chasmImage = "chasm";
-                corridorImage = "path";
-                doorImage = "door";
-                break;
             case TOPDOWN:
                 wallTexture = "wall2";
                 indoorImage = "indoor";
                 chasmImage = "chasm";
                 corridorImage = "path";
                 doorImage = "door";
-                break;
-            case UNIVERSE:
-                wallTexture = NOT_USED;  // Not used
-                indoorImage = NOT_USED; // Not used
-                chasmImage = NOT_USED;
-                doorImage = NOT_USED; // Not used
-                corridorImage = NOT_USED; // Not used
                 break;
         }
     }
@@ -470,14 +378,14 @@ public abstract class Level {
         return startPosition;
     }
 
-    protected void setStartPositionToItem(int itemType) {
+    protected boolean setStartPositionToItem(int itemType) {
         for (int x = 0; x < map.getSizeX(); x++)
             for (int y = 0; y < map.getSizeY(); y++)
                 if (map.item[x][y] == itemType) {
                     startPosition.set(x, y);
-                    return;
+                    return true;
                 }
-        startPosition.set(-1, -1);
+        return false;
     }
 
     protected void setStartPositionTo(float x, float y) {
@@ -492,25 +400,6 @@ public abstract class Level {
                     return;
                 }
         startPosition.set(-1, -1);
-    }
-
-    protected boolean sanityChecked() {
-        boolean exitFound = false;
-        boolean startFeatureFound = false;
-
-        for (int x = 0; x < map.getWidth(); x++)
-            for (int y = 0; y < map.getHeight(); y++) {
-                if (!exitFound)
-                    if (map.item[x][y] == UniverseMap.ITEM_ENTRANCE_CAVE
-                            || map.item[x][y] == UniverseMap.ITEM_ENTRANCE_SURFACE
-                            || map.item[x][y] == UniverseMap.ITEM_ENTRANCE_UNIVERSE
-                            || map.item[x][y] == UniverseMap.ITEM_TRIGGER)
-                        exitFound = true;
-            }
-
-        startFeatureFound = startPosition.x != -1 && startPosition.y != -1;
-
-        return exitFound && startFeatureFound;
     }
 
     public boolean isPlatforms() {

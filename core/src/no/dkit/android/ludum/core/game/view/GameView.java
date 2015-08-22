@@ -211,11 +211,6 @@ public class GameView {
         drawObscuringLayer(gameModel.getObscuringFeatureLayer());
         drawShadedLayer(gameModel.getObscuringShadedLayer());
         spriteBatch.end();
-
-        gameModel.getForeground().render(spriteBatch,
-                camera.position.x - Config.getDimensions().WORLD_WIDTH / 2f,
-                camera.position.y - Config.getDimensions().WORLD_HEIGHT / 2f,
-                Config.getDimensions().WORLD_WIDTH, Config.getDimensions().WORLD_HEIGHT);
     }
 
     // TODO: Move these to model to save on iterations

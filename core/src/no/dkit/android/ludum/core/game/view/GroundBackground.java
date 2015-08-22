@@ -15,13 +15,6 @@ public class GroundBackground extends MovingBackground {
         background.setU2(background.getU() + viewWidth);
         background.setV2(background.getV() + viewHeight);
 
-        fog.setU(fog.getU() + .005f + (deltaX / 3));
-        fog.setV(fog.getV() - .005f - (deltaY / 3));
-
-        fog.setU2(fog.getU() + viewWidth/3);
-        fog.setV2(fog.getV() + viewHeight/3);
-
         background.translate(translateX, translateY);
-        fog.translate(translateX, translateY);
     }
 }
