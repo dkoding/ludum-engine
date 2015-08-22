@@ -14,10 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
@@ -25,11 +25,8 @@ import no.dkit.android.ludum.core.game.factory.LevelFactory;
 import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.shaders.AbstractShader;
-import no.dkit.android.ludum.core.shaders.AbstractTextureShader;
 import no.dkit.android.ludum.core.shaders.RenderOperations;
-import no.dkit.android.ludum.core.shaders.fullscreen.ShiningStarScrollShader;
 import no.dkit.android.ludum.core.shaders.fullscreen.SimpleCloudShader;
-import no.dkit.android.ludum.core.shaders.texture.TunnellShader;
 
 public class MenuScreenModel {
     public static final String TRANSPARENT = "transparent";
@@ -61,7 +58,6 @@ public class MenuScreenModel {
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        TextureRegion helpImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "help");
         TextureRegion playImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "start");
         TextureRegion soundImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "sound");
         TextureRegion vibrateImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "vibrate");
@@ -77,15 +73,6 @@ public class MenuScreenModel {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 XXXX.changeLevel();
-            }
-        });
-
-        Button helpButton = new Button(new Image(helpImage), skin, TRANSPARENT);
-
-        helpButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                XXXX.changeScreen(XXXX.SCREEN.HELP);
             }
         });
 
@@ -171,9 +158,6 @@ public class MenuScreenModel {
 
         // stage.addActor(new Button("Behind Window", skin));
         stage.addActor(window);
-        helpButton.setSize(100, 100);
-        helpButton.setPosition(Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 200);
-        stage.addActor(helpButton);
     }
 
     private String getLevelLabel() {
@@ -188,9 +172,9 @@ public class MenuScreenModel {
     }
 
     private void updateBackground() {
-        if(level.worldType == Level.LEVEL_TYPE.TOPDOWN) {
+        if (level.worldType == Level.LEVEL_TYPE.TOPDOWN) {
             background = new SimpleCloudShader();
-            ((AbstractShader)background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            ((AbstractShader) background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
     }
 

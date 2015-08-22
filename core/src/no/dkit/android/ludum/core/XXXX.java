@@ -6,12 +6,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.controller.GameScreen;
-import no.dkit.android.ludum.core.game.controller.HelpScreen;
 import no.dkit.android.ludum.core.game.controller.LoadingScreen;
 import no.dkit.android.ludum.core.game.controller.MenuScreen;
 import no.dkit.android.ludum.core.game.controller.SplashScreen;
@@ -125,11 +121,6 @@ public class XXXX extends ApplicationAdapter {
 
         if (to.equals(SCREEN.STARTMENU)) {
             newScreen = new MenuScreen();
-        } else if (to.equals(SCREEN.HELP)) {
-            newScreen = new HelpScreen();
-        } else if (to.equals(SCREEN.UPGRADE)) {
-            newScreen = new UpgradeScreen();
-            existingGameScreen = oldScreen;
         } else if (to.equals(SCREEN.AFTER_UPGRADE)) {
             newScreen = existingGameScreen;
         } else if (to.equals(SCREEN.STARTMENU)) {
