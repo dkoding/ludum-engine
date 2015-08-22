@@ -32,6 +32,7 @@ public class CityMap extends AbstractMap {
             type = City.CORRIDOR_STRAIGHT;
 
         City dungeon = new City(width - 1, height - 1, type);
+
         Cell[][] cells = dungeon.getCells();
         for (int x = 0; x < width - 1; x++) {
             for (int y = 0; y < height - 1; y++) {
@@ -39,24 +40,12 @@ public class CityMap extends AbstractMap {
             }
         }
 
+        //replaceAll(AbstractMap.DOOR, AbstractMap.CLEAR);
+
         clearOccupied(SOLID);
         directDoors();
 
-        if (inside) {
-            replaceAll(BORDER, CLEAR, map2d);
-            replaceAll(SOLID, OCCUPIED, map2d);
-            replaceAll(CLEAR, SOLID, map2d);
-            cleanupInvisible(SOLID, CLEAR);
-            replaceAll(OCCUPIED, SOLID, map2d);
-            replaceAll(CLEAR, OCCUPIED, map2d);
-        } else {
-            box(SOLID);
-        }
-
-        if (platforms) {
-            replaceAll(CORRIDOR, PLATFORM, map2d);
-            directPlatforms();
-        }
+        box(SOLID);
 
         printMap(map2d);
 

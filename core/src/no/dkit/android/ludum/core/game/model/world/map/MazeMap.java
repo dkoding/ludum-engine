@@ -17,6 +17,7 @@ public class MazeMap extends AbstractMap {
         initVariables((int) Math.pow(2, Config.MAZE_SIZE) + 1, (int) Math.pow(2, Config.MAZE_SIZE) + 1);
 
         clearMap();
+
         generateMaze(map2d, 2, sizeX < sizeY ? sizeX : sizeY,
                 MathUtils.random(2, 3), sizeX * MathUtils.random(5, 10), sizeX, sizeY);
 

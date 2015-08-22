@@ -24,11 +24,7 @@ public class MapFactory {
 
         switch (type) {
             case TOPDOWN:
-                if (random > .75f)
-                    map = new ObstacleFeatureMap();
-                else if (random > .50f)
-                    map = new MazeMap();
-                else if (random > .25f)
+                if (random > .50f)
                     map = new CityMap();
                 else
                     map = new DungeonMap();

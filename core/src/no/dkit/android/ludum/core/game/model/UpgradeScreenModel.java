@@ -47,7 +47,7 @@ public class UpgradeScreenModel {
         camera.setToOrtho(false);
 
         background = new TunnellShader();
-        ((AbstractTextureShader)background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), ResourceFactory.getInstance().getTexture("stone"));
+        ((AbstractTextureShader)background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), ResourceFactory.getInstance().getTexture("wall"));
 
         spriteBatch = new SpriteBatch();
 

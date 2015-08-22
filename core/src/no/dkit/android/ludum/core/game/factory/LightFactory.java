@@ -58,7 +58,7 @@ public class LightFactory {
         } else if (XXXX.performance == Config.PERFORMANCE.MEDIUM) {
             numRays = 32;
         } else {
-            numRays = 64;
+            numRays = 256;
         }
     }
 
@@ -76,7 +76,7 @@ public class LightFactory {
         if (type == LIGHT_TYPE.LARGE_PLAYER_LIGHT) {
             Color color = new Color(1f, 1f, 1f, 1f);
             light = getLight(0, 0, Config.getDimensions().WORLD_WIDTH, numRays, color);
-            light.setSoftnessLength(Config.getDimensions().WORLD_WIDTH / 2f);
+            light.setSoftnessLength(Config.TILE_SIZE_X*4);
         } else if (type == LIGHT_TYPE.SMALL_PLAYER_LIGHT) {
             Color color = new Color(1f, 1f, 1f, 1f);
             light = getLight(0, 0, Config.getDimensions().WORLD_WIDTH, numRays, color);

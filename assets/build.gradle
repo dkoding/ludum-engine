@@ -9,17 +9,17 @@ File[] fileList(String dir) {
     file(dir).listFiles({ file -> file.isDirectory() } as FileFilter).sort()
 }
 
-task copyUnmanagedAssets(type: Copy) {
+task copyUnmanaged(type: Copy) {
     from 'unmanaged'
     into assets
 }
-task packManagedAssets(dependsOn: 'classes') {
+task packManaged(dependsOn: 'classes') {
     doLast {
         fileList(source).each { File file ->
             javaexec {
                 classpath = sourceSets.main.runtimeClasspath
                 main = 'no.dkit.gamelib.util.Packer'
-                args = [source + '/' + file.name, target, file.name + '.pack']
+                args = [source + '/' + file.name, target, file.name]
             }
         }
     }

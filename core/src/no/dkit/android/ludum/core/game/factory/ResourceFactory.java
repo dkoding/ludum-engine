@@ -64,7 +64,7 @@ public class ResourceFactory implements AssetErrorListener {
         atlases.addAll(Arrays.asList(UI));
 
         for (String fileName : atlases) {
-            manager.load(baseDir + fileName + ".pack.atlas", TextureAtlas.class);
+            manager.load(baseDir + fileName + ".atlas", TextureAtlas.class);
         }
     }
 
@@ -82,7 +82,7 @@ public class ResourceFactory implements AssetErrorListener {
             atlases.add(Level.LEVEL_TYPE.TOPDOWN.toString().toLowerCase());
 
         for (String fileName : atlases) {
-            manager.load(baseDir + fileName + ".pack.atlas", TextureAtlas.class);
+            manager.load(baseDir + fileName + ".atlas", TextureAtlas.class);
         }
     }
 
@@ -109,7 +109,7 @@ public class ResourceFactory implements AssetErrorListener {
 
     // Return image based on level world type
     public TextureAtlas.AtlasRegion getWorldTypeImage(String imageName) {
-        TextureAtlas.AtlasRegion region = manager.get(baseDir + LevelFactory.getInstance().getCurrentLevel().getWorldType().toString().toLowerCase() + ".pack.atlas",
+        TextureAtlas.AtlasRegion region = manager.get(baseDir + LevelFactory.getInstance().getCurrentLevel().getWorldType().toString().toLowerCase() + ".atlas",
                 TextureAtlas.class).findRegion(imageName);
 
         if (region == null && !"".equals(imageName))
@@ -172,7 +172,7 @@ public class ResourceFactory implements AssetErrorListener {
 
     // Return animation based on level world type
     public Array<TextureAtlas.AtlasRegion> getWorldTypeAnimation(String imageName) {
-        Array<TextureAtlas.AtlasRegion> regions = manager.get(baseDir + LevelFactory.getInstance().getCurrentLevel().getWorldType().toString().toLowerCase() + ".pack.atlas",
+        Array<TextureAtlas.AtlasRegion> regions = manager.get(baseDir + LevelFactory.getInstance().getCurrentLevel().getWorldType().toString().toLowerCase() + ".atlas",
                 TextureAtlas.class).findRegions(imageName);
 
         if (regions == null || regions.size == 0)
@@ -182,7 +182,7 @@ public class ResourceFactory implements AssetErrorListener {
     }
 
     public TextureAtlas.AtlasRegion getImage(String type, String imageName) {
-        TextureAtlas.AtlasRegion region = manager.get(baseDir + type + ".pack.atlas", TextureAtlas.class).findRegion(imageName);
+        TextureAtlas.AtlasRegion region = manager.get(baseDir + type + ".atlas", TextureAtlas.class).findRegion(imageName);
 
         if (region == null && !"".equals(imageName))
             throw new RuntimeException("Could not load image " + imageName + " for type " + type);
@@ -214,8 +214,8 @@ public class ResourceFactory implements AssetErrorListener {
     }
 
     public RenderOperations getBackground(Level level, RenderOperations.BACKGROUND_TYPE type, int worldWidth, int worldHeight, int mapWidth, int mapHeight) {
-        return new GroundBackground(ResourceFactory.getInstance().getTexture("stone"),
-                                 ResourceFactory.getInstance().getTransparentTexture("fog1"),
+        return new GroundBackground(ResourceFactory.getInstance().getTexture("ground"),
+                                 null,
                                  worldWidth, worldHeight, mapWidth, mapHeight);
     }
 

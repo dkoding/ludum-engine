@@ -1125,8 +1125,7 @@ public class BodyFactory {
     }
 
     public GameBody getCorridorFeature(float x, float y, TextureAtlas.AtlasRegion corridorImage) {
-        return new FeatureBody(x, y, Config.TILE_SIZE_X, corridorImage,
-                ResourceFactory.getInstance().getImage(ResourceFactory.MASK, "terrainmask"));
+        return new FeatureBody(x, y, Config.TILE_SIZE_X, corridorImage);
     }
 
     public GameBody getPlatformBody(float x, float y, int direction) {

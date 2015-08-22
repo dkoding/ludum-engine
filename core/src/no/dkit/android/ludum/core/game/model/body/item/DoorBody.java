@@ -18,7 +18,7 @@ import no.dkit.android.ludum.core.game.model.world.map.UniverseMap;
 
 public class DoorBody extends DirectionalGameBody {
     public boolean open = false;
-    public boolean locked = MathUtils.random() > .8f;
+    public boolean locked = false;
 
     private final TextureRegion doorImage;
 

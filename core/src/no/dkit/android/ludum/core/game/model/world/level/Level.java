@@ -219,7 +219,7 @@ public abstract class Level {
     protected void getDefaultImagesFor(LEVEL_TYPE worldType) {
         switch (worldType) {
             case TOPDOWN:
-                wallTexture = "wall2";
+                wallTexture = "wall";
                 indoorImage = "indoor";
                 chasmImage = "chasm";
                 corridorImage = "path";
