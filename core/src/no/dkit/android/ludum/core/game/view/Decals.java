@@ -1,7 +1,5 @@
 package no.dkit.android.ludum.core.game.view;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -49,8 +47,8 @@ public class Decals {
         batch.draw(fboRegion,
                 posX + x - Config.getDimensions().WORLD_WIDTH / 2f, posY + y - Config.getDimensions().WORLD_HEIGHT / 2f,
                 0, 0,
-                Config.getDimensions().WORLD_WIDTH, Config.getDimensions().WORLD_HEIGHT,
-                1, 1,
+                width, height,
+                1,1,
                 0);
     }
 }
