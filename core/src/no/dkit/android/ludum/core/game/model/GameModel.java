@@ -460,14 +460,6 @@ public class GameModel {
             } else if (gameBody instanceof KeyBody) {
                 map.spot(gameBody, Color.MAGENTA);
             }
-
-            if (Level.getInstance().isPlatforms() && gameBody instanceof AgentBody) {
-                if (worldMap.map2d[(int) (gameBody.position.x + Config.TILE_SIZE_X)][(int) (gameBody.position.y + Config.TILE_SIZE_Y)] == AbstractMap.CLEAR
-                        || worldMap.map2d[(int) (gameBody.position.x + Config.TILE_SIZE_X)][(int) (gameBody.position.y + Config.TILE_SIZE_Y)] == AbstractMap.PLATFORM)
-                    if (((AgentBody) gameBody).getNumPlatforms() == 0) {
-                        ((AgentBody) gameBody).fell();
-                    }
-            }
         }
 
         if (Config.DEBUGTEXT) {
@@ -728,8 +720,6 @@ public class GameModel {
         TextFactory.getInstance().addText(new TextItem("LEVEL CLEARED"), 0f);
 
         int counter = 0;
-
-        SoundFactory.getInstance().playMusic(SoundFactory.MUSIC_TYPE.WIN);
 
         while (counter < 50) {
             Vector2 position = playerBody.position;

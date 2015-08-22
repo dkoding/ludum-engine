@@ -130,18 +130,16 @@ public class ResourceFactory implements AssetErrorListener {
 
     public Array<TextureAtlas.AtlasRegion> getWalkerAnimation(BodyFactory.ENEMY_ANIM type) {
         switch (type) {
-            case WALKER_ANIM_1:
-                return getWorldTypeAnimation("player");
+            case MALE:
+                return getWorldTypeAnimation("player-male-run");
+            case FEMALE:
+                return getWorldTypeAnimation("player-female-run");
+            case MALESOLDIER:
+                return getWorldTypeAnimation("player-male-runweapon");
+            case FEMALESOLDIER:
+                return getWorldTypeAnimation("player-female-runweapon");
         }
         throw new RuntimeException("Unknown walker image type " + type);
-    }
-
-    public Array<TextureAtlas.AtlasRegion> getFlyerAnimation(BodyFactory.ENEMY_ANIM type) {
-        switch (type) {
-            case FLYER_ANIM_1:
-                return getWorldTypeAnimation("dragon");
-        }
-        throw new RuntimeException("Unknown flyer image type " + type);
     }
 
     // Return image based on level world type

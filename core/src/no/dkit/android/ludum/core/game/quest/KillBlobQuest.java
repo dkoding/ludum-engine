@@ -45,22 +45,10 @@ public class KillBlobQuest extends Quest {
 
     @Override
     public void startQuest() {
-        final AgentBody questAgent = BodyFactory.getInstance().createQuestAgent(Level.getInstance().getEnemyTypes().get(0),
-                GameModel.getPlayer().position.cpy().add(Config.TILE_SIZE_X * 2, Config.TILE_SIZE_Y * 2), GameModel.getPlayer().position);
-
-        GameModel.getPlayer().register(GameEvent.EVENT_TYPE.KILLED, new GameEvent() {
-            @Override
-            public void fire(GameBody gameBody) {
-                if (gameBody.equals(questAgent)) {
-                    completedQuest();
-                }
-            }
-        });
     }
 
     @Override
     public void completedQuest() {
-        SoundFactory.getInstance().playMusic(SoundFactory.MUSIC_TYPE.WIN);
         ((GameScreen) XXXX.getGame().getScreen()).getStage().addActor(new RewardTable(this));
     }
 

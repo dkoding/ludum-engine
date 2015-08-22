@@ -449,21 +449,6 @@ public class AgentBody extends PoolableGameBody {
         else return 1;
     }
 
-    public void fell(Vector2 position) {
-        fell();
-        body.setTransform(position, angle);
-    }
-
-    public void fell() {
-        if (falling) return;
-        health = 0;
-        if (this instanceof PlayerBody)
-            SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.SCREAM);
-        body.setLinearDamping(5);
-        scaleMod = -.02f;
-        falling = true;
-    }
-
     public void setNeighborhood(Neighborhood neighborhood) {
         this.neighborhood = neighborhood;
     }

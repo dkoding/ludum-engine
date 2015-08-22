@@ -11,7 +11,6 @@ import no.dkit.android.ludum.core.game.controller.GameScreen;
 import no.dkit.android.ludum.core.game.controller.LoadingScreen;
 import no.dkit.android.ludum.core.game.controller.MenuScreen;
 import no.dkit.android.ludum.core.game.controller.SplashScreen;
-import no.dkit.android.ludum.core.game.controller.UpgradeScreen;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
 import no.dkit.android.ludum.core.game.factory.LightFactory;

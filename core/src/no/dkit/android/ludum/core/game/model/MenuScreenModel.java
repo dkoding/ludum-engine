@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -23,6 +25,7 @@ import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.LevelFactory;
 import no.dkit.android.ludum.core.game.factory.ResourceFactory;
+import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.shaders.AbstractShader;
 import no.dkit.android.ludum.core.shaders.RenderOperations;
@@ -60,7 +63,7 @@ public class MenuScreenModel {
 
         TextureRegion playImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "start");
         TextureRegion soundImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "sound");
-        TextureRegion vibrateImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "vibrate");
+        TextureRegion musicImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "music");
         TextureRegion logo = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "logo");
         TextureRegion left = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "arrow_left");
         TextureRegion right = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "arrow_right");
@@ -103,9 +106,9 @@ public class MenuScreenModel {
         });
 
         final Button toggleSound = new Button(new Image(soundImage), skin, TOGGLE);
-        final Button toggleVibrate = new Button(new Image(vibrateImage), skin, TOGGLE);
+        final Button toggleMusic = new Button(new Image(musicImage), skin, TOGGLE);
 
-        NinePatchDrawable up = (NinePatchDrawable) toggleVibrate.getStyle().up;
+        NinePatchDrawable up = (NinePatchDrawable) toggleMusic.getStyle().up;
 
         NinePatchDrawable checked = new NinePatchDrawable(up) {
             @Override
@@ -118,8 +121,36 @@ public class MenuScreenModel {
         Button.ButtonStyle style = new Button.ButtonStyle();
         style.checked = checked;
 
-        toggleVibrate.setStyle(style);
+        toggleMusic.setStyle(style);
         toggleSound.setStyle(style);
+
+        toggleSound.setChecked(Config.sound);
+
+        toggleSound.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Config.sound = !Config.sound;
+                if (Config.sound)
+                    SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.DOOROPEN);
+                toggleSound.setChecked(Config.sound);
+            }
+        });
+
+        toggleMusic.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Config.music = !Config.music;
+                if (Config.music)
+                    SoundFactory.getInstance().playMusic(SoundFactory.MUSIC_TYPE.MENU);
+                else
+                    SoundFactory.getInstance().stopMusic();
+                toggleMusic.setChecked(Config.music);
+            }
+        });
+
+
+        toggleSound.setChecked(Config.sound);
+        toggleMusic.setChecked(Config.music);
 
         Image imageActor = new Image(logo);
 
@@ -149,7 +180,7 @@ public class MenuScreenModel {
         window.row();
         window.add(levelLabel).colspan(3);
         window.row();
-        window.add(toggleVibrate).size(100, 100);
+        window.add(toggleMusic).size(100, 100);
         window.add(playButton).size(100, 100);
         window.add(toggleSound).size(100, 100);
         window.row();

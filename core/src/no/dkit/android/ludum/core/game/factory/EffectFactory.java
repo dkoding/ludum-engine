@@ -83,20 +83,15 @@ public class EffectFactory {
         Set<EFFECT_TYPE> effectTypes = particleEffects.keySet();
 
         for (EFFECT_TYPE effect_type : effectTypes) {
-            ParticleEmitter particleEmitter = new ParticleEmitter(particleEffects.get(effect_type).getEmitters().get(0));
+            final ParticleEffect particleEffect = particleEffects.get(effect_type);
+
+            if (effect_type == EFFECT_TYPE.BLOOD || effect_type == EFFECT_TYPE.DIRBLOOD || effect_type == EFFECT_TYPE.SMOKE)
+                particleEffect.scaleEffect(Config.getDimensions().WORLD_ON_SCREEN_FACTOR);
+            else
+                particleEffect.scaleEffect(Config.getDimensions().WORLD_ON_SCREEN_FACTOR);
+
+            ParticleEmitter particleEmitter = new ParticleEmitter(particleEffect.getEmitters().get(0));
             particleEmitter.setContinuous(false);
-
-            particleEmitter.getScale().setHigh(particleEmitter.getScale().getHighMin() * Config.getDimensions().WORLD_ON_SCREEN_FACTOR, particleEmitter.getScale().getHighMax() * Config.getDimensions().WORLD_ON_SCREEN_FACTOR);
-            particleEmitter.getScale().setLow(particleEmitter.getScale().getLowMin() * Config.getDimensions().WORLD_ON_SCREEN_FACTOR, particleEmitter.getScale().getLowMax() * Config.getDimensions().WORLD_ON_SCREEN_FACTOR);
-            particleEmitter.getVelocity().setHigh(particleEmitter.getVelocity().getHighMin() * Config.getDimensions().WORLD_ON_SCREEN_FACTOR, particleEmitter.getVelocity().getHighMax() * Config.getDimensions().WORLD_ON_SCREEN_FACTOR);
-            particleEmitter.getVelocity().setLow(particleEmitter.getVelocity().getLowMin() * Config.getDimensions().WORLD_ON_SCREEN_FACTOR, particleEmitter.getVelocity().getLowMax() * Config.getDimensions().WORLD_ON_SCREEN_FACTOR);
-
-/*
-            particleEmitter.getScale().setLow(Config.TILE_SIZE_X / 4, Config.TILE_SIZE_X / 4);
-            particleEmitter.getScale().setHigh(Config.TILE_SIZE_X / 2, Config.TILE_SIZE_X / 2);
-            particleEmitter.getVelocity().setLow(Config.TILE_SIZE_X / 2, Config.TILE_SIZE_X / 2);
-            particleEmitter.getVelocity().setHigh(Config.TILE_SIZE_X, Config.TILE_SIZE_X);
-*/
             particleEmitterBlueprints.put(effect_type, particleEmitter);
         }
     }
@@ -107,50 +102,21 @@ public class EffectFactory {
 
     public void addHitEffect(Vector2 position, GameBody.BODY_TYPE type, float angle) {
         final ParticleEmitter particleEmitter = addHitEffect(position, type);
-        if(particleEmitter != null) {
+        if (particleEmitter != null) {
             particleEmitter.getAngle().setHighMin(-20 + angle);
             particleEmitter.getAngle().setHighMax(20 + angle);
         }
     }
 
     public ParticleEmitter addHitEffect(Vector2 position, GameBody.BODY_TYPE type) {
-        switch (type) {
-            case HUMANOID:
-            case ANIMAL:
-            case INSECT:
-                return addEffect(position, EFFECT_TYPE.DIRBLOOD, null); // RED
-            case STONE:
-                return addEffect(position, EFFECT_TYPE.DIRBLOOD, null); // GRAY
-            case WOOD:
-                return addEffect(position, EFFECT_TYPE.DIRBLOOD, null); // BROWN
-            case METAL:
-                return addEffect(position, EFFECT_TYPE.SPARK, null);
-            case LIQUID:
-                return addEffect(position, EFFECT_TYPE.DIRBLOOD, null); // BLUE
-            case ZOMBIE:
-                return addEffect(position, EFFECT_TYPE.DIRBLOOD, null); // GREEN
-            case ALIEN:
-                return addEffect(position, EFFECT_TYPE.DIRBLOOD, null); // YELLOW
-            case SPACESHIP:
-                return addEffect(position, EFFECT_TYPE.EXPLOSION, null); // YELLOW
-            default:
-                return null;
-        }
+        if(type == GameBody.BODY_TYPE.HUMANOID)
+            return addEffect(position, EFFECT_TYPE.DIRBLOOD, null); // RED
+        else
+            return addEffect(position, EFFECT_TYPE.SPARK);
     }
 
     public ParticleEmitter addDieEffect(Vector2 position, GameBody.BODY_TYPE type) {
-        switch (type) {
-            case HUMANOID:
-            case ANIMAL:
-            case ZOMBIE:
-            case ALIEN:
-            case INSECT:
-                return addEffect(position, EFFECT_TYPE.BLOOD, null);
-            case LIQUID:
-                return addEffect(position, EFFECT_TYPE.EXPLOSION, null);
-            default:
-                throw new RuntimeException("NO EFFECT FOR TYPE " + type);
-        }
+        return addEffect(position, EFFECT_TYPE.BLOOD, null);
     }
 
     public ParticleEmitter addEffect(Vector2 position, EFFECT_TYPE type, final ParticleEmitterBox2D.Box2DOperations operations) {

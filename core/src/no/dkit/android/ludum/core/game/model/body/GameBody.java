@@ -143,7 +143,7 @@ public abstract class GameBody {
     public void onDeath() {
         SoundFactory.getInstance().playDieSound(bodyType);
         EffectFactory.getInstance().addDieEffect(position, bodyType);
-        BodyFactory.getInstance().createLoot(position, LootFactory.getInstance().getRandomLootType());
+        //BodyFactory.getInstance().createLoot(position, LootFactory.getInstance().getRandomLootType());
         GameModel.onEvent(GameEvent.EVENT_TYPE.KILLED, this);
         delete();
     }

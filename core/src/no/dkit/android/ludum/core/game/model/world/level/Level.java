@@ -103,12 +103,11 @@ public abstract class Level {
 
     public Loot.LOOT_TYPE getWeaponFor(BodyFactory.ENEMY_ANIM enemy) {
         switch (enemy) {
-            case WALKER_ANIM_1:
+            case FEMALESOLDIER:
+            case MALESOLDIER:
                 return Loot.LOOT_TYPE.GUN;
-            case FLYER_ANIM_1:
-                return Loot.LOOT_TYPE.FIREBALL;
         }
-        throw new RuntimeException("No weapon assigned to enemy " + enemy);
+        return null;
     }
 
     protected void getDefaultFeaturesFor(LEVEL_TYPE worldType) {
@@ -178,12 +177,10 @@ public abstract class Level {
                 );
                 walkers.addAll(
                         Arrays.asList(
-                                BodyFactory.ENEMY_ANIM.WALKER_ANIM_1
-                        )
-                );
-                flyers.addAll(
-                        Arrays.asList(
-                                BodyFactory.ENEMY_ANIM.FLYER_ANIM_1
+                                BodyFactory.ENEMY_ANIM.FEMALE,
+                                BodyFactory.ENEMY_ANIM.MALE,
+                                BodyFactory.ENEMY_ANIM.FEMALESOLDIER,
+                                BodyFactory.ENEMY_ANIM.MALESOLDIER
                         )
                 );
                 break;

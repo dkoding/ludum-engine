@@ -25,7 +25,6 @@ public class MineBody extends GameBody {
     public void collidedWith(GameBody other) {
         if (other instanceof AgentBody) {
             other.hit(damage);
-            SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.EXPLOSION, .5f + MathUtils.random(.5f));
         }
         EffectFactory.getInstance().addEffect(position, EffectFactory.EFFECT_TYPE.BIGEXPLOSION);
         delete();

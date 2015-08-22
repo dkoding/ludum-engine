@@ -49,7 +49,6 @@ public class KeyBody extends GameBody {
     public void collidedWith(GameBody other) { // Will always be playerbody because of collission bits
         ((PlayerBody) other).getData().addKey();
         TextFactory.getInstance().addText(new TextItem("Collect KEYS", 0, Config.getDimensions().SCREEN_HEIGHT / 3, Color.WHITE), -.01f);
-        SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.CASH);
         delete();
     }
 }

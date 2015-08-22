@@ -45,12 +45,12 @@ public class WeaponBody extends PoolableGameBody {
     }
 
     protected void hitAgentEffect(AgentBody other) {
-        EffectFactory.getInstance().addHitEffect(position, bodyType, angle);
+        EffectFactory.getInstance().addHitEffect(position, other.bodyType, angle);
         SoundFactory.getInstance().playHitSound(other.bodyType);
     }
 
     protected void hitNonAgentEffect(GameBody other) {
-        EffectFactory.getInstance().addHitEffect(position, bodyType, angle);
+        EffectFactory.getInstance().addHitEffect(position, other.bodyType, angle);
         SoundFactory.getInstance().playHitSound(other.bodyType);
     }
 

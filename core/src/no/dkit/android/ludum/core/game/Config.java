@@ -99,8 +99,8 @@ public class Config {
     public static final float BLOBLIMB_RADIUS = Config.TILE_SIZE_X / 8f;
     public static final float BLOBLIMB_DENSITY = 3f;
 
-    public static final boolean music = false;
-    public static final boolean sound = false;
+    public static boolean music = true;
+    public static boolean sound = true;
 
     public static Dimensions getDimensions() {
         return dimensions;

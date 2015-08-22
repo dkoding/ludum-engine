@@ -107,18 +107,8 @@ public class DoorBody extends DirectionalGameBody {
     @Override
     public void collidedWith(GameBody other) {
         if (other instanceof PlayerBody) {
-            if (locked) {
-                if (((PlayerBody) other).getData().getKeys() > 0) {
-                    ((PlayerBody) other).getData().removeKey();
-                    openDoor();
-                } else {
-                    TextFactory.getInstance().addText("DOOR IS LOCKED - KEY REQUIRED");
-                    SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.DOORLOCKED);
-                }
-            } else {
-                if (!open)
-                    openDoor();
-            }
+            if (!open)
+                openDoor();
         }
     }
 

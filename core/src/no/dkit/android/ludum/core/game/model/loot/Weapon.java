@@ -112,7 +112,6 @@ public abstract class Weapon extends Loot {
     }
 
     private void onGunEmpty() {
-        SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.GUNEMPTY);
     }
 
     public boolean isReady2() {
@@ -122,8 +121,6 @@ public abstract class Weapon extends Loot {
 
     @Override
     public void onPickup(GameBody owner) {
-        SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.WEAPONPICKUP);
-
         if (owner instanceof AgentBody)
             ((AgentBody) owner).addWeapon(this);
 

@@ -138,11 +138,6 @@ public class ChasmBody extends GameBody {
 
     @Override
     public void collidedWith(GameBody other) {
-        if (other instanceof AgentBody) {
-            if (getBody().getFixtureList().get(0).testPoint(other.position)) {
-                ((AgentBody) other).fell(position);
-            }
-        }
     }
 
     @Override

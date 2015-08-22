@@ -28,6 +28,7 @@ public class SandboxLevel extends Level {
 
         enemyTypes.clear();
         enemyTypes.add(BodyFactory.ENEMY_TYPE.WALKER_SINGLE);
+        enemyTypes.add(BodyFactory.ENEMY_TYPE.WALKER_GROUP);
     }
 
     public void onStart() {
