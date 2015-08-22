@@ -263,12 +263,11 @@ public class GameModel {
                     if (level.getMap().item[x][y] == AbstractMap.ITEM_FEATURE) {
                         FeatureBody item;
 
-                        if (level.getMap().map2d[x][y] == AbstractMap.ROOM)
-                            item = BodyFactory.getInstance().createFeature(x, y, level.getRandomIndoorFeatureType());
-                        else
+                        if (level.getMap().map2d[x][y] != AbstractMap.ROOM) {
                             item = BodyFactory.getInstance().createFeature(x, y, level.getRandomOutdoorFeatureType());
 
-                        featureBodies.add(item);
+                            featureBodies.add(item);
+                        }
                     } else
                         BodyFactory.getInstance().createItem(x, y, level.getMap().item[x][y], level.getMap().itemDirection[x][y]);
                 }

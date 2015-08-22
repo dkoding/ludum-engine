@@ -231,7 +231,7 @@ public abstract class AbstractMap {
             int y = MathUtils.random(2, sizeY - 2);
 
             if (map2d[x][y] == clear) {
-                map2d[x][y] = OCCUPIED;
+                //map2d[x][y] = OCCUPIED;
                 item[x][y] = itemType;
                 numItems++;
             }
@@ -970,12 +970,16 @@ public abstract class AbstractMap {
 
         clearOccupied(ROOM);
 
+        placeAllItems(level, levelType, space, surface, false, false);
+
+        //clearOccupied(ROOM);
+
         printMap(map2d);
     }
 
     private void placeAllItems(int level, Level.LEVEL_TYPE levelType, int space, int surface, boolean inside, boolean chasms) {
         if (levelType == Level.LEVEL_TYPE.TOPDOWN) {
-            // Place nothing yet
+            placeItems(100, AbstractMap.ITEM_FEATURE, CLEAR);
         }
     }
 

@@ -1228,24 +1228,7 @@ public class BodyFactory {
     public FeatureBody getFeature(float x, float y, FEATURE_TYPE type) {
         TextureAtlas.AtlasRegion featureImage = ResourceFactory.getInstance().getFeatureImage(type);
 
-        switch (type) {
-            case NEBULA_FEATURE_1:
-                return new FeatureBody(x, y, Config.TILE_SIZE_X,
-                        featureImage, MathUtils.random(3f, 6f), MathUtils.random(360));
-            case FLOOR_FEATURE_1:
-                return new FeatureBody(x, y, Config.TILE_SIZE_X, featureImage);
-            case SLIMEPOOL:
-                return new FeatureBody(x, y, Config.TILE_SIZE_X * 2, featureImage, ResourceFactory.getInstance().getImage(ResourceFactory.MASK, "terrainmask"));
-            case TOPDOWN_OBSCURING_FEATURE_1:
-                return new ObscuringFeatureBody(x, y, Config.TILE_SIZE_X, featureImage, MathUtils.random(.5f, 2f), MathUtils.random(360), true);
-            case SIDESCROLL_OBSCURING_FEATURE_1:
-                return new ObscuringFeatureBody(x, y, Config.TILE_SIZE_X, featureImage);
-            case OUTDOOR_FEATURE_1:
-                return new FeatureBody(x, y, Config.TILE_SIZE_X * 2, featureImage,
-                        ResourceFactory.getInstance().getImage(ResourceFactory.MASK, "terrainmask"));
-            default:
-                throw new RuntimeException("Unknown feature for " + type);
-        }
+        return new ObscuringFeatureBody(x, y, Config.TILE_SIZE_X, featureImage, MathUtils.random(.5f, 2f), MathUtils.random(360), true);
     }
 
 

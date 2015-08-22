@@ -37,7 +37,6 @@ public class SandboxLevel extends Level {
         for (Loot.LOOT_TYPE weaponType : weaponTypes) {
             givePlayerWeapon(LootFactory.getInstance().getWeapon(weaponType));
         }
-
 /*
         TriggerBody trigger = BodyFactory.getInstance().createTrigger(2, 2);
         trigger.setTrigger(new QuestTrigger(new KillBlobQuest(worldType)));

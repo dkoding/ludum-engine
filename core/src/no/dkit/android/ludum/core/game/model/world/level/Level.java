@@ -115,15 +115,15 @@ public abstract class Level {
         indoorFeatureTypes.clear();
         outdoorFeatureTypes.clear();
 
+/*
         indoorFeatureTypes.addAll(
                 Arrays.asList(
                         BodyFactory.FEATURE_TYPE.FLOOR_FEATURE_1
                 ));
+*/
         outdoorFeatureTypes.addAll(
                 Arrays.asList(
-                        BodyFactory.FEATURE_TYPE.TOPDOWN_OBSCURING_FEATURE_1,
-                        BodyFactory.FEATURE_TYPE.OUTDOOR_FEATURE_1,
-                        BodyFactory.FEATURE_TYPE.SLIMEPOOL
+                        BodyFactory.FEATURE_TYPE.TOPDOWN_OBSCURING_FEATURE_1
                 ));
     }
 
