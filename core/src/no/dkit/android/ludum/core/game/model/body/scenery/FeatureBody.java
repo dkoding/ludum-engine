@@ -31,7 +31,7 @@ public class FeatureBody extends GameBody {
         super(halfTileSizeX, image);
         this.x = x;
         this.y = y;
-        this.scale = 1;
+        this.scale = MathUtils.random(.75f, 1.25f);
         this.rotation = MathUtils.random(360);
         position.set(x,y);
     }

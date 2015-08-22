@@ -439,27 +439,6 @@ public class PlayerBody extends AgentBody implements GameEventListener {
         input.clear();
     }
 
-    @Override
-    protected void updateEmission() {
-        if (controlMode == CONTROL_MODE.NEWTONIAN) {
-            trailEmitter.setPosition(position.x, position.y);
-            emitterAngle = body.getAngle() - 180;
-            emissionSpeed = speedVector.len();
-
-            tmp.set(-Config.TILE_SIZE_X / 2f, 0).rotate(angle);
-            tmp2.set(position).add(tmp);
-
-            trailEmitter.setPosition(tmp2.x, tmp2.y);
-            trailEmitter.getAngle().setHigh(emitterAngle - emitterArc, emitterAngle + emitterArc);
-            trailEmitter.getAngle().setLow(emitterAngle - emitterArc, emitterAngle + emitterArc);
-            trailEmitter.getVelocity().setHigh(0, emissionSpeed);
-            trailEmitter.getVelocity().setLow(0, emissionSpeed / 4);
-            trailEmitter.getEmission().setLow(emission * emissionSpeed, emission * emissionSpeed);
-            trailEmitter.getEmission().setHigh(emission * emissionSpeed, emission * emissionSpeed);
-        } else
-            super.updateEmission();
-    }
-
     public void setControlMode(CONTROL_MODE controlMode) {
         this.controlMode = controlMode;
     }

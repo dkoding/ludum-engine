@@ -1,9 +1,14 @@
 package no.dkit.android.ludum.core;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.controller.GameScreen;
 import no.dkit.android.ludum.core.game.controller.HelpScreen;
@@ -23,6 +28,8 @@ import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.transition.DoneCallback;
 import no.dkit.android.ludum.core.game.transition.TransitionScreen;
+import no.dkit.android.ludum.core.game.view.TweenImage;
+import no.dkit.android.ludum.core.game.view.TweenImageAccessor;
 
 public class XXXX extends ApplicationAdapter {
     private static boolean isChanging = false;
@@ -30,6 +37,8 @@ public class XXXX extends ApplicationAdapter {
     private static Screen existingGameScreen;
 
     public static Config.PERFORMANCE performance;
+
+    static TweenManager tweener;
 
     public XXXX(Config.PERFORMANCE performance) {
         this.performance = performance;
@@ -65,12 +74,22 @@ public class XXXX extends ApplicationAdapter {
             game = new Game() {
                 @Override
                 public void create() {
-
+                    setupTweener();
                 }
             };
             game.create();
         }
         game.setScreen(new SplashScreen());
+    }
+
+
+    private void setupTweener() {
+        tweener = new TweenManager();
+        Tween.registerAccessor(TweenImage.class, new TweenImageAccessor());
+    }
+
+    public static TweenManager getTweener() {
+        return tweener;
     }
 
     @Override

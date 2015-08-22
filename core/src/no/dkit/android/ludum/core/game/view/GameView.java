@@ -92,7 +92,7 @@ public class GameView {
         gameModel.setCamera(camera);
 
         factorX = (float) Config.getDimensions().WORLD_WIDTH / (float) Level.getInstance().getMap().getWidth();
-        factorY = (float) Config.getDimensions().WORLD_WIDTH / (float) Level.getInstance().getMap().getWidth() * Config.getDimensions().ASPECT_RATIO;
+        factorY = (float) Config.getDimensions().WORLD_HEIGHT / (float) Level.getInstance().getMap().getHeight();
     }
 
     public void update() {

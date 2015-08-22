@@ -74,7 +74,15 @@ public class MonsterPlayerBody extends PlayerBody {
 
     @Override
     protected void updateEmission() {
-        super.updateEmission();
+        trailEmitter.setPosition(position.x, position.y);
+/*
+        trailEmitter.getAngle().setHigh(angle - emitterArc, angle + emitterArc);
+        trailEmitter.getAngle().setLow(angle - emitterArc, angle + emitterArc);
+        trailEmitter.getVelocity().setHigh(unconscious ? 0 : speed / 2, unconscious ? 0 : speed);
+        trailEmitter.getVelocity().setLow(0, unconscious ? 0 : speed / 4);
+        trailEmitter.getEmission().setLow(0, 0);
+        trailEmitter.getEmission().setHigh(emission, emission);
+*/
 
         eyeOffset.set(Config.TILE_SIZE_X/8f, 0).rotate(angle+90);
         eyePos1.set(position).add(eyeOffset);

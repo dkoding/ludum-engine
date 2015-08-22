@@ -38,19 +38,8 @@ public class DungeonMap extends AbstractMap {
         clearOccupied(SOLID);
         directDoors();
 
-        if (inside) {
-            replaceAll(CLEAR, SOLID, map2d);
-            cleanupInvisible(SOLID, CLEAR);
-            replaceAll(CLEAR, OCCUPIED, map2d);
-        } else {
-            box(SOLID);
-            trimCorners(SOLID);
-        }
-
-        if (platforms) {
-            replaceAll(CORRIDOR, PLATFORM, map2d);
-            directPlatforms();
-        }
+        box(SOLID);
+        trimCorners(SOLID);
 
         printMap(map2d);
 
