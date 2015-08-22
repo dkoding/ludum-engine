@@ -80,12 +80,12 @@ public class EffectFactory {
         particleLayers.put(EFFECT_TYPE.FIRE, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.STEAL, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.EL, GameBody.DRAW_LAYER.FRONT);
-        particleLayers.put(EFFECT_TYPE.BLOOD, GameBody.DRAW_LAYER.FRONT);
-        particleLayers.put(EFFECT_TYPE.DIRBLOOD, GameBody.DRAW_LAYER.FRONT);
+        particleLayers.put(EFFECT_TYPE.BLOOD, GameBody.DRAW_LAYER.BACK);
+        particleLayers.put(EFFECT_TYPE.DIRBLOOD, GameBody.DRAW_LAYER.BACK);
         particleLayers.put(EFFECT_TYPE.SMOKE, GameBody.DRAW_LAYER.BACK);
-        particleLayers.put(EFFECT_TYPE.EXPLOSION, GameBody.DRAW_LAYER.BACK);
+        particleLayers.put(EFFECT_TYPE.EXPLOSION, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.BIGEXPLOSION, GameBody.DRAW_LAYER.FRONT);
-        particleLayers.put(EFFECT_TYPE.SPARK, GameBody.DRAW_LAYER.FRONT);
+        particleLayers.put(EFFECT_TYPE.SPARK, GameBody.DRAW_LAYER.BACK);
         particleLayers.put(EFFECT_TYPE.GUNSMOKE, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.ACHIEVE, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.RUBBLE, GameBody.DRAW_LAYER.FRONT);

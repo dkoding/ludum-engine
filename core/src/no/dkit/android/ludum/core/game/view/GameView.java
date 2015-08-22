@@ -52,6 +52,10 @@ public class GameView {
 
     float time = 1f;
     float angle = 0f;
+    private Matrix4 newMatrix;
+    private Matrix4 prevMatrix;
+    private float factorX;
+    private float factorY;
 
     public GameView(GameModel gameModel) {
         this.gameModel = gameModel;
@@ -86,6 +90,9 @@ public class GameView {
 
         decals = new Decals(Level.getInstance().getMap().getWidth(), Level.getInstance().getMap().getHeight());
         gameModel.setCamera(camera);
+
+        factorX = (float) Config.getDimensions().WORLD_WIDTH / (float) Level.getInstance().getMap().getWidth();
+        factorY = (float) Config.getDimensions().WORLD_WIDTH / (float) Level.getInstance().getMap().getWidth() * Config.getDimensions().ASPECT_RATIO;
     }
 
     public void update() {
@@ -212,15 +219,18 @@ public class GameView {
 
     // TODO: Move these to model to save on iterations
     private void drawSpriteLayers() {
-        spriteBatch.enableBlending();
-
+        spriteBatch.disableBlending();
         drawFloorLayer(gameModel.getFloorLayer());
+
+        spriteBatch.enableBlending();
 
         if (Config.DEBUGTEXT)
             startMeasure();
         drawShadedLayer(gameModel.getShadedLayer());
         if (Config.DEBUGTEXT)
             endMeasure("Shaded layers");
+
+        spriteBatch.enableBlending();
 
         drawFeatureLayer(gameModel.getFeatureLayer());
 
@@ -236,49 +246,51 @@ public class GameView {
 
         if (Config.DEBUGTEXT)
             startMeasure();
-        EffectFactory.getInstance().drawEffects(spriteBatch, GameBody.DRAW_LAYER.BACK);
-        if (Config.DEBUGTEXT)
-            endMeasure("Draw Effects on BACK layer");
 
-        drawLayer(gameModel.getMediumLayer());
         spriteBatch.end();
 
         decals.record();
         spriteBatch.begin();
-        drawOnDecal(gameModel.getFrontLayer());
+        spriteBatch.enableBlending();
+        scaleToDecals();
+        EffectFactory.getInstance().drawEffects(spriteBatch, GameBody.DRAW_LAYER.BACK);
+        scaleBack();
         spriteBatch.end();
         decals.end();
 
         spriteBatch.begin();
+
+        if (Config.DEBUGTEXT)
+            endMeasure("Draw Effects on BACK layer");
+
+        drawLayer(gameModel.getMediumLayer());
         drawLayer(gameModel.getFrontLayer());
+
         spriteBatch.end();
 
+        // Necessary?
         spriteBatch.begin();
         spriteBatch.enableBlending();
 
         decals.render(spriteBatch, camera.position.x, camera.position.y, gameModel.translateVector.x, gameModel.translateVector.y);
+
+        spriteBatch.end();
+
+        spriteBatch.begin();
     }
 
-    private void drawOnDecal(Array<GameBody> layer) {
-        if (layer.size == 0) return;
+    private void scaleBack() {
+        spriteBatch.setTransformMatrix(prevMatrix);
+    }
 
-        final Matrix4 oldMatrix = spriteBatch.getTransformMatrix().cpy();
-        final Matrix4 prevMatrix = oldMatrix.cpy();
-        final float factorX = (float) Config.getDimensions().WORLD_WIDTH / (float) Level.getInstance().getMap().getWidth();
-        final float factorY = (float) Config.getDimensions().WORLD_WIDTH / (float) Level.getInstance().getMap().getWidth() * Config.getDimensions().ASPECT_RATIO;
+    private void scaleToDecals() {
+        prevMatrix = spriteBatch.getTransformMatrix().cpy();
+        newMatrix = spriteBatch.getTransformMatrix().cpy();
 
-        //oldMatrix.translate(factorX * camera.position.x - Config.getDimensions().WORLD_WIDTH / 2f, factorY * camera.position.y - Config.getDimensions().WORLD_HEIGHT / 2f, 0);
-        oldMatrix.setToTranslationAndScaling(camera.position.x - Config.getDimensions().WORLD_WIDTH / 2f, camera.position.y - Config.getDimensions().WORLD_HEIGHT / 2f, 0,
+        newMatrix.setToTranslationAndScaling(camera.position.x - Config.getDimensions().WORLD_WIDTH / 2f, camera.position.y - Config.getDimensions().WORLD_HEIGHT / 2f, 0,
                 factorX, factorY, 0);
 
-        spriteBatch.setTransformMatrix(oldMatrix);
-
-        for (GameBody gameBody : layer) {
-//            if (gameBody instanceof WeaponBody)
-            gameBody.draw(spriteBatch);
-        }
-
-        spriteBatch.setTransformMatrix(prevMatrix);
+        spriteBatch.setTransformMatrix(newMatrix);
     }
 
     private void drawLayer(Array<GameBody> layer) {
@@ -367,8 +379,6 @@ public class GameView {
     private void drawFeatureLayer(Array<GameBody> layer) {
         if (layer.size == 0) return;
 
-        spriteBatch.enableBlending();
-
         for (GameBody body : layer) {
             body.draw(spriteBatch);
         }
@@ -377,13 +387,9 @@ public class GameView {
     private void drawFloorLayer(Array<FloorBody> layer) {
         if (layer.size == 0) return;
 
-        spriteBatch.disableBlending();
-
         for (FloorBody body : layer) {
             body.draw(spriteBatch);
         }
-
-        spriteBatch.enableBlending();
     }
 
     private void drawCrosshairs() {
