@@ -5,7 +5,6 @@ import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.LootFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
-import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
 import no.dkit.android.ludum.core.game.model.world.map.SandboxMap;
 
 import java.util.List;

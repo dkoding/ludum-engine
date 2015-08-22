@@ -11,28 +11,27 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.physics.box2d.joints.RopeJointDef;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.utils.Array;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.ai.simulationobjects.Neighborhood;
 import no.dkit.android.ludum.core.game.model.GameModel;
-import no.dkit.android.ludum.core.game.model.PlayerData;
 import no.dkit.android.ludum.core.game.model.body.DiscardBody;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.LightBody;
 import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
 import no.dkit.android.ludum.core.game.model.body.agent.AnimatedAgentBody;
-import no.dkit.android.ludum.core.game.model.body.agent.AnimatedPlayerBody;
 import no.dkit.android.ludum.core.game.model.body.agent.Blob;
+import no.dkit.android.ludum.core.game.model.body.agent.MonsterPlayerBody;
 import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
-import no.dkit.android.ludum.core.game.model.body.agent.PlayerVehicleBody;
 import no.dkit.android.ludum.core.game.model.body.agent.ShipSingle;
-import no.dkit.android.ludum.core.game.model.body.item.CannonBody;
 import no.dkit.android.ludum.core.game.model.body.item.CrateBody;
 import no.dkit.android.ludum.core.game.model.body.item.DangerBody;
 import no.dkit.android.ludum.core.game.model.body.item.DoorBody;
@@ -56,7 +55,6 @@ import no.dkit.android.ludum.core.game.model.body.scenery.SpawnBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.UpgradeBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.BombBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.BulletBody;
-import no.dkit.android.ludum.core.game.model.body.weapon.EnergyBallBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.ParticleBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.RocketBody;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
@@ -141,6 +139,7 @@ public class BodyFactory {
     private FixtureDef agentFixture = new FixtureDef();
     private FixtureDef bulletFixture = new FixtureDef();
     private FixtureDef turretFixture = new FixtureDef();
+    private FixtureDef linkFixture = new FixtureDef();
 
     protected FixtureDef playerFixture = new FixtureDef();
 
@@ -183,6 +182,7 @@ public class BodyFactory {
         createLampAttributes(createCircleShape(Config.TILE_SIZE_X / 4));
         createTurretAttributes(createTurretShape());
         createAgentAttributes(createCircleShape(Config.TILE_SIZE_X / 3), 3);
+        createLinkAttributes();
 
         setupCategories();
 /*
@@ -244,6 +244,17 @@ public class BodyFactory {
 */
 
         createParticleBlueprints();
+    }
+
+    private void createLinkAttributes() {
+        linkFixture = new FixtureDef();
+        linkFixture.isSensor = true;
+        linkFixture.restitution = 0;
+        linkFixture.friction = 0;
+/*
+        linkFixture.shape = shape; // This is set on rope creation time
+*/
+        linkFixture.density = 1;
     }
 
     private void createParticleBlueprints() {
@@ -878,11 +889,6 @@ public class BodyFactory {
             return new MineBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getItemImage("mine"));
         else if (type == AbstractMap.ITEM_CRATE)
             return new CrateBody(body, fixtureDef.shape.getRadius());
-        else if (type == AbstractMap.ITEM_CANNON)
-            if (direction == AbstractMap.NO_DIRECTION)
-                return getRandomRotatingGun(body);
-            else
-                return new CannonBody(body, Config.TILE_SIZE_X, direction);
         else if (type == AbstractMap.ITEM_LIQUID_SS)
             return new ObscuringShadedBody(body, Config.TILE_SIZE_X,
                     ShaderFactory.getInstance().getShader(RenderOperations.BACKGROUND_TYPE.WATERSINUSWAVE, shaderRadius, shaderRadius,
@@ -1004,29 +1010,57 @@ public class BodyFactory {
         }
     }
 
-    public PlayerBody createShipPlayer(Vector2 playerPosition) {
-        Body body = getDefaultPlayerBody(playerPosition, false);
-        return new PlayerBody(body, Config.TILE_SIZE_X / 2, new PlayerData(),
-                ResourceFactory.getInstance().getWorldTypeImage("player"), PlayerBody.CONTROL_MODE.NEWTONIAN, GameBody.BODY_TYPE.SPACESHIP);
-    }
-
     public PlayerBody createTopDownPlayer(Vector2 playerPosition) {
         Body body = getDefaultPlayerBody(playerPosition, false);
-        return new AnimatedPlayerBody(body, Config.TILE_SIZE_X / 2, new PlayerData(), ResourceFactory.getInstance().getWorldTypeAnimation("player"),
-                PlayerBody.CONTROL_MODE.DIRECT, GameBody.BODY_TYPE.HUMANOID);
+        final MonsterPlayerBody monsterPlayerBody = new MonsterPlayerBody(body, Config.TILE_SIZE_X / 4,
+                ResourceFactory.getInstance().getWorldTypeImage("head"),
+                ResourceFactory.getInstance().getWorldTypeImage("tail"),
+                PlayerBody.CONTROL_MODE.DIRECT);
+        final Body[] tail = createTail(monsterPlayerBody, 3, 8);
+        monsterPlayerBody.addTail(tail);
+        return monsterPlayerBody;
     }
 
-    public PlayerBody createTopDownPlayerVehicle(Vector2 playerPosition) {
-        Body body = getVehiclePlayerBody(playerPosition, false);
-        return new PlayerVehicleBody(body, Config.TILE_SIZE_X / 2, new PlayerData(),
-                ResourceFactory.getInstance().getWorldTypeImage("tank"),
-                ResourceFactory.getInstance().getWorldTypeImage("tankgun"));
+    private Body[] createTail(GameBody head, float length, int numLinks) {
+        if (length == 0 || numLinks == 0) throw new RuntimeException("Length and links must be > 0");
+
+        Body[] linkBodies = new Body[numLinks];
+
+        float newX, newY;
+
+        for (int i = 0; i < numLinks; i++) {
+            CircleShape tailShape = new CircleShape();
+            final float tailRadius = Config.TILE_SIZE_X / 4f / (i + 1);
+            tailShape.setRadius(tailRadius);
+
+            BodyDef linkBodyDef = createTailBodyDef(1, true, 2, 2);
+            newX = head.position.x + tailRadius * (i + 1);
+            newY = head.position.y + tailRadius * (i + 1);
+            linkBodyDef.position.set(newX, newY);
+            linkFixture.shape = tailShape;
+            linkBodies[i] = createBody(linkBodyDef, linkFixture);
+
+            if (i == 0)
+                revoluteConnect(head.getBody(), linkBodies[i], -tailRadius / 2, 0, 0, 0);
+            else if (i > 0)
+                revoluteConnect(linkBodies[i - 1], linkBodies[i], -tailRadius, 0, tailRadius, 0);
+        }
+
+        return linkBodies;
     }
 
-    public PlayerBody createSidescrollPlayer(Vector2 playerPosition) {
-        Body body = getDefaultPlayerBody(playerPosition, true);
-        return new PlayerBody(body, Config.TILE_SIZE_X / 2, new PlayerData(),
-                ResourceFactory.getInstance().getWorldTypeImage("player"), PlayerBody.CONTROL_MODE.DIRECT, GameBody.BODY_TYPE.METAL);
+    private BodyDef createTailBodyDef(float gravityScale, boolean movable, int linearDamping, int angularDamping) {
+        return createBodyDef(false, movable ? BodyDef.BodyType.DynamicBody : BodyDef.BodyType.StaticBody, 0, gravityScale, linearDamping, angularDamping, false);
+    }
+
+    public Joint revoluteConnect(Body hinge, Body slave, float x, float y, float x2, float y2) {
+        RevoluteJointDef revoluteConnect = new RevoluteJointDef();
+        revoluteConnect.bodyA = hinge;
+        revoluteConnect.bodyB = slave;
+        revoluteConnect.collideConnected = false;
+        revoluteConnect.localAnchorA.set(x2, y2);
+        revoluteConnect.localAnchorB.set(x, y);
+        return world.createJoint(revoluteConnect);
     }
 
     private Body getDefaultPlayerBody(Vector2 playerPosition, boolean fixedRotation) {
@@ -1275,9 +1309,6 @@ public class BodyFactory {
             switch (def.getType()) {
                 case BOMB:
                     new BombBody(body, bulletFixture.shape.getRadius(), def.getBulletImage(), angle, def.getDamage());
-                    break;
-                case FIREBALL:
-                    new EnergyBallBody(body, bulletFixture.shape.getRadius(), angle, def.getDamage());
                     break;
                 case GUN:
                     new BulletBody(body, bulletFixture.shape.getRadius(), def.getBulletImage(), angle, def.getDamage());

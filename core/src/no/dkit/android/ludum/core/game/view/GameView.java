@@ -258,21 +258,20 @@ public class GameView {
         spriteBatch.end();
         decals.end();
 
-        spriteBatch.begin();
-
         if (Config.DEBUGTEXT)
             endMeasure("Draw Effects on BACK layer");
 
-        drawLayer(gameModel.getMediumLayer());
-        drawLayer(gameModel.getFrontLayer());
-
-        spriteBatch.end();
-
-        // Necessary?
         spriteBatch.begin();
         spriteBatch.enableBlending();
 
         decals.render(spriteBatch, camera.position.x, camera.position.y, gameModel.translateVector.x, gameModel.translateVector.y);
+
+        spriteBatch.end();
+
+        spriteBatch.begin();
+
+        drawLayer(gameModel.getMediumLayer());
+        drawLayer(gameModel.getFrontLayer());
 
         spriteBatch.end();
 

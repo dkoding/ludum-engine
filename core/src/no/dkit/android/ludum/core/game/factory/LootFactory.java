@@ -3,7 +3,6 @@ package no.dkit.android.ludum.core.game.factory;
 import no.dkit.android.ludum.core.game.model.loot.Armor;
 import no.dkit.android.ludum.core.game.model.loot.Bomb;
 import no.dkit.android.ludum.core.game.model.loot.Fireball;
-import no.dkit.android.ludum.core.game.model.loot.Flamethrower;
 import no.dkit.android.ludum.core.game.model.loot.Gun;
 import no.dkit.android.ludum.core.game.model.loot.Laser;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
@@ -70,8 +69,6 @@ public class LootFactory {
                 return new Bomb();
             case FIREBALL:
                 return new Fireball();
-            case FLAME_THROWER:
-                return new Flamethrower();
             case GUN:
                 return new Gun();
             case LASER:

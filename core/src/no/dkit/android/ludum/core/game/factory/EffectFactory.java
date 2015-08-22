@@ -25,7 +25,7 @@ public class EffectFactory {
 
     private Array<ParticleEmitter> emitters;
 
-    public enum EFFECT_TYPE {FIRE, STEAL, BLOOD, DIRBLOOD, SMOKE, EXPLOSION, BIGEXPLOSION, RUBBLE, SPARK, GUNSMOKE, ACHIEVE, EL, FIREBALL}
+    public enum EFFECT_TYPE {BLOOD, DIRBLOOD, SMOKE, EXPLOSION, BIGEXPLOSION, SPARK, ACHIEVE, EYE}
 
     static EffectFactory instance = null;
     private static World world;
@@ -62,33 +62,23 @@ public class EffectFactory {
 
         particleEffectLoader = new ParticleEffectLoader(new InternalFileHandleResolver());
 
-        particleEffects.put(EFFECT_TYPE.FIREBALL, particleEffectLoader.load("effect/fireball.txt"));
-        particleEffects.put(EFFECT_TYPE.FIRE, particleEffectLoader.load("effect/fire.txt"));
-        particleEffects.put(EFFECT_TYPE.STEAL, particleEffectLoader.load("effect/star.txt"));
-        particleEffects.put(EFFECT_TYPE.EL, particleEffectLoader.load("effect/el.txt"));
         particleEffects.put(EFFECT_TYPE.BLOOD, particleEffectLoader.load("effect/blood.txt"));
         particleEffects.put(EFFECT_TYPE.DIRBLOOD, particleEffectLoader.load("effect/dirblood.txt"));
         particleEffects.put(EFFECT_TYPE.SMOKE, particleEffectLoader.load("effect/smoke.txt"));
         particleEffects.put(EFFECT_TYPE.EXPLOSION, particleEffectLoader.load("effect/explosion.txt"));
         particleEffects.put(EFFECT_TYPE.BIGEXPLOSION, particleEffectLoader.load("effect/bigexplosion.txt"));
         particleEffects.put(EFFECT_TYPE.SPARK, particleEffectLoader.load("effect/spark.txt"));
-        particleEffects.put(EFFECT_TYPE.GUNSMOKE, particleEffectLoader.load("effect/gunsmoke.txt"));
         particleEffects.put(EFFECT_TYPE.ACHIEVE, particleEffectLoader.load("effect/achieve.txt"));
-        particleEffects.put(EFFECT_TYPE.RUBBLE, particleEffectLoader.load("effect/rubble.txt"));
+        particleEffects.put(EFFECT_TYPE.EYE, particleEffectLoader.load("effect/eye.txt"));
 
-        particleLayers.put(EFFECT_TYPE.FIREBALL, GameBody.DRAW_LAYER.FRONT);
-        particleLayers.put(EFFECT_TYPE.FIRE, GameBody.DRAW_LAYER.FRONT);
-        particleLayers.put(EFFECT_TYPE.STEAL, GameBody.DRAW_LAYER.FRONT);
-        particleLayers.put(EFFECT_TYPE.EL, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.BLOOD, GameBody.DRAW_LAYER.BACK);
         particleLayers.put(EFFECT_TYPE.DIRBLOOD, GameBody.DRAW_LAYER.BACK);
         particleLayers.put(EFFECT_TYPE.SMOKE, GameBody.DRAW_LAYER.BACK);
+        particleLayers.put(EFFECT_TYPE.EYE, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.EXPLOSION, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.BIGEXPLOSION, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.SPARK, GameBody.DRAW_LAYER.BACK);
-        particleLayers.put(EFFECT_TYPE.GUNSMOKE, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.ACHIEVE, GameBody.DRAW_LAYER.FRONT);
-        particleLayers.put(EFFECT_TYPE.RUBBLE, GameBody.DRAW_LAYER.FRONT);
 
         Set<EFFECT_TYPE> effectTypes = particleEffects.keySet();
 
@@ -156,14 +146,8 @@ public class EffectFactory {
             case ALIEN:
             case INSECT:
                 return addEffect(position, EFFECT_TYPE.BLOOD, null);
-            case STONE:
-            case WOOD:
-            case METAL:
-                return addEffect(position, EFFECT_TYPE.RUBBLE, null);
             case LIQUID:
                 return addEffect(position, EFFECT_TYPE.EXPLOSION, null);
-            case SPACESHIP:
-                return addEffect(position, EFFECT_TYPE.RUBBLE, null);
             default:
                 throw new RuntimeException("NO EFFECT FOR TYPE " + type);
         }

@@ -10,7 +10,6 @@ import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
-import no.dkit.android.ludum.core.game.model.loot.Flamethrower;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
@@ -57,8 +56,6 @@ public class KillBlobQuest extends Quest {
                 }
             }
         });
-
-        GameModel.getPlayer().addLoot(new Flamethrower());
     }
 
     @Override

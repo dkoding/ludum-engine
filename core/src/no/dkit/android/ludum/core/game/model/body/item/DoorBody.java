@@ -105,26 +105,6 @@ public class DoorBody extends DirectionalGameBody {
     }
 
     @Override
-    public void endContact(Contact contact) {
-        if (locked) return;
-
-        if (contact.getFixtureA().getBody().getUserData() instanceof PlayerBody
-                || contact.getFixtureB().getBody().getUserData() instanceof PlayerBody) {
-            closeDoor();
-        }
-    }
-
-    public void closeDoor() {
-        Filter filter = new Filter();
-        filter.categoryBits = Config.CATEGORY_SCENERY;
-        filter.maskBits = BodyFactory.SCENERY_BITS;
-        body.getFixtureList().get(0).setSensor(false);
-        body.getFixtureList().get(0).setFilterData(filter);
-        SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.DOORCLOSE);
-        open = false;
-    }
-
-    @Override
     public void collidedWith(GameBody other) {
         if (other instanceof PlayerBody) {
             if (locked) {
@@ -140,5 +120,10 @@ public class DoorBody extends DirectionalGameBody {
                     openDoor();
             }
         }
+    }
+
+    @Override
+    public DRAW_LAYER getDrawLayer() {
+        return DRAW_LAYER.BACK;
     }
 }

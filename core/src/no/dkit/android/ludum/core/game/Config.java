@@ -140,7 +140,7 @@ public class Config {
             SCREEN_SHORTEST = SCREEN_HEIGHT > SCREEN_WIDTH ? SCREEN_WIDTH : SCREEN_HEIGHT;
             ASPECT_RATIO = (float) SCREEN_SHORTEST / (float) SCREEN_LONGEST;
 
-            WORLD_WIDTH = 16;   // Number of tiles across screen
+            WORLD_WIDTH = 8;   // Number of tiles across screen
             WORLD_HEIGHT = (int) (WORLD_WIDTH * ASPECT_RATIO);
 
             float fraction = (WORLD_WIDTH * ASPECT_RATIO) - WORLD_HEIGHT;
