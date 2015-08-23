@@ -31,7 +31,7 @@ public class MeleeWeapon extends Weapon {
                 "melee"
         );
 
-        cooldown1 = 1000;
+        cooldown1 = 800;
         cooldown2 = 2000;
     }
 
@@ -41,19 +41,19 @@ public class MeleeWeapon extends Weapon {
         int start = (int) GameModel.getPlayer().getAngle() + 90;
 
         Timeline.createSequence()
-                .push(Tween.to(weaponBodies[0], TweenBodyAccessor.ROTATION_RAD, .3f).target((start + rotation) * MathUtils.degreesToRadians).ease(Bounce.OUT)
+                .push(Tween.to(weaponBodies[0], TweenBodyAccessor.ROTATION_RAD, .5f).target((start + rotation) * MathUtils.degreesToRadians).ease(Bounce.OUT)
                                 .setCallbackTriggers(TweenCallback.END | TweenCallback.START)
                                 .setCallback(callback)
                 )
-                .push(Tween.to(weaponBodies[0], TweenBodyAccessor.ROTATION_RAD, .7f).target(start * MathUtils.degreesToRadians).ease(Expo.IN)
+                .push(Tween.to(weaponBodies[0], TweenBodyAccessor.ROTATION_RAD, .3f).target(start * MathUtils.degreesToRadians).ease(Expo.IN)
                                 .setCallbackTriggers(TweenCallback.COMPLETE)
                                 .setCallback(callback)
                 )
                 .start(XXXX.getTweener());
 
         Timeline.createSequence()
-                .push(Tween.to(weaponBodies[1], TweenBodyAccessor.ROTATION_RAD, .3f).target(((start - rotation)) * MathUtils.degreesToRadians).ease(Bounce.OUT))
-                .push(Tween.to(weaponBodies[1], TweenBodyAccessor.ROTATION_RAD, .7f).target(start * MathUtils.degreesToRadians).ease(Expo.IN))
+                .push(Tween.to(weaponBodies[1], TweenBodyAccessor.ROTATION_RAD, .5f).target(((start - rotation)) * MathUtils.degreesToRadians).ease(Bounce.OUT))
+                .push(Tween.to(weaponBodies[1], TweenBodyAccessor.ROTATION_RAD, .3f).target(start * MathUtils.degreesToRadians).ease(Expo.IN))
                 .start(XXXX.getTweener());
     }
 
