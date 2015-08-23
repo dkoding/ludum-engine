@@ -168,7 +168,7 @@ public class Config {
 
     public static final float PLAYER_MAX_SPEED = 1f;
     public static final float PLAYER_MIN_SPEED = .1f;
-    public static final float MAX_SPEED = .5f;
+    public static final float MAX_SPEED = .1f;
     public static final float LOOT_SPEED = .1f;
     public static final float MIN_SPEED = .01f;
     public static final float ROTATE_SPEED = 5f;

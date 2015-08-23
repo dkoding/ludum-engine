@@ -12,6 +12,7 @@ import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
 import no.dkit.android.ludum.core.game.model.PlayerData;
+import no.dkit.android.ludum.core.game.model.body.GameBody;
 
 public class MonsterPlayerBody extends PlayerBody {
     TextureRegion tailImage;
@@ -20,6 +21,8 @@ public class MonsterPlayerBody extends PlayerBody {
     Vector2 eyeOffset = new Vector2();
     Vector2 eyePos1 = new Vector2();
     Vector2 eyePos2 = new Vector2();
+
+    long lastCollission;
 
     boolean tweening = false;
 
@@ -173,7 +176,7 @@ public class MonsterPlayerBody extends PlayerBody {
 
         final float bodyAngleRad = (90 + getAngle()) * MathUtils.degreesToRadians;
 
-        if(tweening) {
+        if (tweening) {
             if (weaponBody != null)
                 this.weaponBody.setTransform(this.position.x, this.position.y, weaponBody.getAngle());
             if (weaponBody2 != null)
@@ -184,12 +187,18 @@ public class MonsterPlayerBody extends PlayerBody {
             if (weaponBody2 != null)
                 this.weaponBody2.setTransform(this.position.x, this.position.y, bodyAngleRad);
         }
+    }
 
-/*
-        if (weaponBody != null)
-            this.weaponBody.setTransform(this.position.x, this.position.y, weaponBody.getAngle());
-        if (weaponBody2 != null)
-            this.weaponBody2.setTransform(this.position.x, this.position.y, weaponBody2.getAngle());
-*/
+    @Override
+    public void collidedWith(GameBody other) {
+        if (System.currentTimeMillis() < lastCollission + 200) return;
+
+        lastCollission = System.currentTimeMillis();
+
+        if (other instanceof AgentBody) {
+            EffectFactory.getInstance().addHitEffect(other.position, other.bodyType, weaponBody.getAngle() * MathUtils.radiansToDegrees + 90);
+            EffectFactory.getInstance().addHitEffect(other.position, other.bodyType, weaponBody2.getAngle() * MathUtils.radiansToDegrees + 90);
+            other.hit(10000);
+        }
     }
 }

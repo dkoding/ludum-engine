@@ -107,23 +107,14 @@ public class BodyFactory {
 */
 
     private FixtureDef triggerFixture = new FixtureDef();
-    private FixtureDef crateFixture = new FixtureDef();
-    private FixtureDef mineFixture = new FixtureDef();
     private FixtureDef particleFixture = new FixtureDef();
     private FixtureDef tileFixture = new FixtureDef();
     private FixtureDef doorFixture = new FixtureDef();
     private FixtureDef lootFixture = new FixtureDef();
-    private FixtureDef dangerFixture = new FixtureDef();
     private FixtureDef featureFixture = new FixtureDef();
-    private FixtureDef platformFixture = new FixtureDef();
-    private FixtureDef upgradeFixture = new FixtureDef();
-    private FixtureDef exitFixture = new FixtureDef();
-    private FixtureDef keyFixture = new FixtureDef();
-    private FixtureDef warpFixture = new FixtureDef();
     private FixtureDef lampFixture = new FixtureDef();
     private FixtureDef agentFixture = new FixtureDef();
     private FixtureDef bulletFixture = new FixtureDef();
-    private FixtureDef turretFixture = new FixtureDef();
     private FixtureDef linkFixture = new FixtureDef();
     private FixtureDef meleeFixture = new FixtureDef();
 
@@ -152,21 +143,12 @@ public class BodyFactory {
         MathUtils.random = new Random(Config.RANDOM_SEED + LevelFactory.level);
 
         createTriggerAttributes(createCircleShape(Config.TILE_SIZE_X / 2));
-        createCrateAttributes(createCenteredBoxShape(Config.TILE_SIZE_X / 2, Config.TILE_SIZE_Y / 2));
-        createMineAttributes(createCircleShape(Config.TILE_SIZE_X / 10));
         createParticleAttributes(createCircleShape(Config.TILE_SIZE_X / 50));
         createTileAttributes(createCenteredBoxShape(Config.TILE_SIZE_X, Config.TILE_SIZE_Y));
         createDoorAttributes(createDoorShape());
-        createPlatformAttributes(createCenteredBoxShape(Config.TILE_SIZE_X, Config.TILE_SIZE_Y));
         createItemAttributes(createCircleShape(Config.TILE_SIZE_X / 4));
-        createKeyAttributes(createCircleShape(Config.TILE_SIZE_X / 4));
-        createDangerAttributes(createCircleShape(Config.TILE_SIZE_X / 2));
         createPlanetAttributes(createCircleShape(Config.TILE_SIZE_X / 2));
-        createUpgradeAttributes(createCircleShape(Config.TILE_SIZE_X));
-        createExitAttributes(createCircleShape(Config.TILE_SIZE_X));
-        createWarpAttributes(createCircleShape(Config.TILE_SIZE_X / 2));
         createLampAttributes(createCircleShape(Config.TILE_SIZE_X / 4));
-        createTurretAttributes(createTurretShape());
         createAgentAttributes(createCircleShape(Config.TILE_SIZE_X / 3), 3);
         createLinkAttributes();
         createMeleeAttributes();
@@ -293,41 +275,21 @@ public class BodyFactory {
         agentFixture.filter.categoryBits = Config.CATEGORY_ENEMY;
         agentFixture.filter.maskBits = ENEMY_BITS;
 
-        turretFixture.filter.categoryBits = Config.CATEGORY_ENEMY;
-        turretFixture.filter.maskBits = ENEMY_BITS;
-
-        crateFixture.filter.categoryBits = Config.CATEGORY_ITEM;
-        crateFixture.filter.maskBits = ITEM_BITS;
-
         doorFixture.filter.categoryBits = Config.CATEGORY_SCENERY;
         doorFixture.filter.maskBits = SCENERY_BITS;
 
         lootFixture.filter.categoryBits = Config.CATEGORY_LOOT;
         lootFixture.filter.maskBits = LOOT_BITS;
 
-        keyFixture.filter.categoryBits = Config.CATEGORY_ITEM;
-        keyFixture.filter.maskBits = ITEM_BITS;
-
-        dangerFixture.filter.categoryBits = Config.CATEGORY_ITEM;
-        dangerFixture.filter.maskBits = ITEM_BITS;
-
-        mineFixture.filter.categoryBits = Config.CATEGORY_ITEM;
-        mineFixture.filter.maskBits = ITEM_BITS;
+        meleeFixture.filter.categoryBits = Config.CATEGORY_BULLET;
+        meleeFixture.filter.maskBits = 0;
+        meleeFixture.filter.groupIndex = -1; // particles and bullets should not collide with each other
 
         tileFixture.filter.categoryBits = Config.CATEGORY_SCENERY;
         tileFixture.filter.maskBits = SCENERY_BITS;
 
-        platformFixture.filter.categoryBits = Config.CATEGORY_PLATFORM;
-        platformFixture.filter.maskBits = PLATFORM_BITS;
-
         triggerFixture.filter.categoryBits = Config.CATEGORY_TRIGGER;
         triggerFixture.filter.maskBits = TRIGGER_BITS;
-
-        upgradeFixture.filter.categoryBits = Config.CATEGORY_TRIGGER;
-        upgradeFixture.filter.maskBits = TRIGGER_BITS;
-
-        exitFixture.filter.categoryBits = Config.CATEGORY_TRIGGER;
-        exitFixture.filter.maskBits = TRIGGER_BITS;
 
         lampFixture.filter.categoryBits = Config.CATEGORY_ITEM;
         lampFixture.filter.maskBits = ITEM_BITS;
@@ -341,12 +303,6 @@ public class BodyFactory {
         tileFixture.isSensor = false;
 
         return tileFixture;
-    }
-
-    private FixtureDef createPlatformAttributes(Shape shape) {
-        platformFixture.shape = shape;
-        platformFixture.isSensor = true;
-        return platformFixture;
     }
 
     private FixtureDef createDoorAttributes(Shape shape) {
@@ -380,26 +336,6 @@ public class BodyFactory {
         return particleFixture;
     }
 
-    private FixtureDef createMineAttributes(Shape shape) {
-        mineFixture.shape = shape;
-        mineFixture.density = 5000f;
-        mineFixture.friction = 0f;
-        mineFixture.restitution = .99f;
-        mineFixture.isSensor = true;
-
-        return mineFixture;
-    }
-
-    private FixtureDef createCrateAttributes(Shape shape) {
-        crateFixture.shape = shape;
-        crateFixture.density = 50f;
-        crateFixture.friction = 1f;
-        crateFixture.restitution = 1f;
-        crateFixture.isSensor = false;
-
-        return crateFixture;
-    }
-
     private FixtureDef createTriggerAttributes(Shape shape) {
         triggerFixture.shape = shape;
         triggerFixture.density = 5000f;
@@ -410,26 +346,6 @@ public class BodyFactory {
         return triggerFixture;
     }
 
-    private FixtureDef createKeyAttributes(Shape shape) {
-        keyFixture.shape = shape;
-        keyFixture.density = 5f;
-        keyFixture.friction = .01f;
-        keyFixture.restitution = .5f;
-        keyFixture.isSensor = false;
-
-        return keyFixture;
-    }
-
-    private FixtureDef createDangerAttributes(Shape shape) {
-        dangerFixture.shape = shape;
-        dangerFixture.density = 5;
-        dangerFixture.friction = .5f;
-        dangerFixture.restitution = .5f;
-        dangerFixture.isSensor = false;
-
-        return dangerFixture;
-    }
-
     private FixtureDef createPlanetAttributes(Shape shape) {
         featureFixture.shape = shape;
         featureFixture.density = 5.0f;
@@ -438,36 +354,6 @@ public class BodyFactory {
         featureFixture.isSensor = true;
 
         return featureFixture;
-    }
-
-    private FixtureDef createUpgradeAttributes(Shape shape) {
-        upgradeFixture.shape = shape;
-        upgradeFixture.density = 5.0f;
-        upgradeFixture.friction = .95f;
-        upgradeFixture.restitution = 0f;
-        upgradeFixture.isSensor = true;
-
-        return upgradeFixture;
-    }
-
-    private FixtureDef createExitAttributes(Shape shape) {
-        exitFixture.shape = shape;
-        exitFixture.density = 5.0f;
-        exitFixture.friction = .95f;
-        exitFixture.restitution = 0f;
-        exitFixture.isSensor = true;
-
-        return exitFixture;
-    }
-
-    private FixtureDef createWarpAttributes(Shape shape) {
-        warpFixture.density = 5.0f;
-        warpFixture.shape = shape;
-        warpFixture.friction = .95f;
-        warpFixture.restitution = 0f;
-        warpFixture.isSensor = true;
-
-        return warpFixture;
     }
 
     private FixtureDef createLampAttributes(Shape shape) {
@@ -536,53 +422,10 @@ public class BodyFactory {
         return fixture;
     }
 
-    private FixtureDef createTurretAttributes(Shape shape) {
-        turretFixture.shape = shape;
-        turretFixture.density = 10f;
-        turretFixture.friction = 0.5f;
-        turretFixture.restitution = .9f;
-        turretFixture.isSensor = false;
-
-        return turretFixture;
-    }
-
-    private FixtureDef createPlasmaAttributes(FixtureDef fixture, Shape polygonShape) {
-        fixture.shape = polygonShape;
-        fixture.density = 1f;
-        fixture.friction = 1f;
-        fixture.restitution = 1f;
-
-        return fixture;
-    }
-
-    private FixtureDef createChainBulletAttributes(FixtureDef fixture, Shape shape) {
-        fixture.shape = shape;
-        fixture.density = 5000f;
-        fixture.friction = 1f;
-        fixture.restitution = 1f;
-
-        return fixture;
-    }
-
-    private FixtureDef createSpearAttributes(FixtureDef fixture, Shape shape) {
-        fixture.shape = shape;
-        fixture.density = 5000f;
-        fixture.friction = 1f;
-        fixture.restitution = 1f;
-
-        return fixture;
-    }
-
     private Shape createCircleShape(float radius) {
         Shape circleShape = new CircleShape();
         circleShape.setRadius(radius);
         return circleShape;
-    }
-
-    private Shape createBoxShape(float width, float height) {
-        Shape boxShape = new PolygonShape();
-        ((PolygonShape) boxShape).setAsBox(width, height);
-        return boxShape;
     }
 
     private Shape createTurretShape() {
@@ -831,34 +674,13 @@ public class BodyFactory {
 
         if (type == AbstractMap.ITEM_LOOT) {
             fixtureDef = lootFixture;
-        } else if (type == AbstractMap.ITEM_ROCK) {
-            fixtureDef = dangerFixture;
-        } else if (type == AbstractMap.ITEM_KEY) {
-            fixtureDef = keyFixture;
         } else if (type == AbstractMap.ITEM_TRIGGER) {
             fixtureDef = triggerFixture;
-        } else if (type == AbstractMap.ITEM_UPGRADE)
-            fixtureDef = upgradeFixture;
-        else if (type == AbstractMap.ITEM_FEATURE)
+        } else if (type == AbstractMap.ITEM_FEATURE)
             fixtureDef = featureFixture;
-        else if (type == AbstractMap.PLATFORM)
-            fixtureDef = platformFixture;
-        else if (type == AbstractMap.ITEM_SPAWN)
-            fixtureDef = warpFixture;
-        else if (type == AbstractMap.ITEM_ENTRANCE_SURFACE || type == AbstractMap.ITEM_ENTRANCE_CAVE || type == AbstractMap.ITEM_ENTRANCE_UNIVERSE)
-            fixtureDef = exitFixture;
-        else if (type == AbstractMap.ITEM_LIQUID_SS || type == AbstractMap.ITEM_LIQUID_TD)
-            fixtureDef = exitFixture; // TODO: GIVE OWN FIXTURE WITH GRAVITY/DRAG LATER
         else if (type == AbstractMap.ITEM_LAMP)
             fixtureDef = lampFixture;
-        else if (type == AbstractMap.ITEM_MINE)
-            fixtureDef = mineFixture;
-        else if (type == AbstractMap.ITEM_CRATE) {
-            fixtureDef = crateFixture;
-            //fixtureDef.filter.maskBits = (short) (fixtureDef.filter.maskBits | Config.CATEGORY_LIGHT);
-        } else if (type == AbstractMap.ITEM_CANNON) {
-            fixtureDef = turretFixture;
-        } else
+        else
             throw new RuntimeException("Have no fixtureDef for type " + type);
 
         return fixtureDef;
@@ -1365,14 +1187,4 @@ public class BodyFactory {
         ((PolygonShape) crossShape).setAsBox(hx / 2, hx / 8, new Vector2(inverted ? hx * .8f : -hx * .8f, hx * .8f), inverted ? MathUtils.degreesToRadians * -30 : MathUtils.degreesToRadians * 30);
         return crossShape;
     }
-/*
-    public Vector2 getVector() {
-        return vectorPool.obtain();
-    }
-
-    public void freeVector(Vector2 vector) {
-        vector.set(0, 0);
-        vectorPool.free(vector);
-    }
-*/
 }
