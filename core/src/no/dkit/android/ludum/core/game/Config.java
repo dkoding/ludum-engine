@@ -62,7 +62,7 @@ public class Config {
     public static final float CANNON_CHANCE = .2f;
     public static final float BULLET_RATE_LOW = .1f;
     public static final float BULLET_RATE_MEDIUM = .2f;
-    public static final float BULLET_RATE_HIGH = .02f;
+    public static final float BULLET_RATE_HIGH = .01f;
     public static final int NUM_STARS = 25;
     public static final long RANDOM_SEED = 666;
     public static final int MAX_KEYS = 10;
@@ -166,9 +166,9 @@ public class Config {
     public static final int BOX_VELOCITY_ITERATIONS = 3;
     public static final float BOX_STEP = 1 / 25f;
 
-    public static final float PLAYER_MAX_SPEED = 2f;
+    public static final float PLAYER_MAX_SPEED = 5f;
     public static final float PLAYER_MIN_SPEED = .1f;
-    public static final float MAX_SPEED = .2f;
+    public static final float MAX_SPEED = .5f;
     public static final float LOOT_SPEED = .1f;
     public static final float MIN_SPEED = .01f;
     public static final float ROTATE_SPEED = 5f;

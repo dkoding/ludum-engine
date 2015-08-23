@@ -21,6 +21,7 @@ import no.dkit.android.ludum.core.game.model.body.PoolableGameBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.BlockBody;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.loot.Weapon;
+import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class AgentBody extends PoolableGameBody {
     boolean falling = false;
@@ -131,7 +132,7 @@ public class AgentBody extends PoolableGameBody {
         if (weapon != null) {
             weapon.update(this);
             if (!(this instanceof PlayerBody) && mind.getState().equals(Mind.MindState.ATTACK))
-                if (MathUtils.random() < Config.BULLET_RATE_HIGH) fireBullet();
+                if (MathUtils.random() < Config.BULLET_RATE_HIGH * Level.getInstance().getLevel()) fireBullet();
         }
 
         useMind();
