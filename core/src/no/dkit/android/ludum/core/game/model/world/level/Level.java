@@ -86,9 +86,24 @@ public abstract class Level {
     }
 
     protected void getDefaultPlayerStartPosition(LEVEL_TYPE worldType) {
+        int x;
+        int y;
+        int max = 1000;
+        int curr = 0;
+
         if (worldType == LEVEL_TYPE.TOPDOWN) {
-            if (!setStartPositionToItem(AbstractMap.START_HINT))
-                setStartPositionTo(Level.getInstance().getMap().getWidth() / 2, Level.getInstance().getMap().getHeight() / 2);
+            if (!setStartPositionToItem(AbstractMap.START_HINT)) {
+                while (curr < max) {
+                    curr++;
+                    x = MathUtils.random(1, map.getWidth() - 2);
+                    y = MathUtils.random(1, map.getHeight() - 2);
+
+                    if (map.map2d[x][y] == AbstractMap.CLEAR || map.map2d[x][y] == AbstractMap.ROOM) {
+                        setStartPositionTo(x, y);
+                        break;
+                    }
+                }
+            }
         }
     }
 

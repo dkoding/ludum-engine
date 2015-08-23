@@ -36,8 +36,8 @@ public class XXXX extends ApplicationAdapter {
 
     public static boolean [] cleared = new boolean[Config.MAX_LEVEL];
 
-    public static void savePlayer() {
-        XXXX.cleared[Level.getInstance().getLevel()-1] = true;
+    public static void savePlayer(boolean won) {
+        XXXX.cleared[Level.getInstance().getLevel()-1] = won;
 
         if(allCleared())
             XXXX.changeScreen(SCREEN.WIN_GAME);

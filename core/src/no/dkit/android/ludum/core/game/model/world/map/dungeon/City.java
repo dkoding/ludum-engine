@@ -157,7 +157,7 @@ public class City {
 			if (!failed){
 				//Probability falls so there are an average of 2 doors per room
 				int per = 2*(w+h);
-				System.out.println((float)ROOM_DOORS/(float)per);
+				//System.out.println((float)ROOM_DOORS/(float)per);
 				float door_chance = (float)ROOM_DOORS / (float)per;
 				
 				for (int i = tli; i < tli+w+2; i++){

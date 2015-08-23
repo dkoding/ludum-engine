@@ -3,6 +3,7 @@ package no.dkit.android.ludum.core.game.controller;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.equations.Bounce;
+import aurelienribon.tweenengine.equations.Sine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
+import no.dkit.android.ludum.core.game.ai.behaviors.single.SingleBehavior;
 import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.view.TweenImage;
 import no.dkit.android.ludum.core.game.view.TweenImageAccessor;
@@ -52,8 +54,6 @@ public class WinScreen implements Screen {
 
         background = new FireShader();
         ((AbstractShader) background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        SoundFactory.getInstance().playMusic(SoundFactory.MUSIC_TYPE.WIN);
     }
 
     public void render(float delta) {
@@ -92,16 +92,19 @@ public class WinScreen implements Screen {
 
     public void show() {
         Timeline.createSequence()
-                .push(Tween.from(tweenImage, TweenImageAccessor.POSITION_Y, 3f).target(-tweenImage.getRegionHeight()).ease(Bounce.OUT))
+                .push(Tween.from(tweenImage, TweenImageAccessor.POSITION_Y, 1f).target(-tweenImage.getRegionHeight()/2f).ease(Sine.OUT)).repeatYoyo(10,0f)
                 .start(XXXX.getTweener());
 
         Timeline.createSequence()
-                .push(Tween.from(tweenImage2, TweenImageAccessor.POSITION_Y, 3f).target(-tweenImage2.getRegionHeight()).ease(Bounce.OUT))
+                .push(Tween.from(tweenImage2, TweenImageAccessor.POSITION_Y, 2f).target(-tweenImage2.getRegionHeight()).ease(Bounce.OUT))
                 .start(XXXX.getTweener());
 
         Timeline.createSequence()
-                .push(Tween.from(tweenImage3, TweenImageAccessor.POSITION_Y, 3f).target(-tweenImage3.getRegionHeight()).ease(Bounce.OUT))
+                .push(Tween.from(tweenImage3, TweenImageAccessor.POSITION_Y, 1f).target(-tweenImage3.getRegionHeight()).ease(Bounce.OUT))
                 .start(XXXX.getTweener());
+
+        if (Config.music)
+            SoundFactory.getInstance().playMusic(SoundFactory.MUSIC_TYPE.WIN);
     }
 
     public void dispose() {

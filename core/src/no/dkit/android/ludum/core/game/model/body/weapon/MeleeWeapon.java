@@ -12,7 +12,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
-import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.agent.MonsterPlayerBody;

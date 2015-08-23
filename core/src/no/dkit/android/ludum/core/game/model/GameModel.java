@@ -490,7 +490,7 @@ public class GameModel {
 
         TextFactory.getInstance().addText(new TextItem("All humans dead! Hooray!"), 0f);
         createBigPlayerEffect(true, true, EffectFactory.EFFECT_TYPE.ACHIEVE, Color.WHITE);
-        XXXX.savePlayer();
+        XXXX.savePlayer(true);
     }
 
     private void lostLevel() {
@@ -511,7 +511,7 @@ public class GameModel {
 
         TextFactory.getInstance().addText("You died!");
 
-        XXXX.savePlayer();
+        XXXX.savePlayer(false);
     }
 
     private void createBigPlayerEffect(boolean lights, boolean randomColors, EffectFactory.EFFECT_TYPE achieve, Color color) {

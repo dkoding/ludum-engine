@@ -63,7 +63,17 @@ public class WeaponBody extends PoolableGameBody {
     }
 
     public void draw(SpriteBatch spriteBatch) {
-        return;
+        if (!isActive() || image == null) return;
+
+        spriteBatch.setColor(color);
+        spriteBatch.draw(image,
+                body.getPosition().x - radius, body.getPosition().y - radius,
+                radius, radius,
+                radius * 2, radius * 2,
+                1, 1,
+                rotation,
+                true);
+        spriteBatch.setColor(Color.WHITE);
     }
 
     @Override
