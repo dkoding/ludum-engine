@@ -181,8 +181,10 @@ public class MenuScreenModel {
         window.add(toggleMusic).size(100, 100);
         window.add(playButton).size(100, 100);
         window.add(toggleSound).size(100, 100);
+/*
         window.row();
         window.add(fpsLabel).colspan(3);
+*/
         //window.pack();
 
         // stage.addActor(new Button("Behind Window", skin));

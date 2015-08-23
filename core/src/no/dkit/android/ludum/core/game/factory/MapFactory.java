@@ -35,7 +35,7 @@ public class MapFactory {
 
         map.createMap(level, inside, platforms);
 
-        System.out.println("CREATED " + map.getClass().getName() + " MAP WITH LEVEL CODE: " + type + ":" + level + (inside ? " (inside)" : ""));
+        //System.out.println("CREATED " + map.getClass().getName() + " MAP WITH LEVEL CODE: " + type + ":" + level + (inside ? " (inside)" : ""));
 
         return map;
     }

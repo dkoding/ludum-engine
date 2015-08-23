@@ -158,7 +158,7 @@ public class GameModel {
         map = new Map(level.getMap());
         worldMap = level.getMap();
 
-        TextFactory.getInstance().addText(new TextItem("Level " + LevelFactory.level));
+        TextFactory.getInstance().addText(new TextItem("Level " + LevelFactory.level), -.01f);
 
         background = ResourceFactory.getInstance().getBackground(level,
                 level.getBackgroundType(), Config.getDimensions().WORLD_WIDTH, Config.getDimensions().WORLD_HEIGHT,

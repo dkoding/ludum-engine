@@ -70,13 +70,10 @@ public class MeleeWeapon extends Weapon {
         @Override
         public void onEvent(int type, BaseTween<?> source) {
             if (type == TweenCallback.COMPLETE) {
-                System.out.println("COMPLETE");
                 ((MonsterPlayerBody) owner).disableMelee();
             } else if (type == TweenCallback.START) {
-                System.out.println("START");
                 ((MonsterPlayerBody) owner).enableMelee();
             } else if (type == TweenCallback.END) {
-                System.out.println("END");
                 ((MonsterPlayerBody) owner).finishedAttack();
             }
         }

@@ -88,16 +88,15 @@ public abstract class Level {
     protected void getDefaultPlayerStartPosition(LEVEL_TYPE worldType) {
         if (worldType == LEVEL_TYPE.TOPDOWN) {
             if (!setStartPositionToItem(AbstractMap.START_HINT)) {
-                final Vector2 emptyArea = findEmptySpace();
+                final Vector2 emptyArea = findEmptySpace(AbstractMap.CLEAR);
                 setStartPositionTo(emptyArea.x, emptyArea.y);
             }
         }
     }
 
-    protected Vector2 findEmptySpace() {
+    protected Vector2 findEmptySpace(int clear) {
         int currentAttempt = 0;
         int maxAttempts = 1000; // Safeguard
-        int clear = AbstractMap.CLEAR;
 
         while (currentAttempt < maxAttempts) {
             currentAttempt++;
@@ -276,7 +275,10 @@ public abstract class Level {
     }
 
     public BodyFactory.ENEMY_ANIM getRandomWalker() {
-        return walkers.get(MathUtils.random(walkers.size() - 1));
+        int start = level;
+        if (start > walkers.size() - 2) start = walkers.size() - 2;
+
+        return walkers.get(MathUtils.random(start, walkers.size() - 1));
     }
 
     public BodyFactory.ENEMY_ANIM getRandomFlyer() {

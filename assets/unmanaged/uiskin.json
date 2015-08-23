@@ -1,8 +1,8 @@
 { com.badlogic.gdx.graphics.g2d.BitmapFont: {
-    default-font: { file: default.fnt },
-    fonts: { file: fonts.fnt },
-    fontm: { file: fontm.fnt },
-    fontl: { file: fontl.fnt }
+    default-font: { file: gothic40.fnt },
+    fonts: { file: gothic40.fnt },
+    fontm: { file: gothic40.fnt },
+    fontl: { file: gothic40.fnt }
 },
 com.badlogic.gdx.graphics.Color: {
 	green: { a: 1, b: 0, g: 1, r: 0 },

@@ -36,14 +36,18 @@ public class GameScreen implements Screen, InputProcessor {
     InputMultiplexer multiplexer;
     Stage stage; // UI
 
-    Label humanLabel;
     Image humanImage;
+    Image healthImage;
+
+    Label humanLabel;
+    Label healthLabel;
 
     Label fpsLabel;
     Label fps;
 
     StringBuilder fpsBuilder = new StringBuilder();
     StringBuilder humanBuilder = new StringBuilder();
+    StringBuilder healthBuilder = new StringBuilder();
 
     long lastUpdateTime = System.currentTimeMillis();
     long lastTextUpdate = System.currentTimeMillis();
@@ -112,16 +116,26 @@ public class GameScreen implements Screen, InputProcessor {
         humanLabel.setAlignment(Align.right);
         humanImage = new Image(ResourceFactory.getInstance().getItemImage("disc"));
 
+        healthLabel = new Label("FIELDS: ", XXXX.skin, TRANSPARENT);
+        healthLabel.setAlignment(Align.right);
+        healthImage = new Image(ResourceFactory.getInstance().getItemImage("disc"));
+
         fps = new Label("", XXXX.skin, TRANSPARENT);
         fps.setAlignment(Align.right);
 
         humanLabel = new Label("", XXXX.skin, TRANSPARENT);
         humanLabel.setAlignment(Align.right);
 
+        healthLabel = new Label("", XXXX.skin, TRANSPARENT);
+        healthLabel.setAlignment(Align.right);
+
         Table scoreWindow = new Table(XXXX.skin);
         scoreWindow.defaults().align(Align.right);
         scoreWindow.defaults().pad(5).padTop(0).padBottom(0);
 
+        scoreWindow.add(healthLabel).width(Config.getDimensions().SCREEN_WIDTH / 10);
+        scoreWindow.add(healthImage).size(Config.getDimensions().SCREEN_WIDTH / 20).center();
+        scoreWindow.row();
         scoreWindow.add(humanLabel).width(Config.getDimensions().SCREEN_WIDTH / 10);
         scoreWindow.add(humanImage).size(Config.getDimensions().SCREEN_WIDTH / 20).center();
         scoreWindow.row();
@@ -154,6 +168,11 @@ public class GameScreen implements Screen, InputProcessor {
             humanBuilder.setLength(0);
             humanBuilder.append(GameModel.getInstance().getTotalNumEnemies());
             humanLabel.setText(humanBuilder);
+
+            healthBuilder.setLength(0);
+            healthBuilder.append(GameModel.getPlayer().getHealth());
+            healthLabel.setText(healthBuilder);
+
             lastTextUpdate = System.currentTimeMillis();
         }
 

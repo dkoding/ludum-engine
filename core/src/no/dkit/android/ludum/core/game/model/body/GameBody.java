@@ -21,7 +21,7 @@ import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.quest.GameEvent;
 
 public abstract class GameBody {
-    protected int health = 5;
+    protected int health = 1;
     int hurtThreshold = health > 2 ? 2 : 0;
     int criticalThreshold = health > 1 ? 1 : 0;
 

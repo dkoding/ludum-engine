@@ -1,10 +1,10 @@
 package no.dkit.android.ludum.core.game.model.world.level;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.MapFactory;
+import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
 
 import java.util.Random;
 
@@ -31,10 +31,10 @@ public class RandomLevel extends Level {
     @Override
     public void onStart() {
 
-        for (int i = 0; i < (level * 2); i++) {
+        for (int i = 0; i < ((level + 1) * 2); i++) {
             final BodyFactory.ENEMY_TYPE randomEnemyType = getRandomEnemyType();
-            System.out.println("TYPE" + randomEnemyType);
-            BodyFactory.getInstance().createAgent(randomEnemyType, findEmptySpace());
+            BodyFactory.getInstance().createAgent(randomEnemyType, findEmptySpace(AbstractMap.CLEAR));
+            BodyFactory.getInstance().createAgent(randomEnemyType, findEmptySpace(AbstractMap.ROOM));
         }
     }
 }

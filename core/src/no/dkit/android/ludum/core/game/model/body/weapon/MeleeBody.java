@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
+import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
 
@@ -37,8 +38,9 @@ public class MeleeBody extends WeaponBody {
 
         lastCollission = System.currentTimeMillis();
 
-        if (other instanceof AgentBody)
-            System.out.println("MELEE BODY HIT");
+        if (other instanceof AgentBody) {
+            GameModel.getPlayer().heal(1);
+        }
     }
 
     public Vector2 getPosition() {

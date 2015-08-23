@@ -3,7 +3,7 @@ package no.dkit.android.ludum.core.game;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class Config {
-    public static final int MAX_LEVEL = 1;
+    public static final int MAX_LEVEL = 5;
     public static boolean DEBUG = false;
     public static final float DEBUG_SCALE = 2f;
     public static boolean DEBUGTEXT = false;
@@ -34,8 +34,8 @@ public class Config {
     public static final int NUM_PARTICLES = 50;
     public static final float ENEMY_CHANCE = .1f;
 
-    public static final int PLAYER_START_HEALTH = 25;
-    public static final int PLAYER_START_ARMOR = 25;
+    public static final int PLAYER_START_HEALTH = 50;
+    public static final int PLAYER_START_ARMOR = 0;
     public static final int PLAYER_START_ORBS = 20;
     public static final int PLAYER_START_KEYS = 3;
     public static final int PLAYER_START_CREDITS = 200;
@@ -166,9 +166,9 @@ public class Config {
     public static final int BOX_VELOCITY_ITERATIONS = 3;
     public static final float BOX_STEP = 1 / 25f;
 
-    public static final float PLAYER_MAX_SPEED = 1f;
+    public static final float PLAYER_MAX_SPEED = 2f;
     public static final float PLAYER_MIN_SPEED = .1f;
-    public static final float MAX_SPEED = .1f;
+    public static final float MAX_SPEED = .2f;
     public static final float LOOT_SPEED = .1f;
     public static final float MIN_SPEED = .01f;
     public static final float ROTATE_SPEED = 5f;

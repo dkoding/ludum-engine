@@ -146,6 +146,9 @@ public class MonsterPlayerBody extends PlayerBody {
     public void addMeleeWeapons(MeleeBody weapon, MeleeBody weapon2) {
         this.weaponBody = weapon;
         this.weaponBody2 = weapon2;
+
+        weaponBody.disable();
+        weaponBody2.disable();
     }
 
     public void update() {

@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class TextFactory {
 
-    BitmapFont font = new BitmapFont();
+    BitmapFont font;
     BitmapFontCache fontCache;
     private GlyphLayout glyphLayout = new GlyphLayout();
 
@@ -35,8 +35,9 @@ public class TextFactory {
         alpha = 1;
         alphaMod = 0;
 
+        font = new BitmapFont(Gdx.files.internal("gothic40.fnt"), Gdx.files.internal("gothic40.png"), false);
+
         texts = new Array<TextItem>();
-        font = getFont(50);
         fontCache = new BitmapFontCache(font);
     }
 
@@ -111,7 +112,7 @@ public class TextFactory {
         System.out.println(this.getClass().getName() + " disposed");
     }
 
-    private BitmapFont getFont(int size) {
-       return font;
+    public BitmapFont getFont(int size) {
+        return font;
     }
 }
