@@ -114,11 +114,11 @@ public class GameScreen implements Screen, InputProcessor {
 
         humanLabel = new Label("FIELDS: ", XXXX.skin, TRANSPARENT);
         humanLabel.setAlignment(Align.right);
-        humanImage = new Image(ResourceFactory.getInstance().getItemImage("disc"));
+        humanImage = new Image(ResourceFactory.getInstance().getImage(ResourceFactory.UI, "left"));
 
         healthLabel = new Label("FIELDS: ", XXXX.skin, TRANSPARENT);
         healthLabel.setAlignment(Align.right);
-        healthImage = new Image(ResourceFactory.getInstance().getItemImage("disc"));
+        healthImage = new Image(ResourceFactory.getInstance().getImage(ResourceFactory.UI, "health"));
 
         fps = new Label("", XXXX.skin, TRANSPARENT);
         fps.setAlignment(Align.right);
