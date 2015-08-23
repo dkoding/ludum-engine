@@ -13,6 +13,7 @@ import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.controller.LoadingScreen;
 import no.dkit.android.ludum.core.game.controller.MenuScreen;
 import no.dkit.android.ludum.core.game.controller.SplashScreen;
+import no.dkit.android.ludum.core.game.controller.WinScreen;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
 import no.dkit.android.ludum.core.game.factory.LightFactory;
@@ -37,6 +38,16 @@ public class XXXX extends ApplicationAdapter {
 
     public static void savePlayer() {
         XXXX.cleared[Level.getInstance().getLevel()-1] = true;
+
+        if(allCleared())
+            XXXX.changeScreen(SCREEN.WIN_GAME);
+    }
+
+    private static boolean allCleared() {
+        for (boolean b : cleared) {
+            if(!b) return false;
+        }
+        return true;
     }
 
     public static Skin skin;
@@ -129,6 +140,8 @@ public class XXXX extends ApplicationAdapter {
             newScreen = new MenuScreen();
         } else if (to.equals(SCREEN.STARTMENU)) {
             newScreen = new MenuScreen();
+        } else if (to.equals(SCREEN.WIN_GAME)) {
+            newScreen = new WinScreen();
         }
 
         game.setScreen(new TransitionScreen(game, oldScreen, newScreen, new DoneCallback() {
