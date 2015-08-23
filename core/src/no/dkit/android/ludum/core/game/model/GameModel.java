@@ -1,6 +1,5 @@
 package no.dkit.android.ludum.core.game.model;
 
-import box2dLight.Light;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -81,8 +80,9 @@ public class GameModel {
     private long lastShaderUpdate = System.currentTimeMillis();
     protected long shaderFrameTime;
 
-    public boolean running = false;
     long start = 0;
+
+    long finishTime;
 
     GameView gameView;
 
@@ -124,8 +124,11 @@ public class GameModel {
     private Body bodyA;
     private Body bodyB;
     final Level level;
+    private long lastConditionCheck;
+    static GameModel instance;
 
     public GameModel(int worldWidth, int worldHeight) {
+        instance = this;
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
         this.halfWorldWidth = worldWidth / 2f;
@@ -169,7 +172,11 @@ public class GameModel {
 
         level.onStart();
 
-        running = true;
+        XXXX.gameState = XXXX.GAME_STATE.RUNNING;
+    }
+
+    public static GameModel getInstance() {
+        return instance;
     }
 
     private void setupTerrainShader() {
@@ -268,7 +275,11 @@ public class GameModel {
     }
 
     public void update() {
-        if (!running) return;
+        if (XXXX.gameState != XXXX.GAME_STATE.RUNNING
+                && XXXX.gameState != XXXX.GAME_STATE.FAILED
+                && XXXX.gameState != XXXX.GAME_STATE.WON
+                && XXXX.gameState != XXXX.GAME_STATE.CLICK_TO_CONTINUE) return;
+
 
         if (Config.DEBUGTEXT)
             startMeasure();
@@ -322,6 +333,9 @@ public class GameModel {
             endMeasure("Checked collissions");
 
         LightFactory.getInstance().updatePlayerLights(playerBody.getAngle(), worldMap.map2d[(int) (playerBody.position.x + Config.TILE_SIZE_X)][(int) (playerBody.position.y + Config.TILE_SIZE_Y)]);
+
+        if (System.currentTimeMillis() > lastConditionCheck + 1000)
+                 checkForSpecialConditions();
     }
 
     private void startMeasure() {
@@ -448,6 +462,68 @@ public class GameModel {
             System.out.println("numActiveBodies = " + numActiveBodies);
             System.out.println("numActiveEnemies = " + numActiveEnemies);
             System.out.println("numEnemies = " + numEnemies);
+        }
+    }
+
+    private void checkForSpecialConditions() {
+        lastConditionCheck = System.currentTimeMillis();
+
+        if (level.wonLevel())
+            wonLevel();
+        else if (level.lostLevel())
+            lostLevel();
+    }
+
+    private void wonLevel() {
+        if (XXXX.gameState == XXXX.GAME_STATE.CLICK_TO_CONTINUE) return;
+
+        if (XXXX.gameState == XXXX.GAME_STATE.WON && System.currentTimeMillis() > finishTime + 5000) {
+            XXXX.gameState = XXXX.GAME_STATE.CLICK_TO_CONTINUE;
+            TextFactory.getInstance().addMoreText(new TextItem("Button to continue", 0, -160, Color.WHITE), 0f);
+            return;
+        }
+
+        if (XXXX.gameState == XXXX.GAME_STATE.WON) return;
+
+        finishTime = System.currentTimeMillis();
+        XXXX.gameState = XXXX.GAME_STATE.WON;
+
+        TextFactory.getInstance().addText(new TextItem("All humans dead! Hooray!"), 0f);
+        createBigPlayerEffect(true, true, EffectFactory.EFFECT_TYPE.ACHIEVE, Color.WHITE);
+        XXXX.savePlayer();
+    }
+
+    private void lostLevel() {
+        if (XXXX.gameState == XXXX.GAME_STATE.CLICK_TO_CONTINUE) return;
+
+        if (XXXX.gameState == XXXX.GAME_STATE.FAILED && System.currentTimeMillis() > finishTime + 3000) {
+            XXXX.gameState = XXXX.GAME_STATE.CLICK_TO_CONTINUE;
+            TextFactory.getInstance().addMoreText(new TextItem("Button to continue", 0, -160, Color.WHITE), 0f);
+            return;
+        }
+
+        if (XXXX.gameState == XXXX.GAME_STATE.FAILED) return;
+
+        finishTime = System.currentTimeMillis();
+        XXXX.gameState = XXXX.GAME_STATE.FAILED;
+
+        createBigPlayerEffect(true, false, EffectFactory.EFFECT_TYPE.BLOOD, Color.RED);
+
+        TextFactory.getInstance().addText("You died!");
+
+        XXXX.savePlayer();
+    }
+
+    private void createBigPlayerEffect(boolean lights, boolean randomColors, EffectFactory.EFFECT_TYPE achieve, Color color) {
+        int counter = 0;
+        Vector2 position = new Vector2();
+
+        while (counter < 50) {
+            position.set(playerBody.position);
+            position.add(MathUtils.random(-Config.getDimensions().WORLD_WIDTH / 2, Config.getDimensions().WORLD_WIDTH / 2),
+                    MathUtils.random(-Config.getDimensions().WORLD_HEIGHT / 2, Config.getDimensions().WORLD_HEIGHT / 2));
+            EffectFactory.getInstance().addEffect(position, achieve);
+            counter++;
         }
     }
 
@@ -697,22 +773,6 @@ public class GameModel {
         return map;
     }
 
-    private void wonLevel() {
-        TextFactory.getInstance().addText(new TextItem("LEVEL CLEARED"), 0f);
-
-        int counter = 0;
-
-        while (counter < 50) {
-            Vector2 position = playerBody.position;
-            position.add(MathUtils.random(-Config.getDimensions().WORLD_WIDTH / 2, Config.getDimensions().WORLD_WIDTH / 2),
-                    MathUtils.random(-Config.getDimensions().WORLD_HEIGHT / 2, Config.getDimensions().WORLD_HEIGHT / 2));
-            EffectFactory.getInstance().addEffect(position, EffectFactory.EFFECT_TYPE.ACHIEVE);
-            Light light = LightFactory.getInstance().getLight(position.x, position.y, Config.TILE_SIZE_X * 2, 6, new Color(MathUtils.random(), MathUtils.random(), MathUtils.random(), 1));
-            light.setStaticLight(true);
-            counter++;
-        }
-    }
-
     public RenderOperations getBackground() {
         return background;
     }
@@ -808,5 +868,9 @@ public class GameModel {
 
     public int getArmor() {
         return playerBody.getArmor();
+    }
+
+    public int getTotalNumEnemies() {
+        return numEnemies;
     }
 }

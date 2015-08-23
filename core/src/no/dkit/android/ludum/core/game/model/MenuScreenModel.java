@@ -30,6 +30,7 @@ import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.shaders.AbstractShader;
 import no.dkit.android.ludum.core.shaders.RenderOperations;
 import no.dkit.android.ludum.core.shaders.fullscreen.SimpleCloudShader;
+import no.dkit.android.ludum.core.shaders.fullscreen.WaterscapeShader;
 
 public class MenuScreenModel {
     public static final String TRANSPARENT = "transparent";
@@ -192,7 +193,7 @@ public class MenuScreenModel {
     }
 
     private String getLevelLabel() {
-        return "Level " + LevelFactory.level + ": " + level.getClass().getSimpleName() + ":" + level.getWorldType() + ":" + level.getMap().getClass().getSimpleName();
+        return "Level " + LevelFactory.level + ": " + (XXXX.cleared[LevelFactory.level-1] ? "CLEARED!" : "MORE FOOD HERE!");
     }
 
     private void updateMapImage() {
@@ -204,7 +205,7 @@ public class MenuScreenModel {
 
     private void updateBackground() {
         if (level.worldType == Level.LEVEL_TYPE.TOPDOWN) {
-            background = new SimpleCloudShader();
+            background = new WaterscapeShader();
             ((AbstractShader) background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         }
     }
@@ -226,7 +227,7 @@ public class MenuScreenModel {
             lastShaderUpdate = System.currentTimeMillis();
         }
 
-        background.renderFullScreen(spriteBatch);
+        background.render(spriteBatch, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), 1, 90);
     }
 
     public Stage getStage() {

@@ -12,6 +12,8 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
+import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.ai.mind.Mind;
 import no.dkit.android.ludum.core.game.ai.mind.PrioritizingMind;
@@ -331,7 +333,7 @@ public class PlayerBody extends AgentBody implements GameEventListener {
     }
 
     private void parseControllerInput() {
-        if(unconscious) return;
+        if (unconscious) return;
 
         if (controlMode == CONTROL_MODE.DIRECT)
             parseDirectControllerInput();
@@ -362,6 +364,11 @@ public class PlayerBody extends AgentBody implements GameEventListener {
                     fireBullet1();
                 if (integer == Input.Keys.SHIFT_LEFT && inputKey > 0)
                     fireBullet2();
+
+                if (XXXX.gameState == XXXX.GAME_STATE.CLICK_TO_CONTINUE) {
+                    XXXX.changeScreen(XXXX.SCREEN.STARTMENU);
+                    break;
+                }
             }
         }
 

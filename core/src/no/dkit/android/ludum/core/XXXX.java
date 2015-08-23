@@ -3,10 +3,12 @@ package no.dkit.android.ludum.core;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.controller.LoadingScreen;
 import no.dkit.android.ludum.core.game.controller.MenuScreen;
@@ -20,6 +22,7 @@ import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.ShaderFactory;
 import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.factory.TextFactory;
+import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.transition.DoneCallback;
 import no.dkit.android.ludum.core.game.transition.TransitionScreen;
 import no.dkit.android.ludum.core.game.view.TweenBodyAccessor;
@@ -29,6 +32,18 @@ import no.dkit.android.ludum.core.game.view.TweenImageAccessor;
 public class XXXX extends ApplicationAdapter {
     private static boolean isChanging = false;
     private static Game game;
+
+    public static boolean [] cleared = new boolean[Config.MAX_LEVEL];
+
+    public static void savePlayer() {
+        XXXX.cleared[Level.getInstance().getLevel()-1] = true;
+    }
+
+    public static Skin skin;
+
+    public enum GAME_STATE {INIT, STARTING, RUNNING, HIDDEN, RESUMING, FAILED, WON, PAUSING, CLICK_TO_CONTINUE}
+
+    public static GAME_STATE gameState = GAME_STATE.INIT;
 
     public static Config.PERFORMANCE performance;
 
@@ -62,6 +77,8 @@ public class XXXX extends ApplicationAdapter {
                 }
             };
             game.create();
+
+            skin = new Skin(Gdx.files.getFileHandle("uiskin.json", Files.FileType.Internal));
         }
         game.setScreen(new SplashScreen());
     }

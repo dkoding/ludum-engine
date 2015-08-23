@@ -58,6 +58,13 @@ public class TextFactory {
         updateCache();
     }
 
+    public void addMoreText(TextItem textItem, float alphaMod) {
+        alpha = 1;
+        this.alphaMod = alphaMod;
+        texts.add(textItem);
+        updateCache();
+    }
+
     public void addText(TextItem textItem) {
         alpha = 1;
         this.alphaMod = 0;

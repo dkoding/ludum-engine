@@ -1,5 +1,6 @@
 package no.dkit.android.ludum.core.shaders;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public interface RenderOperations {
@@ -18,6 +19,8 @@ public interface RenderOperations {
     }
 
     public void render(SpriteBatch spriteBatch, float x, float y, float width, float height);
+
+    public void render(Batch spriteBatch, float x, float y, float width, float height, float scale, float rotation);
 
     public void renderFullScreen(SpriteBatch spriteBatch);
 

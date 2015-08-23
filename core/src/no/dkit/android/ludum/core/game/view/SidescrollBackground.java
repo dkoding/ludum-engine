@@ -1,10 +1,16 @@
 package no.dkit.android.ludum.core.game.view;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class SidescrollBackground extends MovingBackground {
     public SidescrollBackground(Texture backLayer, Texture frontLayer, float width, float height, float worldwidth, float worldheight) {
         super(backLayer, frontLayer, width, height, worldwidth, worldheight);
+    }
+
+    @Override
+    public void render(Batch spriteBatch, float x, float y, float width, float height, float scale, float rotation) {
+
     }
 
     @Override

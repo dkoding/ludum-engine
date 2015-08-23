@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Mesh;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
@@ -259,6 +260,57 @@ public abstract class AbstractShader implements RenderOperations {
         shader.dispose();
         mesh.dispose();
         cleanupTextures();
+    }
+
+    public void render(Batch spriteBatch, float x, float y, float width, float height, float scale, float rotation) {
+        if (!ready)
+            throw new RuntimeException("Trying to use a shader before init!");
+
+        if (maskRegion != null) {
+            spriteBatch.enableBlending();
+            Gdx.gl20.glColorMask(false, false, false, true);
+            spriteBatch.setBlendFunction(GL20.GL_ONE, GL20.GL_ZERO);
+            spriteBatch.begin();
+
+            spriteBatch.draw(maskRegion,
+                    x, y,
+                    width / 2, height / 2,
+                    width, height,
+                    scale, scale,
+                    rotation, true);
+
+            //spriteBatch.draw(maskRegion, x, y, width, height);
+            spriteBatch.end();
+
+            Gdx.gl20.glColorMask(true, true, true, true);
+            spriteBatch.setBlendFunction(GL20.GL_DST_ALPHA, GL20.GL_ONE_MINUS_DST_ALPHA);
+            spriteBatch.begin();
+
+            spriteBatch.draw(fboRegion,
+                    x, y,
+                    width / 2, height / 2,
+                    width, height,
+                    scale, scale,
+                    rotation, true);
+
+            spriteBatch.end();
+            spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        } else {
+            if (!alpha)
+                spriteBatch.disableBlending();
+
+            spriteBatch.begin();
+            spriteBatch.draw(fboRegion,
+                    x, y,
+                    width / 2, height / 2,
+                    width, height,
+                    scale, scale,
+                    rotation, true);
+            spriteBatch.end();
+
+            if (!alpha)
+                spriteBatch.enableBlending();
+        }
     }
 
     public void setMaskRegion(TextureRegion maskRegion) {

@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
+import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
@@ -34,10 +36,14 @@ public class GameScreen implements Screen, InputProcessor {
     InputMultiplexer multiplexer;
     Stage stage; // UI
 
+    Label humanLabel;
+    Image humanImage;
+
     Label fpsLabel;
     Label fps;
 
     StringBuilder fpsBuilder = new StringBuilder();
+    StringBuilder humanBuilder = new StringBuilder();
 
     long lastUpdateTime = System.currentTimeMillis();
     long lastTextUpdate = System.currentTimeMillis();
@@ -92,8 +98,41 @@ public class GameScreen implements Screen, InputProcessor {
 
         stage.addActor(mapWindow);
 
+        createScoreWindow();
+
         multiplexer = new InputMultiplexer(stage, processor, this);
         //Gdx.input = new RemoteInput();
+    }
+
+    private void createScoreWindow() {
+        fpsLabel = new Label("FPS", XXXX.skin, TRANSPARENT);
+        fpsLabel.setAlignment(Align.right);
+
+        humanLabel = new Label("FIELDS: ", XXXX.skin, TRANSPARENT);
+        humanLabel.setAlignment(Align.right);
+        humanImage = new Image(ResourceFactory.getInstance().getItemImage("disc"));
+
+        fps = new Label("", XXXX.skin, TRANSPARENT);
+        fps.setAlignment(Align.right);
+
+        humanLabel = new Label("", XXXX.skin, TRANSPARENT);
+        humanLabel.setAlignment(Align.right);
+
+        Table scoreWindow = new Table(XXXX.skin);
+        scoreWindow.defaults().align(Align.right);
+        scoreWindow.defaults().pad(5).padTop(0).padBottom(0);
+
+        scoreWindow.add(humanLabel).width(Config.getDimensions().SCREEN_WIDTH / 10);
+        scoreWindow.add(humanImage).size(Config.getDimensions().SCREEN_WIDTH / 20).center();
+        scoreWindow.row();
+        scoreWindow.add(fpsLabel).width(Config.getDimensions().SCREEN_HEIGHT / 20);
+        scoreWindow.add(fps).width(Config.getDimensions().SCREEN_WIDTH / 10);
+        scoreWindow.pack();
+
+        scoreWindow.setPosition(Config.getDimensions().SCREEN_WIDTH - scoreWindow.getWidth(), Config.getDimensions().SCREEN_HEIGHT - scoreWindow.getHeight());
+
+        scoreWindow.setTransform(false);
+        stage.addActor(scoreWindow);
     }
 
     public void render(float delta) {
@@ -111,6 +150,10 @@ public class GameScreen implements Screen, InputProcessor {
             fpsBuilder.setLength(0);
             fpsBuilder.append(Gdx.graphics.getFramesPerSecond());
             fps.setText(fpsBuilder);
+
+            humanBuilder.setLength(0);
+            humanBuilder.append(GameModel.getInstance().getTotalNumEnemies());
+            humanLabel.setText(humanBuilder);
             lastTextUpdate = System.currentTimeMillis();
         }
 

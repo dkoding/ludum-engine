@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -54,6 +55,11 @@ public class UniverseBackground extends MovingBackground {
         drawStars(batch);
         drawPlanet(batch, x, y);
         batch.end();
+    }
+
+    @Override
+    public void render(Batch spriteBatch, float x, float y, float width, float height, float scale, float rotation) {
+
     }
 
     private void drawStars(SpriteBatch spriteBatch) {

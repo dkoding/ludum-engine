@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.LightFactory;
+import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
 import no.dkit.android.ludum.core.shaders.RenderOperations;
@@ -17,6 +18,14 @@ public abstract class Level {
     public AbstractMap map;
 
     private static Level instance;
+
+    public boolean wonLevel() { // Default win conditions
+        return defaultVictoryCondition();
+    }
+
+    public boolean lostLevel() {
+        return defaultLoseCondition();
+    }
 
     public enum LEVEL_TYPE {TOPDOWN}
 
@@ -394,5 +403,13 @@ public abstract class Level {
 
     public String getName() {
         return map.getClass().getName();
+    }
+
+    private boolean defaultLoseCondition() {
+        return GameModel.getPlayer().isDead();
+    }
+
+    private boolean defaultVictoryCondition() {
+        return GameModel.getInstance().getTotalNumEnemies() <= 0;
     }
 }

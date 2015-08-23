@@ -3,7 +3,7 @@ package no.dkit.android.ludum.core.game;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class Config {
-    public static final int MAX_LEVEL = 100;
+    public static final int MAX_LEVEL = 10;
     public static boolean DEBUG = true;
     public static final float DEBUG_SCALE = 1f;
     public static boolean DEBUGTEXT = false;

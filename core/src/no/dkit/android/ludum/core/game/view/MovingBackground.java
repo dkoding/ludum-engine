@@ -1,6 +1,7 @@
 package no.dkit.android.ludum.core.game.view;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import no.dkit.android.ludum.core.shaders.RenderOperations;
@@ -75,6 +76,11 @@ public class MovingBackground implements RenderOperations {
         if (fog != null)
             fog.draw(batch);
         batch.end();
+    }
+
+    @Override
+    public void render(Batch spriteBatch, float x, float y, float width, float height, float scale, float rotation) {
+
     }
 
     @Override
