@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Manifold;
@@ -45,7 +46,7 @@ public class WeaponBody extends PoolableGameBody {
     }
 
     protected void hitAgentEffect(AgentBody other) {
-        EffectFactory.getInstance().addHitEffect(position, other.bodyType, angle);
+        EffectFactory.getInstance().addHitEffect(other.position, other.bodyType, body.getAngle()* MathUtils.radiansToDegrees);
         SoundFactory.getInstance().playHitSound(other.bodyType);
     }
 
@@ -62,17 +63,7 @@ public class WeaponBody extends PoolableGameBody {
     }
 
     public void draw(SpriteBatch spriteBatch) {
-        if (!isActive() || image == null) return;
-
-        spriteBatch.setColor(color);
-        spriteBatch.draw(image,
-                body.getPosition().x - radius, body.getPosition().y - radius,
-                radius, radius,
-                radius * 2, radius * 2,
-                1, 1,
-                rotation,
-                true);
-        spriteBatch.setColor(Color.WHITE);
+        return;
     }
 
     @Override
