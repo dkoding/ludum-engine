@@ -68,6 +68,4 @@ public class AnimatedAgentBody extends AgentBody {
                         scale * .5f, scale * .5f,
                         angle);
     }
-
-
 }

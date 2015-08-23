@@ -283,8 +283,7 @@ public class BodyFactory {
         lootFixture.filter.maskBits = LOOT_BITS;
 
         meleeFixture.filter.categoryBits = Config.CATEGORY_BULLET;
-        meleeFixture.filter.maskBits = 0;
-        meleeFixture.filter.groupIndex = -1; // particles and bullets should not collide with each other
+        meleeFixture.filter.maskBits = PLAYER_BULLET_BITS;
 
         tileFixture.filter.categoryBits = Config.CATEGORY_SCENERY;
         tileFixture.filter.maskBits = SCENERY_BITS;

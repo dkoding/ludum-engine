@@ -86,25 +86,38 @@ public abstract class Level {
     }
 
     protected void getDefaultPlayerStartPosition(LEVEL_TYPE worldType) {
-        int x;
-        int y;
-        int max = 1000;
-        int curr = 0;
-
         if (worldType == LEVEL_TYPE.TOPDOWN) {
             if (!setStartPositionToItem(AbstractMap.START_HINT)) {
-                while (curr < max) {
-                    curr++;
-                    x = MathUtils.random(1, map.getWidth() - 2);
-                    y = MathUtils.random(1, map.getHeight() - 2);
+                final Vector2 emptyArea = findEmptySpace();
+                setStartPositionTo(emptyArea.x, emptyArea.y);
+            }
+        }
+    }
 
-                    if (map.map2d[x][y] == AbstractMap.CLEAR || map.map2d[x][y] == AbstractMap.ROOM) {
-                        setStartPositionTo(x, y);
-                        break;
-                    }
+    protected Vector2 findEmptySpace() {
+        int currentAttempt = 0;
+        int maxAttempts = 1000; // Safeguard
+        int clear = AbstractMap.CLEAR;
+
+        while (currentAttempt < maxAttempts) {
+            currentAttempt++;
+
+            int x = MathUtils.random(1, map.getWidth() - 2);
+            int y = MathUtils.random(1, map.getHeight() - 2);
+
+            if (currentAttempt < maxAttempts / 2) {
+                if (map.map2d[x][y] == clear && map.map2d[x - 1][y] == clear && map.map2d[x + 1][y] == clear && map.map2d[x][y - 1] == clear && map.map2d[x][y + 1] == clear
+                        && map.map2d[x - 1][y - 1] == clear && map.map2d[x + 1][y + 1] == clear && map.map2d[x + 1][y - 1] == clear && map.map2d[x - 1][y + 1] == clear) {
+                    return new Vector2(x, y);
+                }
+            } else {
+                if (map.map2d[x][y] == clear) {
+                    return new Vector2(x, y);
                 }
             }
         }
+
+        return new Vector2(1, 1);
     }
 
     protected void getSpecialFeaturesFor(int level, LEVEL_TYPE levelType, boolean inside, boolean platforms) {
@@ -396,16 +409,6 @@ public abstract class Level {
 
     protected void setStartPositionTo(float x, float y) {
         startPosition.set(x, y);
-    }
-
-    protected void setStartPositionToTile(int tileType) {
-        for (int x = 0; x < map.getSizeX(); x++)
-            for (int y = 0; y < map.getSizeY(); y++)
-                if (map.map2d[x][y] == tileType) {
-                    startPosition.set(x, y);
-                    return;
-                }
-        startPosition.set(-1, -1);
     }
 
     public boolean isPlatforms() {

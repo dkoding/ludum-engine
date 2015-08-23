@@ -189,36 +189,6 @@ public abstract class AbstractMap {
         map2d[x][y + 1] = AbstractMap.OCCUPIED;
     }
 
-    protected int placeItemsWithinEmptySpace(int maxItems, int itemType, int clear) {
-        int numItems = 0;
-        int currentAttempt = 0;
-        int maxAttempts = 1000; // Safeguard
-
-        while (numItems < maxItems && currentAttempt < maxAttempts) {
-            currentAttempt++;
-
-            int x = MathUtils.random(2, sizeX - 2);
-            int y = MathUtils.random(2, sizeY - 2);
-
-            if (currentAttempt < maxAttempts / 2) {
-                if (map2d[x][y] == clear && map2d[x - 1][y] == clear && map2d[x + 1][y] == clear && map2d[x][y - 1] == clear && map2d[x][y + 1] == clear
-                        && map2d[x - 1][y - 1] == clear && map2d[x + 1][y + 1] == clear && map2d[x + 1][y - 1] == clear && map2d[x - 1][y + 1] == clear) {
-                    map2d[x][y] = OCCUPIED;
-                    item[x][y] = itemType;
-                    numItems++;
-                }
-            } else {
-                if (map2d[x][y] == clear) {
-                    map2d[x][y] = OCCUPIED;
-                    item[x][y] = itemType;
-                    numItems++;
-                }
-            }
-        }
-
-        return numItems;
-    }
-
     protected int placeItems(int maxItems, int itemType, int clear) {
         int numItems = 0;
         int currentAttempt = 0;

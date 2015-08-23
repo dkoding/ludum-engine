@@ -55,7 +55,7 @@ public class SplashScreen implements Screen {
             if (Config.SANDBOX) {
                 XXXX.changeScreen(XXXX.SCREEN.GAME);
             } else {
-                XXXX.changeScreen(XXXX.SCREEN.WIN_GAME);
+                XXXX.changeScreen(XXXX.SCREEN.STARTMENU);
             }
             ready = false;
             ready2 = false;

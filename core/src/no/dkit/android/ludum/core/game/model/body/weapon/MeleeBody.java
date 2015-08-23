@@ -21,6 +21,7 @@ public class MeleeBody extends WeaponBody {
 
     @Override
     public void delete() {
+
     }
 
     @Override
@@ -41,7 +42,7 @@ public class MeleeBody extends WeaponBody {
     }
 
     public Vector2 getPosition() {
-        return body.getPosition();
+        return position;
     }
 
     public float getAngle() {
@@ -50,6 +51,7 @@ public class MeleeBody extends WeaponBody {
 
     public void setTransform(float x, float y, float angle) {
         body.setTransform(x, y, angle);
+        position.set(body.getPosition().x, body.getPosition().y);
     }
 
     public void enable() {

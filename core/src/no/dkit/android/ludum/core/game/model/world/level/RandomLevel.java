@@ -30,7 +30,11 @@ public class RandomLevel extends Level {
 
     @Override
     public void onStart() {
-        BodyFactory.getInstance().createAgent(BodyFactory.ENEMY_TYPE.WALKER_SINGLE, new Vector2(2,2));
-        BodyFactory.getInstance().createAgent(BodyFactory.ENEMY_TYPE.WALKER_GROUP, new Vector2(2,2));
+
+        for (int i = 0; i < (level * 2); i++) {
+            final BodyFactory.ENEMY_TYPE randomEnemyType = getRandomEnemyType();
+            System.out.println("TYPE" + randomEnemyType);
+            BodyFactory.getInstance().createAgent(randomEnemyType, findEmptySpace());
+        }
     }
 }
