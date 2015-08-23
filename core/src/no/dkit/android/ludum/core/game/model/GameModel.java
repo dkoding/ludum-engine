@@ -479,7 +479,7 @@ public class GameModel {
 
         if (XXXX.gameState == XXXX.GAME_STATE.WON && System.currentTimeMillis() > finishTime + 5000) {
             XXXX.gameState = XXXX.GAME_STATE.CLICK_TO_CONTINUE;
-            TextFactory.getInstance().addMoreText(new TextItem("Button to continue", 0, -160, Color.WHITE), 0f);
+            TextFactory.getInstance().addMoreText(new TextItem("Space to continue", 0, -160, Color.WHITE), 0f);
             return;
         }
 
@@ -498,7 +498,7 @@ public class GameModel {
 
         if (XXXX.gameState == XXXX.GAME_STATE.FAILED && System.currentTimeMillis() > finishTime + 3000) {
             XXXX.gameState = XXXX.GAME_STATE.CLICK_TO_CONTINUE;
-            TextFactory.getInstance().addMoreText(new TextItem("Button to continue", 0, -160, Color.WHITE), 0f);
+            TextFactory.getInstance().addMoreText(new TextItem("Space to continue", 0, -160, Color.WHITE), 0f);
             return;
         }
 

@@ -385,11 +385,13 @@ public abstract class AbstractMap {
     }
 
     protected void printMap(int[][] map) {
+/*
         for (int y = 0; y < sizeY; y++) {
             for (int x = 0; x < sizeX; x++)
                 printChar(map[x][y], mapDirection[x][y]);
             System.out.println();
         }
+*/
     }
 
     private static void printChar(int i) {
