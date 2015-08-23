@@ -1,177 +1,104 @@
 package no.dkit.android.ludum.core.game.factory;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import no.dkit.android.ludum.core.game.Config;
-import no.dkit.android.ludum.core.game.ai.behaviors.group.ChangeGroupMindBehavior;
 import no.dkit.android.ludum.core.game.ai.behaviors.group.Flocking;
 import no.dkit.android.ludum.core.game.ai.behaviors.group.GroupArrive;
-import no.dkit.android.ludum.core.game.ai.behaviors.group.GroupOffsetArriveDistanced;
-import no.dkit.android.ludum.core.game.ai.behaviors.group.GroupSeek;
+import no.dkit.android.ludum.core.game.ai.behaviors.group.GroupFlee;
+import no.dkit.android.ludum.core.game.ai.behaviors.group.Separation;
 import no.dkit.android.ludum.core.game.ai.behaviors.single.Arrive;
-import no.dkit.android.ludum.core.game.ai.behaviors.single.Behavior;
 import no.dkit.android.ludum.core.game.ai.behaviors.single.BoxConstraint;
-import no.dkit.android.ludum.core.game.ai.behaviors.single.ChangeMindBehavior;
-import no.dkit.android.ludum.core.game.ai.behaviors.single.Evade;
+import no.dkit.android.ludum.core.game.ai.behaviors.single.ChangeMindOnSpotBehavior;
 import no.dkit.android.ludum.core.game.ai.behaviors.single.Flee;
-import no.dkit.android.ludum.core.game.ai.behaviors.single.OffsetArriveAngled;
-import no.dkit.android.ludum.core.game.ai.behaviors.single.OffsetArriveDistanced;
-import no.dkit.android.ludum.core.game.ai.behaviors.single.Pursuit;
-import no.dkit.android.ludum.core.game.ai.behaviors.single.Seek;
 import no.dkit.android.ludum.core.game.ai.mind.Mind;
 import no.dkit.android.ludum.core.game.ai.simulationobjects.Neighborhood;
 import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
+import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class BehaviorFactory {
-    public enum MINDBEHAVIOR {AGGRESSIVE, DEFENSIVE, NEUTRAL}
 
-    public enum BEHAVIOR {ARRIVE, BOX, FLEE, EVADE, PURSUIT, SEEK, WANDER}
+    public static final float FLEE_FACTOR = Config.AGENT_INFLUENCE_FORCE * 2;
+    public static final float ARRIVE_FACTOR = Config.AGENT_INFLUENCE_FORCE * 1.5f;
+    public static final float FLEE_DISTANCE = Config.getDimensions().AGENT_SPOT_DISTANCE * 1.5f;
 
-    public enum OFFSETBEHAVIOR {OFFSETARRIVEANGLED, OFFSETSEEK, OFFSETARRIVE, OFFSETSEEKANGLED, OFFSETARRIVEDISTANCED}
+    // Switch between defend and neutral
+    public static void civilianBehavior(Vector2 target, AgentBody agent) {
+        applyBoxConstraints(agent);
 
-    public enum GROUPBEHAVIOR {ALIGNMENT, COHESION, FLOCKING, GROUPARRIVE, GROUPSEEK, SEPARATION}
+        agent.getMind().addBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.DEFEND, true, false));
+        agent.getMind().addDefendBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.NEUTRAL, false, false));
+        agent.getMind().addAttackBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.DEFEND, true, false));
 
-    public enum GROUPOFFSETBEHAVIOR {GROUPOFFSETARRIVEDISTANCED}
-
-    public static void setupDefaultMindBehaviors(Vector2 target, AgentBody agent) {
-        agent.getMind().addBehavior(getMindBehavior(BehaviorFactory.MINDBEHAVIOR.AGGRESSIVE, target, true, true));
-        agent.getMind().addAttackBehavior(getMindBehavior(BehaviorFactory.MINDBEHAVIOR.NEUTRAL, target, false, true));
-        agent.getMind().addDefendBehavior(getMindBehavior(BehaviorFactory.MINDBEHAVIOR.NEUTRAL, target, false, true));
+        agent.getMind().addDefendBehavior(new Flee(target, FLEE_DISTANCE, FLEE_FACTOR));
+        agent.getMind().addAttackBehavior(new Arrive(target, 3, Config.getDimensions().WORLD_WIDTH, ARRIVE_FACTOR));
     }
 
-    public static void setupDefaultGroupMindBehaviors(Vector2 target, AgentBody agent, Neighborhood neighborhood) {
-        agent.getMind().addBehavior(getGroupMindBehavior(MINDBEHAVIOR.AGGRESSIVE, neighborhood, target, true, true));
-        agent.getMind().addAttackBehavior(getGroupMindBehavior(MINDBEHAVIOR.AGGRESSIVE, neighborhood, target, true, false));
+    // Switch between defend and neutral
+    public static void soldierBehavior(Vector2 target, AgentBody agent) {
+        applyBoxConstraints(agent);
+
+        agent.getMind().addBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.ATTACK, true, false));
+        agent.getMind().addDefendBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.NEUTRAL, false, false));
+        agent.getMind().addAttackBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.ATTACK, true, false));
+
+        agent.getMind().addDefendBehavior(new Flee(target, FLEE_DISTANCE, FLEE_FACTOR));
+        agent.getMind().addAttackBehavior(new Arrive(target, 3, Config.getDimensions().WORLD_WIDTH, ARRIVE_FACTOR));
     }
 
-    public static void setupRangedBehavior(Vector2 target, AgentBody agent, AgentBody targetAgent, Vector2 position) {
-        setupDefaultMindBehaviors(target, agent);
+    // Switch between defend and neutral, but sometimes attack
+    public static void civilianGroupBehavior(Vector2 target, Neighborhood neighborhood) {
+        final Array<AgentBody> agentBodyList = neighborhood.getAgentBodyList();
 
-        agent.getMind().addBehavior(getSingleBehavior(BEHAVIOR.BOX, position));
-        agent.getMind().addAttackBehavior(getOffsetBehavior(OFFSETBEHAVIOR.OFFSETARRIVEDISTANCED, targetAgent, 1f, 0f));
-        agent.getMind().addDefendBehavior(getSingleBehavior(BEHAVIOR.FLEE, target));
+        final Separation separation = new Separation(neighborhood, Config.getDimensions().WORLD_WIDTH, Config.AGENT_INFLUENCE_FORCE * 3);
 
-        agent.getBody().setLinearVelocity(
-                MathUtils.random(agent.minSpeed * 2) - agent.minSpeed,
-                MathUtils.random(agent.minSpeed * 2) - agent.minSpeed);
-    }
+        final GroupFlee fleeing = new GroupFlee(neighborhood, target, Config.AGENT_INFLUENCE_FORCE * 1.5f, FLEE_FACTOR);
+        final GroupArrive groupArrive = new GroupArrive(neighborhood, target, Config.AGENT_INFLUENCE_FORCE, 3, ARRIVE_FACTOR);
 
-    public static void setupRangedGroupBehavior(Vector2 target, AgentBody agent, AgentBody targetAgent, Vector2 position, Neighborhood neighborhood) {
-        setupDefaultMindBehaviors(target, agent);
+        for (AgentBody agent : agentBodyList) {
+            applyBoxConstraints(agent);
 
-        agent.getMind().addBehavior(getSingleBehavior(BehaviorFactory.BEHAVIOR.BOX, position));
-        agent.getMind().addAttackBehavior(getGroupOffsetBehavior(BehaviorFactory.GROUPOFFSETBEHAVIOR.GROUPOFFSETARRIVEDISTANCED, neighborhood, targetAgent, 1f, 0f));
-        agent.getMind().addDefendBehavior(getSingleBehavior(BehaviorFactory.BEHAVIOR.FLEE, target));
+            agent.getMind().addBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.DEFEND, true, false));
+            agent.getMind().addDefendBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.NEUTRAL, false, false));
+            agent.getMind().addAttackBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.DEFEND, true, false));
 
-        agent.getBody().setLinearVelocity(
-                MathUtils.random(agent.minSpeed * 2) - agent.minSpeed,
-                MathUtils.random(agent.minSpeed * 2) - agent.minSpeed);
-    }
+            agent.getMind().addDefendBehavior(fleeing);
+            agent.getMind().addAttackBehavior(groupArrive);
 
-    public static void setupMeleeBehavior(Vector2 target, AgentBody agent, Vector2 position) {
-        setupDefaultMindBehaviors(target, agent);
-
-        agent.getMind().addBehavior(getSingleBehavior(BehaviorFactory.BEHAVIOR.BOX, position));
-        agent.getMind().addAttackBehavior(getSingleBehavior(BehaviorFactory.BEHAVIOR.SEEK, target));
-        agent.getMind().addDefendBehavior(getSingleBehavior(BehaviorFactory.BEHAVIOR.FLEE, target));
-
-        agent.getBody().setLinearVelocity(
-                MathUtils.random(agent.minSpeed * 2) - agent.minSpeed,
-                MathUtils.random(agent.minSpeed * 2) - agent.minSpeed);
-    }
-
-    public static void setupMeleeGroupBehavior(Vector2 target, AgentBody agent, Vector2 position, Neighborhood neighborhood) {
-        setupDefaultMindBehaviors(target, agent);
-
-        agent.getMind().addBehavior(getSingleBehavior(BehaviorFactory.BEHAVIOR.BOX, position));
-        agent.getMind().addAttackBehavior(getGroupBehavior(BehaviorFactory.GROUPBEHAVIOR.GROUPSEEK, neighborhood, target));
-        agent.getMind().addDefendBehavior(getSingleBehavior(BehaviorFactory.BEHAVIOR.FLEE, target));
-
-        agent.getBody().setLinearVelocity(
-                MathUtils.random(agent.minSpeed * 2) - agent.minSpeed,
-                MathUtils.random(agent.minSpeed * 2) - agent.minSpeed);
-    }
-
-    public static Behavior getSingleBehavior(BEHAVIOR behavior, Vector2 target) {
-        switch (behavior) {
-            case ARRIVE:
-                return new Arrive(target, Config.AGENT_ARRIVE_STEPS, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE);
-            case BOX:
-                return new BoxConstraint(target, Config.AGENT_INFLUENCE_FORCE*10f, Config.getDimensions().AGENT_BOX_WIDTH, Config.getDimensions().AGENT_BOX_HEIGHT);
-            case FLEE:
-                return new Flee(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE / 2f);
-            case EVADE:
-                return new Evade(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE);
-            case PURSUIT:
-                return new Pursuit(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE);
-            case SEEK:
-                return new Seek(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE);
-            case WANDER:
+            agent.getMind().addBehavior(separation);
         }
-        throw new RuntimeException("Unknown behavior " + behavior);
     }
 
-    public static Behavior getOffsetBehavior(OFFSETBEHAVIOR behavior, AgentBody target, float offsetX, float offsetY) {
-        switch (behavior) {
-            case OFFSETARRIVE:
-            case OFFSETARRIVEDISTANCED:
-                return new OffsetArriveDistanced(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE, Config.AGENT_ARRIVE_STEPS, offsetX);
-            case OFFSETARRIVEANGLED:
-                return new OffsetArriveAngled(target, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE, Config.AGENT_ARRIVE_STEPS, offsetX, offsetY);
-            case OFFSETSEEK:
-            case OFFSETSEEKANGLED:
+    public static void soldierGroupBehavior(Vector2 target, Neighborhood neighborhood) {
+        final Array<AgentBody> agentBodyList = neighborhood.getAgentBodyList();
+
+        final Flocking flocking = new Flocking(neighborhood, Config.getDimensions().WORLD_WIDTH, Config.AGENT_INFLUENCE_FORCE * 3);
+
+        final GroupFlee fleeing = new GroupFlee(neighborhood, target, Config.AGENT_INFLUENCE_FORCE * 1.5f, FLEE_FACTOR);
+        final GroupArrive groupArrive = new GroupArrive(neighborhood, target, Config.AGENT_INFLUENCE_FORCE, 3, ARRIVE_FACTOR);
+
+        for (AgentBody agent : agentBodyList) {
+            applyBoxConstraints(agent);
+
+            agent.getMind().addBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.ATTACK, true, false));
+            agent.getMind().addDefendBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.NEUTRAL, false, false));
+            agent.getMind().addAttackBehavior(new ChangeMindOnSpotBehavior(target, Config.getDimensions().AGENT_SPOT_DISTANCE, Mind.MindState.ATTACK, true, false));
+
+            agent.getMind().addDefendBehavior(fleeing);
+            agent.getMind().addAttackBehavior(groupArrive);
+
+            agent.getMind().addBehavior(flocking);
         }
-        throw new RuntimeException("Unknown behavior " + behavior);
     }
 
-    public static Behavior getMindBehavior(MINDBEHAVIOR behavior, Vector2 target, boolean spotted, boolean considerAngle) {
-        switch (behavior) {
-            case AGGRESSIVE:
-                return new ChangeMindBehavior(target, Config.AGENT_SPOT_DISTANCE, Mind.MindState.ATTACK, spotted, considerAngle);
-            case DEFENSIVE:
-                return new ChangeMindBehavior(target, Config.AGENT_SPOT_DISTANCE, Mind.MindState.DEFEND, spotted, considerAngle);
-            case NEUTRAL:
-                return new ChangeMindBehavior(target, Config.AGENT_SPOT_DISTANCE, Mind.MindState.NEUTRAL, spotted, considerAngle);
-        }
-        throw new RuntimeException("Unknown behavior " + behavior);
-    }
+    private static void applyBoxConstraints(AgentBody agent) {
+        final BoxConstraint boxConstraint = new BoxConstraint(
+                new Vector2(Level.getInstance().getMap().getWidth() / 2f, Level.getInstance().getMap().getHeight() / 2f),
+                Config.AGENT_INFLUENCE_FORCE * 10,
+                Level.getInstance().getMap().getWidth(), Level.getInstance().getMap().getHeight());
 
-    public static Behavior getGroupMindBehavior(MINDBEHAVIOR behavior, Neighborhood neighborhood, Vector2 target, boolean spotted, boolean considerAngle) {
-        switch (behavior) {
-            case AGGRESSIVE:
-                return new ChangeGroupMindBehavior(neighborhood, target, Config.AGENT_SPOT_DISTANCE, Mind.MindState.ATTACK, spotted, considerAngle);
-            case DEFENSIVE:
-                return new ChangeGroupMindBehavior(neighborhood, target, Config.AGENT_SPOT_DISTANCE, Mind.MindState.DEFEND, spotted, considerAngle);
-            case NEUTRAL:
-                return new ChangeGroupMindBehavior(neighborhood, target, Config.AGENT_SPOT_DISTANCE, Mind.MindState.NEUTRAL, spotted, considerAngle);
-        }
-        throw new RuntimeException("Unknown behavior " + behavior);
-    }
-
-    public static Behavior getGroupBehavior(GROUPBEHAVIOR behavior, Neighborhood neighborhood, Vector2 target) {
-        if (neighborhood.getCount() <= 0) throw new RuntimeException("Neighborhood is empty!");
-
-        switch (behavior) {
-            case ALIGNMENT:
-            case COHESION:
-            case FLOCKING:
-                return new Flocking(neighborhood, Config.getDimensions().AGENT_INFLUENCE_AREA, Config.AGENT_INFLUENCE_FORCE);
-            case GROUPARRIVE:
-                return new GroupArrive(neighborhood, target, Config.getDimensions().AGENT_INFLUENCE_AREA * 2f, Config.AGENT_ARRIVE_STEPS, Config.AGENT_INFLUENCE_FORCE);
-            case GROUPSEEK:
-                return new GroupSeek(neighborhood, target, Config.getDimensions().AGENT_INFLUENCE_AREA * 2f, Config.AGENT_INFLUENCE_FORCE);
-            case SEPARATION:
-        }
-        throw new RuntimeException("Unknown behavior " + behavior);
-    }
-
-    public static Behavior getGroupOffsetBehavior(GROUPOFFSETBEHAVIOR behavior, Neighborhood neighborhood, AgentBody target, float offsetX, float offsetY) {
-        if (neighborhood.getCount() <= 0) throw new RuntimeException("Neighborhood is empty!");
-
-        switch (behavior) {
-            case GROUPOFFSETARRIVEDISTANCED:
-                return new GroupOffsetArriveDistanced(neighborhood, target, Config.getDimensions().AGENT_INFLUENCE_AREA * 2f, Config.AGENT_INFLUENCE_FORCE, Config.AGENT_ARRIVE_STEPS, offsetX);
-        }
-        throw new RuntimeException("Unknown behavior " + behavior);
+        agent.getMind().addBehavior(boxConstraint);
+        agent.getMind().addDefendBehavior(boxConstraint);
+        agent.getMind().addAttackBehavior(boxConstraint);
     }
 }

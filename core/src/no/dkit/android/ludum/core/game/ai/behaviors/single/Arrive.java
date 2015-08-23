@@ -1,6 +1,7 @@
 package no.dkit.android.ludum.core.game.ai.behaviors.single;
 
 import com.badlogic.gdx.math.Vector2;
+import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
 
 public class Arrive extends SingleBehavior {
@@ -38,6 +39,8 @@ public class Arrive extends SingleBehavior {
 
         force.scl(speed / distance);
         force.sub(veh.getBody().getLinearVelocity());
+
+        if (force.len() < Config.EPSILON) return NO_VECTOR;
         force.scl(getInfluence());
 
         return force;

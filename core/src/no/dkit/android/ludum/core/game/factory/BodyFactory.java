@@ -10,7 +10,6 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Filter;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -1138,10 +1137,15 @@ public class BodyFactory {
                     AnimatedAgentBody walkerSingle = new AnimatedAgentBody(getAgentBody(def.getPosition(), true, true, createCircleShape(Config.WALKER_RADIUS), Config.WALKER_DENSITY), Config.WALKER_RADIUS,
                             ResourceFactory.getInstance().getWalkerAnimation(randomWalker));
                     walkerSingle.bodyType = GameBody.BODY_TYPE.HUMANOID;
-                    BehaviorFactory.setupMeleeBehavior(target, walkerSingle, def.getPosition().cpy());
-                    final Loot.LOOT_TYPE weaponForWalker = Level.getInstance().getWeaponFor(randomWalker);
-                    if (weaponForWalker != null)
-                        LootFactory.getInstance().getWeapon(weaponForWalker).onPickup(walkerSingle);
+
+                    if (randomWalker == ENEMY_ANIM.FEMALESOLDIER || randomWalker == ENEMY_ANIM.MALESOLDIER) {
+                        BehaviorFactory.soldierBehavior(target, walkerSingle);
+                        final Loot.LOOT_TYPE weaponForWalker = Level.getInstance().getWeaponFor(randomWalker);
+                        if (weaponForWalker != null)
+                            LootFactory.getInstance().getWeapon(weaponForWalker).onPickup(walkerSingle);
+                    } else {
+                        BehaviorFactory.civilianBehavior(target, walkerSingle);
+                    }
                     walkerSingle.setBoss();
                     break;
                 case WALKER_GROUP:
@@ -1153,12 +1157,16 @@ public class BodyFactory {
                                 ResourceFactory.getInstance().getWalkerAnimation(randomGroupWalker));
                         walkerNeighborhood.addAgentBody(groupWalker);
                         groupWalker.bodyType = GameBody.BODY_TYPE.HUMANOID;
-                        BehaviorFactory.setupMeleeGroupBehavior(target, groupWalker, def.getPosition().cpy(), walkerNeighborhood);
 
+                        if (randomGroupWalker == ENEMY_ANIM.FEMALESOLDIER || randomGroupWalker == ENEMY_ANIM.MALESOLDIER) {
+                            BehaviorFactory.soldierGroupBehavior(target, walkerNeighborhood);
 
-                        final Loot.LOOT_TYPE weaponFor = Level.getInstance().getWeaponFor(randomGroupWalker);
-                        if (weaponFor != null)
-                            LootFactory.getInstance().getWeapon(weaponFor).onPickup(groupWalker);
+                            final Loot.LOOT_TYPE weaponFor = Level.getInstance().getWeaponFor(randomGroupWalker);
+                            if (weaponFor != null)
+                                LootFactory.getInstance().getWeapon(weaponFor).onPickup(groupWalker);
+                        } else {
+                            BehaviorFactory.civilianGroupBehavior(target, walkerNeighborhood);
+                        }
                         groupWalker.setBoss();
                     }
                     break;
@@ -1339,22 +1347,22 @@ public class BodyFactory {
         final Body weaponBody = createBody(bodyDef);
         final Body weaponBody2 = createBody(bodyDef);
 
-        meleeFixture.shape = createScytheShape(length, false);
+        meleeFixture.shape = createClawShape(length, false);
         meleeFixture.isSensor = true;
         weaponBody.createFixture(meleeFixture);
 
-        meleeFixture.shape = createScytheShape(length, true);
+        meleeFixture.shape = createClawShape(length, true);
         meleeFixture.isSensor = true;
         weaponBody2.createFixture(meleeFixture);
 
         owner.addMeleeWeapons(weaponBody, weaponBody2);
 
-        return new Body[] { weaponBody, weaponBody2};
+        return new Body[]{weaponBody, weaponBody2};
     }
 
-    private Shape createScytheShape(float hx, boolean inverted) {
+    private Shape createClawShape(float hx, boolean inverted) {
         Shape crossShape = new PolygonShape();
-        ((PolygonShape) crossShape).setAsBox(hx / 2, hx / 8, new Vector2(inverted ? hx * 1.2f : -hx * 1.2f, hx * 1.6f), inverted ? MathUtils.degreesToRadians * -30 : MathUtils.degreesToRadians * 30);
+        ((PolygonShape) crossShape).setAsBox(hx / 2, hx / 8, new Vector2(inverted ? hx * .8f : -hx * .8f, hx * .8f), inverted ? MathUtils.degreesToRadians * -30 : MathUtils.degreesToRadians * 30);
         return crossShape;
     }
 /*

@@ -125,6 +125,7 @@ public class Config {
         public float SCREEN_ON_WORLD_FACTOR;
         public float WORLD_ON_SCREEN_FACTOR;
         public float WORLD_ON_SCREEN_FACTOR_Y;
+        public float AGENT_SPOT_DISTANCE;
 
         public float AGENT_INFLUENCE_AREA;
         public float AGENT_BOX_INFLUENCE_AREA;
@@ -142,6 +143,8 @@ public class Config {
 
             WORLD_WIDTH = 8;   // Number of tiles across screen
             WORLD_HEIGHT = (int) (WORLD_WIDTH * ASPECT_RATIO);
+
+            AGENT_SPOT_DISTANCE = WORLD_WIDTH / 4f;
 
             float fraction = (WORLD_WIDTH * ASPECT_RATIO) - WORLD_HEIGHT;
 

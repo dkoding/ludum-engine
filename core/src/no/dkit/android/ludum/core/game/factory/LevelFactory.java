@@ -2,7 +2,6 @@ package no.dkit.android.ludum.core.game.factory;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Json;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
