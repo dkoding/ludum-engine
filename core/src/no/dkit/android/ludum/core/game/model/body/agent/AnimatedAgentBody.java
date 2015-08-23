@@ -34,14 +34,17 @@ public class AnimatedAgentBody extends AgentBody {
             spriteBatch.setColor(Color.ORANGE);
         }
 
+        if (weapon != null)
+            spriteBatch.setColor(Color.GREEN);
+
         Color beforeAlpha = spriteBatch.getColor();
 
         spriteBatch.setColor(beforeAlpha.r, beforeAlpha.g, beforeAlpha.b, alpha);
 
-        if(flying)
+        if (flying)
             animTimer += Gdx.graphics.getDeltaTime();
         else
-            animTimer += speed/30f;
+            animTimer += speed / 30f;
 
         currentFrame = walk.getKeyFrame(animTimer, true);
 
@@ -65,4 +68,6 @@ public class AnimatedAgentBody extends AgentBody {
                         scale * .5f, scale * .5f,
                         angle);
     }
+
+
 }

@@ -76,7 +76,7 @@ public class EffectFactory {
         particleLayers.put(EFFECT_TYPE.TRAIL, GameBody.DRAW_LAYER.BACK);
 
         particleLayers.put(EFFECT_TYPE.EYE, GameBody.DRAW_LAYER.FRONT);
-        particleLayers.put(EFFECT_TYPE.EXPLOSION, GameBody.DRAW_LAYER.BACK);
+        particleLayers.put(EFFECT_TYPE.EXPLOSION, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.BIGEXPLOSION, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.SPARK, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.ACHIEVE, GameBody.DRAW_LAYER.FRONT);

@@ -20,16 +20,14 @@ import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
+import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.BlockBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.FloorBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringFeatureBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
-import no.dkit.android.ludum.core.shaders.fullscreen.Beacon2Shader;
-import no.dkit.android.ludum.core.shaders.fullscreen.FireShader;
-import no.dkit.android.ludum.core.shaders.fullscreen.ShiningStarScrollShader;
-import no.dkit.android.ludum.core.shaders.texture.VignetteShader;
+import no.dkit.android.ludum.core.shaders.fullscreen.VignetteShader;
 
 import java.util.Random;
 
@@ -57,7 +55,8 @@ public class GameView {
     private float factorX;
     private float factorY;
 
-    //Beacon2Shader shader = new Beacon2Shader();
+    VignetteShader shader = new VignetteShader();
+    private float alpha;
 
     public GameView(GameModel gameModel) {
         this.gameModel = gameModel;
@@ -84,6 +83,7 @@ public class GameView {
 
         shapeRenderer = new ShapeRenderer(20); // Max 10 vertixes
         shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.setAutoShapeType(true);
 
         crosshairImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "crosshair");
         targetImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "target");
@@ -94,7 +94,7 @@ public class GameView {
         factorX = (float) Config.getDimensions().WORLD_WIDTH / (float) Level.getInstance().getMap().getWidth();
         factorY = (float) Config.getDimensions().WORLD_HEIGHT / (float) Level.getInstance().getMap().getHeight();
 
-        //shader.init(Config.getDimensions().SCREEN_SHORTEST, Config.getDimensions().SCREEN_SHORTEST, true);
+        shader.init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
     }
 
     public void update() {
@@ -130,14 +130,19 @@ public class GameView {
         globalRotation += 1f;
         if (globalRotation > 360) globalRotation = 0;
 
-/*
-        TODO: Enable this again?
         shader.update();
+
+        alpha = 1.0f - (gameModel.getPlayerBody().getHealth() / (float) Config.PLAYER_START_HEALTH);
+
+        if(alpha != 0.0f) {
+            if(alpha > .5f) alpha = .5f;
+            shader.setAlpha(alpha);
+        }
+
         shader.render(spriteBatch,
                 camera.position.x - Config.getDimensions().WORLD_WIDTH / 2f,
                 camera.position.y - Config.getDimensions().WORLD_HEIGHT / 2f,
                 Config.getDimensions().WORLD_WIDTH, Config.getDimensions().WORLD_HEIGHT);
-*/
     }
 
     private void drawText() {
