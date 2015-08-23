@@ -22,8 +22,6 @@ public abstract class Weapon extends Loot {
     protected Integer speed;
     protected Integer rate;
 
-    protected TextureAtlas.AtlasRegion weaponImage;
-
     boolean randomFire = true;
 
     protected GameBody owner;
@@ -174,9 +172,4 @@ public abstract class Weapon extends Loot {
     public void fire2() {
         fire1();
     }
-
-    public TextureAtlas.AtlasRegion getWeaponImage() {
-        return weaponImage;
-    }
-
 }

@@ -13,6 +13,7 @@ import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
 import no.dkit.android.ludum.core.game.model.PlayerData;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
+import no.dkit.android.ludum.core.game.model.body.weapon.MeleeBody;
 
 public class MonsterPlayerBody extends PlayerBody {
     TextureRegion tailImage;
@@ -29,10 +30,8 @@ public class MonsterPlayerBody extends PlayerBody {
     ParticleEmitter eye1;
     ParticleEmitter eye2;
 
-    private Body weaponBody;
-    private Body weaponBody2;
-    private Fixture right;
-    private Fixture left;
+    private MeleeBody weaponBody;
+    private MeleeBody weaponBody2;
 
     public MonsterPlayerBody(Body body, float radius, TextureRegion image, TextureRegion tailImage, CONTROL_MODE controlMode) {
         super(body, radius, new PlayerData(), image, controlMode, BODY_TYPE.ALIEN);
@@ -63,7 +62,7 @@ public class MonsterPlayerBody extends PlayerBody {
         }
 
         if (weapon != null) {
-            spriteBatch.draw(weapon.getWeaponImage(),
+            spriteBatch.draw(weaponBody.getImage(),
                     weaponBody.getPosition().x - radius, weaponBody.getPosition().y - radius,
                     radius, radius,
                     radius * 2, radius * 2,
@@ -71,7 +70,7 @@ public class MonsterPlayerBody extends PlayerBody {
                     weaponBody.getAngle() * MathUtils.radiansToDegrees + 90,
                     true);
 
-            spriteBatch.draw(weapon.getWeaponImage(),
+            spriteBatch.draw(weaponBody2.getImage(),
                     weaponBody2.getPosition().x - radius, weaponBody2.getPosition().y - radius,
                     radius, radius,
                     radius * 2, radius * 2,
@@ -124,11 +123,13 @@ public class MonsterPlayerBody extends PlayerBody {
     }
 
     public void enableMelee() {
+        tweening = true;
+
         if (Config.DEBUGTEXT)
             System.out.println("ENABLING MELEE!");
 
-        enable(right);
-        enable(left);
+        weaponBody.enable();
+        weaponBody2.enable();
 
 /*
         if (goingLeft) {
@@ -141,34 +142,19 @@ public class MonsterPlayerBody extends PlayerBody {
 */
     }
 
-    private void enable(Fixture f) {
-        tweening = true;
-        final Filter filterData = f.getFilterData();
-        filterData.maskBits = BodyFactory.PLAYER_BULLET_BITS;
-        f.setFilterData(filterData);
-    }
-
-    private void disable(Fixture f) {
-        tweening = false;
-        final Filter filterData = f.getFilterData();
-        filterData.maskBits = 0;
-        f.setFilterData(filterData);
-    }
-
     public void disableMelee() {
+        tweening = false;
+
         if (Config.DEBUGTEXT)
             System.out.println("DISABLING MELEE!");
-        disable(left);
-        disable(right);
+
+        weaponBody.disable();
+        weaponBody2.disable();
     }
 
-    public void addMeleeWeapons(Body weapon, Body weapon2) {
+    public void addMeleeWeapons(MeleeBody weapon, MeleeBody weapon2) {
         this.weaponBody = weapon;
         this.weaponBody2 = weapon2;
-        this.left = weapon.getFixtureList().get(0);
-        this.right = weapon2.getFixtureList().get(0);
-        this.weaponBody.setUserData(this);
-        this.weaponBody2.setUserData(this);
     }
 
     public void update() {
@@ -177,15 +163,11 @@ public class MonsterPlayerBody extends PlayerBody {
         final float bodyAngleRad = (90 + getAngle()) * MathUtils.degreesToRadians;
 
         if (tweening) {
-            if (weaponBody != null)
-                this.weaponBody.setTransform(this.position.x, this.position.y, weaponBody.getAngle());
-            if (weaponBody2 != null)
-                this.weaponBody2.setTransform(this.position.x, this.position.y, weaponBody2.getAngle());
+            this.weaponBody.setTransform(this.position.x, this.position.y, weaponBody.getAngle());
+            this.weaponBody2.setTransform(this.position.x, this.position.y, weaponBody2.getAngle());
         } else {
-            if (weaponBody != null)
-                this.weaponBody.setTransform(this.position.x, this.position.y, bodyAngleRad);
-            if (weaponBody2 != null)
-                this.weaponBody2.setTransform(this.position.x, this.position.y, bodyAngleRad);
+            this.weaponBody.setTransform(this.position.x, this.position.y, bodyAngleRad);
+            this.weaponBody2.setTransform(this.position.x, this.position.y, bodyAngleRad);
         }
     }
 
@@ -195,10 +177,12 @@ public class MonsterPlayerBody extends PlayerBody {
 
         lastCollission = System.currentTimeMillis();
 
+/*
         if (other instanceof AgentBody) {
             EffectFactory.getInstance().addHitEffect(other.position, other.bodyType, weaponBody.getAngle() * MathUtils.radiansToDegrees + 90);
             EffectFactory.getInstance().addHitEffect(other.position, other.bodyType, weaponBody2.getAngle() * MathUtils.radiansToDegrees + 90);
             other.hit(10000);
         }
+*/
     }
 }

@@ -41,6 +41,7 @@ import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringFeatureBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringShadedBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.BulletBody;
+import no.dkit.android.ludum.core.game.model.body.weapon.MeleeBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.ParticleBody;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
@@ -1177,7 +1178,9 @@ public class BodyFactory {
         meleeFixture.isSensor = true;
         weaponBody2.createFixture(meleeFixture);
 
-        owner.addMeleeWeapons(weaponBody, weaponBody2);
+        owner.addMeleeWeapons(
+                new MeleeBody(weaponBody, Config.TILE_SIZE_X / 2f, ResourceFactory.getInstance().getWeaponImage("melee")),
+                new MeleeBody(weaponBody2, Config.TILE_SIZE_X / 2f, ResourceFactory.getInstance().getWeaponImage("melee")));
 
         return new Body[]{weaponBody, weaponBody2};
     }
