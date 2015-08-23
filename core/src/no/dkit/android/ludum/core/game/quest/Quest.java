@@ -25,7 +25,7 @@ public abstract class Quest {
     }
 
     protected void setupRewards() {
-        rewards.add(new RewardItem(new TextureRegionDrawable(ResourceFactory.getInstance().getItemImage("orb")), "You found some orbs!", Loot.LOOT_TYPE.TREASURE));
+        rewards.add(new RewardItem(new TextureRegionDrawable(ResourceFactory.getInstance().getItemImage("orb")), "You found some orbs!", Loot.LOOT_TYPE.ORB));
     }
 
     protected void setupDialogueImages() {

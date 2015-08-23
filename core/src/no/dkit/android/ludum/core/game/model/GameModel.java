@@ -20,34 +20,27 @@ import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.ai.behaviors.single.Arrive;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
-import no.dkit.android.ludum.core.game.factory.LaserFactory;
 import no.dkit.android.ludum.core.game.factory.LevelFactory;
 import no.dkit.android.ludum.core.game.factory.LightFactory;
 import no.dkit.android.ludum.core.game.factory.LootFactory;
 import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.ShaderFactory;
-import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.factory.TextItem;
 import no.dkit.android.ludum.core.game.model.body.DiscardBody;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
 import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
-import no.dkit.android.ludum.core.game.model.body.item.DangerBody;
-import no.dkit.android.ludum.core.game.model.body.item.KeyBody;
 import no.dkit.android.ludum.core.game.model.body.item.LootBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.BlockBody;
-import no.dkit.android.ludum.core.game.model.body.scenery.ChasmBody;
-import no.dkit.android.ludum.core.game.model.body.scenery.ExitBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.FeatureBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.FloorBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.LampBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringFeatureBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringShadedBody;
-import no.dkit.android.ludum.core.game.model.body.scenery.PlatformBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
-import no.dkit.android.ludum.core.game.model.body.weapon.LaserBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.ParticleBody;
+import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.model.world.level.SandboxLevel;
@@ -154,7 +147,6 @@ public class GameModel {
         BodyFactory.create(world);
 
         EffectFactory.create(world);
-        LaserFactory.create(world);
         LightFactory.create(world);
         ShaderFactory.create(level.getWorldType(), level.level);
 
@@ -210,7 +202,7 @@ public class GameModel {
                 playerBody = BodyFactory.getInstance().createTopDownPlayer(level.getStartPosition());
         }
 
-        final Weapon weapon = LootFactory.getInstance().getWeapon(level.getWeaponTypes().get(0));
+        final Weapon weapon = LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.MELEE);
         weapon.onPickup(playerBody);
 
         playerBody.getBody().setLinearVelocity(0, 0);
@@ -385,10 +377,6 @@ public class GameModel {
                     if (gameBody.isActive()) {
                         if (gameBody instanceof BlockBody)
                             terrainLayer.add((BlockBody) gameBody);
-                        else if (gameBody instanceof PlatformBody && !((PlatformBody) gameBody).moving)
-                            nonMovingBodies.add(gameBody);
-                        else if (gameBody instanceof ChasmBody)
-                            nonMovingBodies.add(gameBody);
                         else if (gameBody instanceof LampBody)
                             nonMovingBodies.add(gameBody);
                         else if (gameBody instanceof ShadedBody) {
@@ -396,8 +384,6 @@ public class GameModel {
                                 obscuringShadedLayer.add((ShadedBody) gameBody);
                             else {
                                 shadedLayer.add((ShadedBody) gameBody);
-                                if (gameBody instanceof ExitBody)
-                                    movingBodies.add(gameBody);
                             }
                             ShaderFactory.getInstance().addActiveShader(((ShadedBody) gameBody).getShader());
                         } else
@@ -453,12 +439,8 @@ public class GameModel {
             } else if (gameBody instanceof AgentBody) {
                 numActiveEnemies++;
                 map.spot(gameBody, Color.RED);
-            } else if (gameBody instanceof DangerBody) {
-                map.spot(gameBody, Color.ORANGE);
             } else if (gameBody instanceof LootBody) {
                 map.spot(gameBody, Color.YELLOW);
-            } else if (gameBody instanceof KeyBody) {
-                map.spot(gameBody, Color.MAGENTA);
             }
         }
 
@@ -503,7 +485,6 @@ public class GameModel {
             startMeasure();
         BodyFactory.getInstance().cleanUp();
         EffectFactory.getInstance().cleanUp();
-        LaserFactory.getInstance().cleanUp();
         if (Config.DEBUGTEXT)
             endMeasure("Cleaned up effects and lasers");
     }
@@ -742,10 +723,6 @@ public class GameModel {
 
     public AbstractMap getTileMap() {
         return worldMap;
-    }
-
-    public Array<LaserBody> getLasers() {
-        return LaserFactory.getInstance().getLasers();
     }
 
     public Array<GameBody> getFeatureLayer() {

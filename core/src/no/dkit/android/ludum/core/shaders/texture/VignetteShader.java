@@ -4,7 +4,6 @@ import no.dkit.android.ludum.core.shaders.AbstractTextureShader;
 
 public class VignetteShader extends AbstractTextureShader {
 
-
     @Override
     public String getFragmentShader() {
         return "uniform float time;\n" +

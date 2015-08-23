@@ -7,7 +7,6 @@ import no.dkit.android.ludum.core.game.factory.EffectFactory;
 import no.dkit.android.ludum.core.game.factory.ParticleEmitterBox2D;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
-import no.dkit.android.ludum.core.game.model.body.item.RotatingGunBody;
 
 public abstract class Thrower extends Weapon {
     private final EffectFactory.EFFECT_TYPE effect;
@@ -50,15 +49,12 @@ public abstract class Thrower extends Weapon {
         emitter.getAngle().setHigh(angle - arc, angle + arc);
         emitter.getAngle().setLow(angle - arc, angle + arc);
         emitter.getVelocity().setLow(Config.TILE_SIZE_X);
-        emitter.getVelocity().setHigh(Config.TILE_SIZE_X*4);
+        emitter.getVelocity().setHigh(Config.TILE_SIZE_X * 4);
         emitter.start();
     }
 
-    public void update(GameBody owner) {   // TODO: WHY DIFFERENT SOURCE/POSITION!?
+    public void update(GameBody owner) {
         if (emitter == null || !owner.isActive()) return;
-        if(owner instanceof RotatingGunBody)
-            emitter.setPosition(((RotatingGunBody)owner).source.x, ((RotatingGunBody)owner).source.y);
-        else
-            emitter.setPosition(owner.position.x, owner.position.y);
+        emitter.setPosition(owner.position.x, owner.position.y);
     }
 }

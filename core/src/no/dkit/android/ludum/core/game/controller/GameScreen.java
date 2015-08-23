@@ -5,36 +5,20 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
-import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
-import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.view.GameView;
 
@@ -70,12 +54,6 @@ public class GameScreen implements Screen, InputProcessor {
             Input.Keys.SHIFT_LEFT
     };
 
-    private static ImageButton mapButton;
-    private static Button upgradeButton;
-    private static Button travelSidescrollButton;
-    private static Button travelUniverseButton;
-    private static Button travelTopdownButton;
-
     protected final Skin skin;
 
     private OrthographicCamera camera;
@@ -100,24 +78,6 @@ public class GameScreen implements Screen, InputProcessor {
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        mapButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(gameModel.getMap().getImage()))) {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                gameModel.getMap().getImage();
-                super.draw(batch, .5f);
-            }
-        };
-
-        mapButton.addListener(new ClickListener() {
-
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                XXXX.changeScreen(XXXX.SCREEN.STARTMENU);
-            }
-        });
-
-        updateWeaponWindow();
-
         fpsLabel = new Label("FPS: ", skin, TRANSPARENT);
         fpsLabel.setAlignment(Align.right);
 
@@ -127,8 +87,6 @@ public class GameScreen implements Screen, InputProcessor {
         Table mapWindow = new Table(skin);
         mapWindow.defaults();
         mapWindow.pad(5);
-        mapWindow.add(mapButton).size(100, 100);
-        mapButton.getImageCell().fill().expand();
         mapWindow.pack();
         mapWindow.setPosition(0, Config.getDimensions().SCREEN_HEIGHT - mapWindow.getHeight());
 
@@ -138,90 +96,13 @@ public class GameScreen implements Screen, InputProcessor {
         //Gdx.input = new RemoteInput();
     }
 
-    public void updateWeaponButton(Weapon weapon) {
-        Table table = (Table) stage.getRoot().findActor(WEAPONWINDOW);
-        TextButton actor = (TextButton) table.findActor("" + weapon.getId());
-        actor.setText("" + weapon.ammo);
-        actor.invalidate();
-    }
-
-    public void updateWeaponWindow() {
-        Table weaponWindow = new Table(skin);
-        weaponWindow.setName(WEAPONWINDOW);
-        weaponWindow.setSize(Config.getDimensions().SCREEN_WIDTH, Config.getDimensions().SCREEN_HEIGHT / 20);
-
-        ButtonGroup weaponGroup = new ButtonGroup();
-
-        TextButton[] weaponButtons = new TextButton[0];
-
-        Weapon[] playerWeapons = new Weapon[0];
-
-        Array<Weapon> weapons = gameModel.getPlayerWeapons();
-        if (weapons.size > 0) {
-            playerWeapons = new Weapon[weapons.size];
-
-            for (int i=0; i < weapons.size; i++) {
-                playerWeapons[i] = weapons.get(i);
-            }
-            weaponButtons = new TextButton[playerWeapons.length];
-        }
-
-        for (int i = 0; i < playerWeapons.length; i++) {
-            final int index = i;
-            final int ammo = weapons.get(i).ammo;
-            final TextureAtlas.AtlasRegion image = ResourceFactory.getInstance().getImage(ResourceFactory.UI, playerWeapons[i].getImageName());
-
-            weaponButtons[i] = new TextButton("" + ammo, skin, TRANSPARENT) {
-                @Override
-                public void draw(Batch batch, float parentAlpha) {
-                    if (isChecked()) {
-                        batch.setColor(Color.WHITE);
-                    } else {
-                        batch.setColor(Color.DARK_GRAY);
-                    }
-
-                    batch.draw(image, getX(), getY(), getWidth(), getHeight());
-
-                    super.draw(batch, .9f);
-
-                    batch.setColor(Color.WHITE);
-                }
-            };
-
-            weaponButtons[i].addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    gameModel.setWeaponIndex(index);
-                }
-            });
-
-            TextButton.TextButtonStyle style = weaponButtons[i].getStyle();
-            weaponButtons[i].setStyle(style);
-            weaponButtons[i].setName("" + playerWeapons[i].getId());
-            weaponGroup.add(weaponButtons[i]);
-
-            weaponWindow.add(weaponButtons[i]).size(Config.getDimensions().SCREEN_WIDTH / 20);
-        }
-
-        weaponWindow.defaults().align(Align.right);
-        weaponWindow.defaults().pad(10);
-
-        weaponWindow.pack();
-        weaponWindow.setPosition(Gdx.graphics.getWidth() - weaponWindow.getWidth(), 0);
-
-        Actor oldWindow = stage.getRoot().findActor(WEAPONWINDOW);
-
-        if (oldWindow != null)
-            stage.getRoot().removeActor(oldWindow);
-
-        stage.addActor(weaponWindow);
-    }
-
     public void render(float delta) {
         if (System.currentTimeMillis() - lastUpdateTime > (1000f / Config.FPS)) {
             lastUpdateTime = System.currentTimeMillis();
             processInput();
         }
+
+        XXXX.getTweener().update(delta);
 
         gameModel.update();
         gameView.update();
@@ -239,10 +120,6 @@ public class GameScreen implements Screen, InputProcessor {
 
     public void resize(int width, int height) {
         stage.getViewport().update(width, height);
-    }
-
-    public static void enableUpgradeMenu(boolean enable) {
-        upgradeButton.setVisible(enable);
     }
 
     public void show() {
@@ -275,9 +152,7 @@ public class GameScreen implements Screen, InputProcessor {
     }
 
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.BACK || keycode == Input.Keys.BACKSPACE) {
-            XXXX.changeScreen(XXXX.SCREEN.UPGRADE);
-        } else if (keycode == Input.Keys.ESCAPE) {
+        if (keycode == Input.Keys.ESCAPE) {
             Gdx.app.exit();
         }
 
@@ -310,10 +185,6 @@ public class GameScreen implements Screen, InputProcessor {
 
     public boolean scrolled(int amount) {
         return false;
-    }
-
-    public void update() {
-        updateWeaponWindow();
     }
 
     private class MyGestureListener implements GestureDetector.GestureListener {

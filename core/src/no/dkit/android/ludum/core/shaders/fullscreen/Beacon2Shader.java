@@ -28,7 +28,7 @@ public class Beacon2Shader extends AbstractShader {
                 "\t\txy+=center;\n" +
                 "\t\tc+=pow(300000.,(1.-length(xy)*7.)*(1.+0.1*fract(float(-i)/float(N)-time*1.)))/30000.0;\n" +
                 "\t}\n" +
-                "\tgl_FragColor = vec4( c*vec3(0.4,.2,.1),1.0 );\n" +
+                "\tgl_FragColor = vec4( c*vec3(0.4,.2,.1),0.2 );\n" +
                 "\n" +
                 "}";
     }

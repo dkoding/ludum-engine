@@ -67,7 +67,7 @@ public class PlayerBody extends AgentBody implements GameEventListener {
         mind = new PrioritizingMind();
         mind.setState(Mind.MindState.NEUTRAL);
 
-        setupEmitter(EffectFactory.EFFECT_TYPE.SMOKE, 5, 200);
+        setupEmitter(EffectFactory.EFFECT_TYPE.TRAIL, 5, 200);
     }
 
     public PlayerBody(Body body, float radius, PlayerData data) {
@@ -81,7 +81,7 @@ public class PlayerBody extends AgentBody implements GameEventListener {
         this.data = data;
         this.listeners = new HashMap<GameEvent.EVENT_TYPE, Array<GameEvent>>();
 
-        setupEmitter(EffectFactory.EFFECT_TYPE.SMOKE, 5, 200);
+        setupEmitter(EffectFactory.EFFECT_TYPE.TRAIL, 5, 200);
     }
 
     @Override

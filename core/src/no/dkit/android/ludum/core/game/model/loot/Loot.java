@@ -4,17 +4,7 @@ import no.dkit.android.ludum.core.game.model.body.GameBody;
 
 public abstract class Loot {
     public enum LOOT_TYPE {
-        BOMB,
-        GUN,
-        ROCKET,
-        FIREBALL,
-        FLAME_THROWER,
-        LASER,
-
-        MEDPACK,
-        ORB,
-        TREASURE,
-        ARMOR
+        MELEE, ORB, BOMB, GUN
     }
 
     LOOT_TYPE type;

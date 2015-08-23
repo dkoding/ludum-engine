@@ -17,11 +17,18 @@ public abstract class AbstractTextureShader extends AbstractShader {
 
     @Override
     protected void performTextureBindings() {
-        texture.bind();
+        if (texture != null)
+            texture.bind();
     }
 
     @Override
     protected void cleanupTextures() {
-        texture.dispose();
+        if (texture != null)
+            texture.dispose();
+    }
+
+    public void bind(Texture texture) {
+        this.texture = texture;
+        performTextureBindings();
     }
 }

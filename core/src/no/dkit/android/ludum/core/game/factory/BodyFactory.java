@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -26,37 +27,22 @@ import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.DiscardBody;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.LightBody;
-import no.dkit.android.ludum.core.game.model.body.agent.AgentBody;
 import no.dkit.android.ludum.core.game.model.body.agent.AnimatedAgentBody;
-import no.dkit.android.ludum.core.game.model.body.agent.Blob;
 import no.dkit.android.ludum.core.game.model.body.agent.MonsterPlayerBody;
 import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
-import no.dkit.android.ludum.core.game.model.body.agent.ShipSingle;
-import no.dkit.android.ludum.core.game.model.body.item.CrateBody;
-import no.dkit.android.ludum.core.game.model.body.item.DangerBody;
 import no.dkit.android.ludum.core.game.model.body.item.DoorBody;
-import no.dkit.android.ludum.core.game.model.body.item.KeyBody;
 import no.dkit.android.ludum.core.game.model.body.item.LootBody;
-import no.dkit.android.ludum.core.game.model.body.item.MineBody;
-import no.dkit.android.ludum.core.game.model.body.item.RotatingGunBody;
 import no.dkit.android.ludum.core.game.model.body.item.TriggerBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.BlockBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.BorderBody;
-import no.dkit.android.ludum.core.game.model.body.scenery.ChasmBody;
-import no.dkit.android.ludum.core.game.model.body.scenery.ExitBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.FeatureBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.FloorBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.LampBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringFeatureBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringShadedBody;
-import no.dkit.android.ludum.core.game.model.body.scenery.PlatformBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
-import no.dkit.android.ludum.core.game.model.body.scenery.SpawnBody;
-import no.dkit.android.ludum.core.game.model.body.scenery.UpgradeBody;
-import no.dkit.android.ludum.core.game.model.body.weapon.BombBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.BulletBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.ParticleBody;
-import no.dkit.android.ludum.core.game.model.body.weapon.RocketBody;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
@@ -140,6 +126,7 @@ public class BodyFactory {
     private FixtureDef bulletFixture = new FixtureDef();
     private FixtureDef turretFixture = new FixtureDef();
     private FixtureDef linkFixture = new FixtureDef();
+    private FixtureDef meleeFixture = new FixtureDef();
 
     protected FixtureDef playerFixture = new FixtureDef();
 
@@ -183,6 +170,7 @@ public class BodyFactory {
         createTurretAttributes(createTurretShape());
         createAgentAttributes(createCircleShape(Config.TILE_SIZE_X / 3), 3);
         createLinkAttributes();
+        createMeleeAttributes();
 
         setupCategories();
 /*
@@ -255,6 +243,14 @@ public class BodyFactory {
         linkFixture.shape = shape; // This is set on rope creation time
 */
         linkFixture.density = 1;
+    }
+
+    private void createMeleeAttributes() {
+        meleeFixture = new FixtureDef();
+        meleeFixture.isSensor = true;
+        meleeFixture.restitution = 1;
+        meleeFixture.friction = 1;
+        meleeFixture.density = 100;
     }
 
     private void createParticleBlueprints() {
@@ -664,14 +660,6 @@ public class BodyFactory {
         BodyDef bulletDef;
 
         switch (type) {
-            case BOMB:
-                createBombAttributes(bulletFixture, createCircleShape(Config.TILE_SIZE_X / 6f));
-                bulletDef = createGravityBulletDef(.5f);
-                break;
-            case ROCKET:
-                createRocketAttributes(bulletFixture, createBoxShape(Config.TILE_SIZE_X / 4f, Config.TILE_SIZE_X / 16f));
-                bulletDef = createGravityBulletDef(.1f);
-                break;
             default:
                 createBulletAttributes(bulletFixture, createCircleShape(Config.TILE_SIZE_X / 10f));
                 bulletDef = createBulletDef();
@@ -741,12 +729,8 @@ public class BodyFactory {
                                   TextureAtlas.AtlasRegion doorImage, TextureAtlas.AtlasRegion corridorImage, Texture wallTexture) {
         if (type == AbstractMap.ROOM) { // Delegate to getFeature-method
             return getFloorFeature(x, y, indoorImage);
-        } else if (type == AbstractMap.CHASM) { // Delegate to getFeature-method
-            return getRandomChasmBody(x, y, indoorImage);
         } else if (type == AbstractMap.CORRIDOR) {
             return getCorridorFeature(x, y, corridorImage);
-        } else if (type == AbstractMap.PLATFORM) {
-            return getPlatformBody(x, y, direction);
         }
 
         FixtureDef fixtureDef = getTileFixtureDef(type, direction);
@@ -814,22 +798,10 @@ public class BodyFactory {
         else */
         if (type == AbstractMap.ITEM_LOOT)
             return getLoot(body, fixtureDef);
-        else if (type == AbstractMap.ITEM_ROCK)
-            return new DangerBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getItemImage("crystal"));
-        else if (type == AbstractMap.ITEM_KEY)
-            return new KeyBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getItemImage("key"));
         else if (type == AbstractMap.ITEM_TRIGGER)
             return new TriggerBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getWorldTypeImage("spawn"));
-        else if (type == AbstractMap.ITEM_UPGRADE)
-            return createUpgradeBody(fixtureDef, body);
-        else if (type == AbstractMap.ITEM_SPAWN)
-            return new SpawnBody(body, fixtureDef.shape.getRadius() * 2, ResourceFactory.getInstance().getWorldTypeImage("spawn"));
         else if (type == AbstractMap.ITEM_LAMP)
             return new LampBody(body, fixtureDef.shape.getRadius(), getRandomColor(), direction);
-        else if (type == AbstractMap.ITEM_MINE)
-            return new MineBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getItemImage("mine"));
-        else if (type == AbstractMap.ITEM_CRATE)
-            return new CrateBody(body, fixtureDef.shape.getRadius());
         else if (type == AbstractMap.ITEM_LIQUID_SS)
             return new ObscuringShadedBody(body, Config.TILE_SIZE_X,
                     ShaderFactory.getInstance().getShader(RenderOperations.BACKGROUND_TYPE.WATERSINUSWAVE, shaderRadius, shaderRadius,
@@ -840,34 +812,8 @@ public class BodyFactory {
                     ResourceFactory.getInstance().getTransparentTexture("watertd")
             ),
                     ResourceFactory.getInstance().getImage(ResourceFactory.MASK, "watermask"));
-        else if (type == AbstractMap.ITEM_ENTRANCE_SURFACE || type == AbstractMap.ITEM_ENTRANCE_UNIVERSE || type == AbstractMap.ITEM_ENTRANCE_CAVE) {
-            return createAppropriateExitBody(LevelFactory.getInstance().getCurrentLevel().getWorldType(), type, fixtureDef, body);
-        } else
+        else
             throw new RuntimeException("Should not happen...");
-    }
-
-    private GameBody getRandomRotatingGun(Body body) {
-        int random = MathUtils.random.nextInt(4);
-
-        switch (random) {
-            case 0:
-                return new RotatingGunBody(body, Config.TILE_SIZE_X / 2, ResourceFactory.getInstance().getItemImage("turret"),
-                        LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.GUN), .5f, false);
-            case 1:
-                return new RotatingGunBody(body, Config.TILE_SIZE_X / 2, ResourceFactory.getInstance().getItemImage("turret"),
-                        LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.LASER), .1f, false);
-            case 2:
-                return new RotatingGunBody(body, Config.TILE_SIZE_X / 2, ResourceFactory.getInstance().getItemImage("turret"),
-                        LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.FLAME_THROWER), 1f, false);
-            case 3:
-            default:
-                return new RotatingGunBody(body, Config.TILE_SIZE_X / 2, ResourceFactory.getInstance().getItemImage("turret"),
-                        LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.BOMB), 2f, false);
-        }
-    }
-
-    private GameBody createUpgradeBody(FixtureDef fixtureDef, Body body) {
-        return new UpgradeBody(body, fixtureDef.shape.getRadius(), ResourceFactory.getInstance().getWorldTypeImage("upgrade"));
     }
 
     private LootBody getLoot(Body body, FixtureDef fixtureDef) {
@@ -1103,120 +1049,10 @@ public class BodyFactory {
         return new FeatureBody(x, y, Config.TILE_SIZE_X, corridorImage);
     }
 
-    public GameBody getPlatformBody(float x, float y, int direction) {
-        BodyDef tileBodyDef = createStaticBodyDef(0);
-        tileBodyDef.position.x = x;
-        tileBodyDef.position.y = y;
-
-        boolean round = MathUtils.randomBoolean();
-        boolean rotating = MathUtils.random() < .1f;
-        boolean sliding = MathUtils.random() < .1f;
-
-        float size = rotating ? Config.TILE_SIZE_X : MathUtils.random(Config.TILE_SIZE_X, Config.TILE_SIZE_X * 1.5f);
-        float offsetX = MathUtils.random(size);
-        float offsetY = MathUtils.random(size);
-
-        if (rotating) {
-            offsetX = MathUtils.random(size / 2);
-            offsetY = MathUtils.random(size / 2);
-            createPlatformAttributes(createNonCenteredBoxShape(size, size, offsetX, offsetY));
-        } else if (sliding) {
-            size = Config.TILE_SIZE_X;
-
-            if (direction == AbstractMap.E || direction == AbstractMap.W) {
-                offsetX = 0;
-                offsetY = MathUtils.random(-Config.TILE_SIZE_Y / 2f, Config.TILE_SIZE_Y / 2f);
-            } else {
-                offsetX = MathUtils.random(-Config.TILE_SIZE_X / 2f, Config.TILE_SIZE_X / 2f);
-                offsetY = 0;
-            }
-
-            createPlatformAttributes(createNonCenteredBoxShape(size, size, offsetX, offsetY));
-        } else {
-            if (round)
-                createPlatformAttributes(createCircleShape(size));
-            else
-                createPlatformAttributes(createCenteredBoxShape(size, size));
-        }
-
-        Body body = createBody(tileBodyDef, platformFixture);
-        body.setLinearVelocity(0, 0);
-
-        FEATURE_TYPE type = FEATURE_TYPE.PLATFORM_1;
-
-        if (rotating)
-            return new PlatformBody(body, size, ResourceFactory.getInstance().getFeatureImage(FEATURE_TYPE.MOVING_PLATFORM_1), true, offsetX, offsetY);
-        else if (sliding)
-            return new PlatformBody(body, size, ResourceFactory.getInstance().getFeatureImage(FEATURE_TYPE.MOVING_PLATFORM_1), offsetX, offsetY, direction);
-        else
-            return new PlatformBody(body, size, ResourceFactory.getInstance().getFeatureImage(type),
-                    round ? ResourceFactory.getInstance().getImage(ResourceFactory.MASK,
-                            "roundplatformmask") : ResourceFactory.getInstance().getImage(ResourceFactory.MASK,
-                            "squareplatformmask"), false, 0, 0, AbstractMap.NO_DIRECTION);
-    }
-
-    public GameBody getRandomChasmBody(float x, float y, TextureAtlas.AtlasRegion indoor) {
-        BodyDef tileBodyDef = createStaticBodyDef(0);
-        tileBodyDef.position.x = x;
-        tileBodyDef.position.y = y;
-
-        // Defaults
-        float size = Config.TILE_SIZE_X;
-        float offsetX = 0;
-        float offsetY = 0;
-        float rotation = 0;
-        Texture chasmImage = ResourceFactory.getInstance().getTransparentTexture(Level.getInstance().getChasmImage());
-        TextureAtlas.AtlasRegion chasmMask = ResourceFactory.getInstance().getImage(ResourceFactory.MASK, "chasmmask");
-
-        float f = MathUtils.random();
-
-        if (f < .16f) {   // OFFSET LAVA I HULL
-            size = Config.TILE_SIZE_X * .5f;
-            offsetX = MathUtils.random(-size / 2, size / 2);
-            offsetY = MathUtils.random(-size / 2, size / 2);
-            rotation = MathUtils.random();
-        } else if (f < .32f) { // OFFSETT HULL
-            size = Config.TILE_SIZE_X * .5f;
-            offsetX = MathUtils.random(-size / 2, size / 2);
-            offsetY = MathUtils.random(-size / 2, size / 2);
-            rotation = MathUtils.random();
-            chasmImage = null;
-        } else if (f < .48f) { // LAVA
-            chasmMask = null;
-        } else if (f < .64f) { // HULL
-            chasmImage = null;
-            chasmMask = null;
-        } else if (f < .80f) { // MASKED HULL
-            size = Config.TILE_SIZE_X * .75f;
-            rotation = MathUtils.random();
-            chasmImage = null;
-        } else {  // MASKED LAVA
-            size = Config.TILE_SIZE_X * .75f;
-        }
-
-        createPlatformAttributes(createNonCenteredBoxShape(size, size, offsetX, offsetY));
-        Body body = createBody(tileBodyDef, platformFixture);
-        body.setLinearVelocity(0, 0);
-        return new ChasmBody(body, x, y, size, indoor, chasmImage, chasmMask, offsetX, offsetY, rotation);
-    }
-
     public FeatureBody getFeature(float x, float y, FEATURE_TYPE type) {
         TextureAtlas.AtlasRegion featureImage = ResourceFactory.getInstance().getFeatureImage(type);
 
         return new ObscuringFeatureBody(x, y, Config.TILE_SIZE_X, featureImage, MathUtils.random(.5f, 2f), MathUtils.random(360), true);
-    }
-
-
-    private ExitBody createAppropriateExitBody(Level.LEVEL_TYPE worldType, int type, FixtureDef fixtureDef, Body body) {
-        final float shaderRadius = fixtureDef.shape.getRadius() * Config.getDimensions().SCREEN_ON_WORLD_FACTOR * 2;
-
-        if (type == AbstractMap.ITEM_ENTRANCE_SURFACE) {
-            return new ExitBody(body, fixtureDef.shape.getRadius(), Level.LEVEL_TYPE.TOPDOWN,
-                    ResourceFactory.getInstance().getWorldTypeImage("exit_to_surface"),
-                    ShaderFactory.getInstance().getShader(RenderOperations.BACKGROUND_TYPE.BEACON, shaderRadius, shaderRadius),
-                    ResourceFactory.getInstance().getImage(ResourceFactory.MASK, "orb"));
-        } else
-            throw new RuntimeException("What are you trying to do!?");
     }
 
     public Array<Body> update() {
@@ -1246,18 +1082,8 @@ public class BodyFactory {
         for (BulletDef def : bulletsToCreate) {
             Body body = getBulletBody(def.getType(), def.getSourceX(), def.getSourceY(), def.getVelocityX(), def.getVelocityY(), def.isPlayerOwned());
             angle = MathUtils.radiansToDegrees * MathUtils.atan2(def.getVelocityY(), def.getVelocityX());
-
-            switch (def.getType()) {
-                case BOMB:
-                    new BombBody(body, bulletFixture.shape.getRadius(), def.getBulletImage(), angle, def.getDamage());
-                    break;
-                case GUN:
-                    new BulletBody(body, bulletFixture.shape.getRadius(), def.getBulletImage(), angle, def.getDamage());
-                    break;
-                case ROCKET:
-                    new RocketBody(body, Config.TILE_SIZE_X / 4f, Config.TILE_SIZE_X / 16f, def.getBulletImage(), angle, def.getDamage());
-                    break;
-            }
+            new BulletBody(body, bulletFixture.shape.getRadius(), def.getBulletImage(), angle, def.getDamage());
+            break;
         }
         bulletsToCreate.clear();
     }
@@ -1505,6 +1331,32 @@ public class BodyFactory {
         }
     }
 
+    public Body[] attachMeleeWeapons(MonsterPlayerBody owner, float length) {
+        if (length == 0) throw new RuntimeException("Length and links must be > 0");
+
+        final BodyDef bodyDef = createBodyDef(true, BodyDef.BodyType.KinematicBody, 0, 0, 0, 0, false);
+
+        final Body weaponBody = createBody(bodyDef);
+        final Body weaponBody2 = createBody(bodyDef);
+
+        meleeFixture.shape = createScytheShape(length, false);
+        meleeFixture.isSensor = true;
+        weaponBody.createFixture(meleeFixture);
+
+        meleeFixture.shape = createScytheShape(length, true);
+        meleeFixture.isSensor = true;
+        weaponBody2.createFixture(meleeFixture);
+
+        owner.addMeleeWeapons(weaponBody, weaponBody2);
+
+        return new Body[] { weaponBody, weaponBody2};
+    }
+
+    private Shape createScytheShape(float hx, boolean inverted) {
+        Shape crossShape = new PolygonShape();
+        ((PolygonShape) crossShape).setAsBox(hx / 2, hx / 8, new Vector2(inverted ? hx * 1.2f : -hx * 1.2f, hx * 1.6f), inverted ? MathUtils.degreesToRadians * -30 : MathUtils.degreesToRadians * 30);
+        return crossShape;
+    }
 /*
     public Vector2 getVector() {
         return vectorPool.obtain();

@@ -27,4 +27,10 @@ public abstract class AbstractDualTextureShader extends AbstractTextureShader {
         texture.dispose();
         texture2.dispose();
     }
+
+    public void bind(Texture texture, Texture texture2) {
+        this.texture = texture;
+        this.texture2 = texture2;
+        performTextureBindings();
+    }
 }

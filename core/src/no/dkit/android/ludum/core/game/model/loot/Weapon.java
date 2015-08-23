@@ -1,5 +1,6 @@
 package no.dkit.android.ludum.core.game.model.loot;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import no.dkit.android.ludum.core.XXXX;
@@ -21,9 +22,11 @@ public abstract class Weapon extends Loot {
     protected Integer speed;
     protected Integer rate;
 
+    protected TextureAtlas.AtlasRegion weaponImage;
+
     boolean randomFire = true;
 
-    GameBody owner;
+    protected GameBody owner;
 
     protected long lastFire1 = 0;
     protected long lastFire2 = 0;
@@ -85,9 +88,6 @@ public abstract class Weapon extends Loot {
         origin.set(position);
 
         prepareAngles(position, target);
-
-        if (playerOwner)
-            XXXX.updateWeaponButton(this);
     }
 
     public void prepareFire2(Vector2 position, Vector2 target) {
@@ -96,9 +96,6 @@ public abstract class Weapon extends Loot {
         origin.set(position);
 
         prepareAngles(position, target);
-
-        if (playerOwner)
-            XXXX.updateWeaponButton(this);
     }
 
     private void prepareAngles(Vector2 position, Vector2 target) {
@@ -126,9 +123,6 @@ public abstract class Weapon extends Loot {
 
         this.owner = owner;
         playerOwner = this.owner instanceof PlayerBody;
-
-        if (playerOwner)
-            XXXX.updateGameScreen();
     }
 
     @Override
@@ -180,4 +174,9 @@ public abstract class Weapon extends Loot {
     public void fire2() {
         fire1();
     }
+
+    public TextureAtlas.AtlasRegion getWeaponImage() {
+        return weaponImage;
+    }
+
 }

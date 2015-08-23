@@ -25,7 +25,7 @@ public class EffectFactory {
 
     private Array<ParticleEmitter> emitters;
 
-    public enum EFFECT_TYPE {BLOOD, DIRBLOOD, SMOKE, EXPLOSION, BIGEXPLOSION, SPARK, ACHIEVE, EYE}
+    public enum EFFECT_TYPE {BLOOD, DIRBLOOD, TRAIL, EXPLOSION, BIGEXPLOSION, SPARK, ACHIEVE, EYE}
 
     static EffectFactory instance = null;
     private static World world;
@@ -64,7 +64,7 @@ public class EffectFactory {
 
         particleEffects.put(EFFECT_TYPE.BLOOD, particleEffectLoader.load("effect/blood.txt"));
         particleEffects.put(EFFECT_TYPE.DIRBLOOD, particleEffectLoader.load("effect/dirblood.txt"));
-        particleEffects.put(EFFECT_TYPE.SMOKE, particleEffectLoader.load("effect/smoke.txt"));
+        particleEffects.put(EFFECT_TYPE.TRAIL, particleEffectLoader.load("effect/smoke.txt"));
         particleEffects.put(EFFECT_TYPE.EXPLOSION, particleEffectLoader.load("effect/explosion.txt"));
         particleEffects.put(EFFECT_TYPE.BIGEXPLOSION, particleEffectLoader.load("effect/bigexplosion.txt"));
         particleEffects.put(EFFECT_TYPE.SPARK, particleEffectLoader.load("effect/spark.txt"));
@@ -73,11 +73,12 @@ public class EffectFactory {
 
         particleLayers.put(EFFECT_TYPE.BLOOD, GameBody.DRAW_LAYER.BACK);
         particleLayers.put(EFFECT_TYPE.DIRBLOOD, GameBody.DRAW_LAYER.BACK);
-        particleLayers.put(EFFECT_TYPE.SMOKE, GameBody.DRAW_LAYER.BACK);
+        particleLayers.put(EFFECT_TYPE.TRAIL, GameBody.DRAW_LAYER.BACK);
+
         particleLayers.put(EFFECT_TYPE.EYE, GameBody.DRAW_LAYER.FRONT);
-        particleLayers.put(EFFECT_TYPE.EXPLOSION, GameBody.DRAW_LAYER.FRONT);
+        particleLayers.put(EFFECT_TYPE.EXPLOSION, GameBody.DRAW_LAYER.BACK);
         particleLayers.put(EFFECT_TYPE.BIGEXPLOSION, GameBody.DRAW_LAYER.FRONT);
-        particleLayers.put(EFFECT_TYPE.SPARK, GameBody.DRAW_LAYER.BACK);
+        particleLayers.put(EFFECT_TYPE.SPARK, GameBody.DRAW_LAYER.FRONT);
         particleLayers.put(EFFECT_TYPE.ACHIEVE, GameBody.DRAW_LAYER.FRONT);
 
         Set<EFFECT_TYPE> effectTypes = particleEffects.keySet();
@@ -85,7 +86,7 @@ public class EffectFactory {
         for (EFFECT_TYPE effect_type : effectTypes) {
             final ParticleEffect particleEffect = particleEffects.get(effect_type);
 
-            if (effect_type == EFFECT_TYPE.BLOOD || effect_type == EFFECT_TYPE.DIRBLOOD || effect_type == EFFECT_TYPE.SMOKE)
+            if (effect_type == EFFECT_TYPE.BLOOD || effect_type == EFFECT_TYPE.DIRBLOOD || effect_type == EFFECT_TYPE.TRAIL)
                 particleEffect.scaleEffect(Config.getDimensions().WORLD_ON_SCREEN_FACTOR);
             else
                 particleEffect.scaleEffect(Config.getDimensions().WORLD_ON_SCREEN_FACTOR);
@@ -112,7 +113,7 @@ public class EffectFactory {
         if(type == GameBody.BODY_TYPE.HUMANOID)
             return addEffect(position, EFFECT_TYPE.DIRBLOOD, null); // RED
         else
-            return addEffect(position, EFFECT_TYPE.SPARK);
+            return addEffect(position, EFFECT_TYPE.EXPLOSION);
     }
 
     public ParticleEmitter addDieEffect(Vector2 position, GameBody.BODY_TYPE type) {

@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.JointEdge;
 import com.badlogic.gdx.utils.Array;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
@@ -25,9 +24,12 @@ import no.dkit.android.ludum.core.game.model.body.scenery.BlockBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.FloorBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringFeatureBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
-import no.dkit.android.ludum.core.game.model.body.weapon.LaserBody;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.model.world.map.AbstractMap;
+import no.dkit.android.ludum.core.shaders.fullscreen.Beacon2Shader;
+import no.dkit.android.ludum.core.shaders.fullscreen.FireShader;
+import no.dkit.android.ludum.core.shaders.fullscreen.ShiningStarScrollShader;
+import no.dkit.android.ludum.core.shaders.texture.VignetteShader;
 
 import java.util.Random;
 
@@ -44,8 +46,6 @@ public class GameView {
     TextureRegion crosshairImage;
     TextureRegion targetImage;
 
-    Array<LaserBody> lasers;
-
     Decals decals;
 
     Camera camera;
@@ -56,6 +56,8 @@ public class GameView {
     private Matrix4 prevMatrix;
     private float factorX;
     private float factorY;
+
+    //Beacon2Shader shader = new Beacon2Shader();
 
     public GameView(GameModel gameModel) {
         this.gameModel = gameModel;
@@ -83,8 +85,6 @@ public class GameView {
         shapeRenderer = new ShapeRenderer(20); // Max 10 vertixes
         shapeRenderer.setProjectionMatrix(camera.combined);
 
-        lasers = gameModel.getLasers();
-
         crosshairImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "crosshair");
         targetImage = ResourceFactory.getInstance().getImage(ResourceFactory.UI, "target");
 
@@ -93,6 +93,8 @@ public class GameView {
 
         factorX = (float) Config.getDimensions().WORLD_WIDTH / (float) Level.getInstance().getMap().getWidth();
         factorY = (float) Config.getDimensions().WORLD_HEIGHT / (float) Level.getInstance().getMap().getHeight();
+
+        //shader.init(Config.getDimensions().SCREEN_SHORTEST, Config.getDimensions().SCREEN_SHORTEST, true);
     }
 
     public void update() {
@@ -102,7 +104,6 @@ public class GameView {
         Gdx.graphics.getGL20().glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         drawImages();
-        drawShapes();
 
         if (Config.DEBUGTEXT)
             startMeasure();
@@ -110,20 +111,6 @@ public class GameView {
                 gameModel.getWorldWidth() / 2, gameModel.getWorldHeight() / 2, gameModel.getTileMap().getSizeX(), gameModel.getTileMap().getSizeX());
         if (Config.DEBUGTEXT)
             endMeasure("Lights");
-
-        if (Config.DEBUGTEXT)
-            startMeasure();
-        spriteBatch.begin();
-        for (LaserBody laserBody : lasers) {
-            laserBody.draw(spriteBatch, ResourceFactory.getInstance().getItemImage("laserglow"),
-                    ResourceFactory.getInstance().getItemImage("laserbeam"),
-                    ResourceFactory.getInstance().getItemImage("laserend"),
-                    ResourceFactory.getInstance().getItemImage("laserendglow")
-            );
-        }
-        spriteBatch.end();
-        if (Config.DEBUGTEXT)
-            endMeasure("Lasers");
 
         spriteBatch.begin();
         drawCrosshairs();
@@ -142,22 +129,15 @@ public class GameView {
 
         globalRotation += 1f;
         if (globalRotation > 360) globalRotation = 0;
-    }
 
-    private void drawShapes() {
-        Array<JointEdge> jointList = gameModel.getPlayerBody().getBody().getJointList();
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.translate(-camera.position.x + Config.getDimensions().WORLD_WIDTH / 2f, -camera.position.y + Config.getDimensions().WORLD_HEIGHT / 2f, 0);
-        for (JointEdge jointEdge : jointList) {
-            shapeRenderer.line(
-                    jointEdge.joint.getAnchorA().x,
-                    jointEdge.joint.getAnchorA().y,
-                    jointEdge.joint.getAnchorB().x,
-                    jointEdge.joint.getAnchorB().y);
-        }
-        shapeRenderer.translate(camera.position.x - Config.getDimensions().WORLD_WIDTH / 2f, camera.position.y - Config.getDimensions().WORLD_HEIGHT / 2f, 0);
-        shapeRenderer.end();
+/*
+        TODO: Enable this again?
+        shader.update();
+        shader.render(spriteBatch,
+                camera.position.x - Config.getDimensions().WORLD_WIDTH / 2f,
+                camera.position.y - Config.getDimensions().WORLD_HEIGHT / 2f,
+                Config.getDimensions().WORLD_WIDTH, Config.getDimensions().WORLD_HEIGHT);
+*/
     }
 
     private void drawText() {
@@ -249,23 +229,11 @@ public class GameView {
 
         spriteBatch.end();
 
-        decals.record();
-        spriteBatch.begin();
-        spriteBatch.enableBlending();
-        scaleToDecals();
-        EffectFactory.getInstance().drawEffects(spriteBatch, GameBody.DRAW_LAYER.BACK);
-        scaleBack();
-        spriteBatch.end();
-        decals.end();
-
-        if (Config.DEBUGTEXT)
-            endMeasure("Draw Effects on BACK layer");
+        recordDecals();
 
         spriteBatch.begin();
         spriteBatch.enableBlending();
-
         decals.render(spriteBatch, camera.position.x, camera.position.y, gameModel.translateVector.x, gameModel.translateVector.y);
-
         spriteBatch.end();
 
         spriteBatch.begin();
@@ -276,6 +244,17 @@ public class GameView {
         spriteBatch.end();
 
         spriteBatch.begin();
+    }
+
+    private void recordDecals() {
+        decals.record();
+        spriteBatch.begin();
+        spriteBatch.enableBlending();
+        scaleToDecals();
+        EffectFactory.getInstance().drawEffects(spriteBatch, GameBody.DRAW_LAYER.BACK);
+        scaleBack();
+        spriteBatch.end();
+        decals.end();
     }
 
     private void scaleBack() {

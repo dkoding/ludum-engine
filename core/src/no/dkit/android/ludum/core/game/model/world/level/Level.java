@@ -91,16 +91,6 @@ public abstract class Level {
         map.createStandardFeatures(level, levelType);
     }
 
-    public Loot.LOOT_TYPE getWeaponFor(BodyFactory.ENEMY_IMAGE enemy) {
-        switch (enemy) {
-            case SHIP_1:
-                return Loot.LOOT_TYPE.LASER;
-            case SHIP_2:
-                return Loot.LOOT_TYPE.ROCKET;
-        }
-        throw new RuntimeException("No weapon assigned to enemy " + enemy);
-    }
-
     public Loot.LOOT_TYPE getWeaponFor(BodyFactory.ENEMY_ANIM enemy) {
         switch (enemy) {
             case FEMALESOLDIER:
@@ -195,18 +185,13 @@ public abstract class Level {
             case TOPDOWN: // First weapon is default weapon
                 weaponTypes.addAll(
                         Arrays.asList(
-                                Loot.LOOT_TYPE.GUN,
-                                Loot.LOOT_TYPE.BOMB,
-                                Loot.LOOT_TYPE.FIREBALL,
-                                Loot.LOOT_TYPE.FLAME_THROWER));
+                                Loot.LOOT_TYPE.GUN
+                        ));
                 break;
         }
 
         lootTypes.addAll(
                 Arrays.asList(
-                        Loot.LOOT_TYPE.MEDPACK,
-                        Loot.LOOT_TYPE.TREASURE,
-                        Loot.LOOT_TYPE.ARMOR,
                         Loot.LOOT_TYPE.ORB
                 )
         );

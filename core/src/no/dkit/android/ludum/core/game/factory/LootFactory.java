@@ -1,15 +1,10 @@
 package no.dkit.android.ludum.core.game.factory;
 
-import no.dkit.android.ludum.core.game.model.loot.Armor;
+import no.dkit.android.ludum.core.game.model.body.weapon.MeleeWeapon;
 import no.dkit.android.ludum.core.game.model.loot.Bomb;
-import no.dkit.android.ludum.core.game.model.loot.Fireball;
 import no.dkit.android.ludum.core.game.model.loot.Gun;
-import no.dkit.android.ludum.core.game.model.loot.Laser;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
-import no.dkit.android.ludum.core.game.model.loot.Medpack;
 import no.dkit.android.ludum.core.game.model.loot.Orb;
-import no.dkit.android.ludum.core.game.model.loot.Rocket;
-import no.dkit.android.ludum.core.game.model.loot.Treasure;
 import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
@@ -31,16 +26,9 @@ public class LootFactory {
 
     private LootFactory() {
         weapons.add(Loot.LOOT_TYPE.BOMB);
-        weapons.add(Loot.LOOT_TYPE.FIREBALL);
-        weapons.add(Loot.LOOT_TYPE.FLAME_THROWER);
         weapons.add(Loot.LOOT_TYPE.GUN);
-        weapons.add(Loot.LOOT_TYPE.LASER);
-        weapons.add(Loot.LOOT_TYPE.ROCKET);
 
         loot.addAll(weapons);
-        loot.add(Loot.LOOT_TYPE.TREASURE);
-        loot.add(Loot.LOOT_TYPE.ARMOR);
-        loot.add(Loot.LOOT_TYPE.MEDPACK);
         loot.add(Loot.LOOT_TYPE.ORB);
     }
 
@@ -50,12 +38,6 @@ public class LootFactory {
 
     public Loot getLoot(Loot.LOOT_TYPE type) {
         switch (type) {
-            case TREASURE:
-                return new Treasure();
-            case ARMOR:
-                return new Armor();
-            case MEDPACK:
-                return new Medpack();
             case ORB:
                 return new Orb();
             default:
@@ -67,14 +49,10 @@ public class LootFactory {
         switch (type) {
             case BOMB:
                 return new Bomb();
-            case FIREBALL:
-                return new Fireball();
             case GUN:
                 return new Gun();
-            case LASER:
-                return new Laser();
-            case ROCKET:
-                return new Rocket();
+            case MELEE:
+                return new MeleeWeapon();
             default:
                 throw new RuntimeException("DERP..." + type);
         }

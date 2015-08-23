@@ -6,8 +6,8 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.physics.box2d.Body;
 import no.dkit.android.ludum.core.game.Config;
-import no.dkit.android.ludum.core.game.controller.GameScreen;
 import no.dkit.android.ludum.core.game.controller.LoadingScreen;
 import no.dkit.android.ludum.core.game.controller.MenuScreen;
 import no.dkit.android.ludum.core.game.controller.SplashScreen;
@@ -20,16 +20,15 @@ import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.ShaderFactory;
 import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.factory.TextFactory;
-import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.transition.DoneCallback;
 import no.dkit.android.ludum.core.game.transition.TransitionScreen;
+import no.dkit.android.ludum.core.game.view.TweenBodyAccessor;
 import no.dkit.android.ludum.core.game.view.TweenImage;
 import no.dkit.android.ludum.core.game.view.TweenImageAccessor;
 
 public class XXXX extends ApplicationAdapter {
     private static boolean isChanging = false;
     private static Game game;
-    private static Screen existingGameScreen;
 
     public static Config.PERFORMANCE performance;
 
@@ -43,22 +42,12 @@ public class XXXX extends ApplicationAdapter {
         return game;
     }
 
-    public static void updateGameScreen() {
-        if (game.getScreen() instanceof GameScreen) // Safeguard
-            ((GameScreen) game.getScreen()).update();
-    }
-
-    public static void updateWeaponButton(Weapon weapon) {
-        if (game.getScreen() instanceof GameScreen) // Safeguard
-            ((GameScreen) game.getScreen()).updateWeaponButton(weapon);
-    }
-
     public static void setScreen(Screen screen) {
         game.setScreen(screen);
         isChanging = false;
     }
 
-    public enum SCREEN {SPLASH, STARTMENU, GAME, WIN_LEVEL, UPGRADE, AFTER_UPGRADE, WIN_GAME, HELP}
+    public enum SCREEN {SPLASH, STARTMENU, GAME, WIN_LEVEL, WIN_GAME, HELP}
 
     public enum AIM_MODE {DIRECTION, FOCUSED}
 
@@ -81,6 +70,7 @@ public class XXXX extends ApplicationAdapter {
     private void setupTweener() {
         tweener = new TweenManager();
         Tween.registerAccessor(TweenImage.class, new TweenImageAccessor());
+        Tween.registerAccessor(Body.class, new TweenBodyAccessor());
     }
 
     public static TweenManager getTweener() {
@@ -120,8 +110,6 @@ public class XXXX extends ApplicationAdapter {
 
         if (to.equals(SCREEN.STARTMENU)) {
             newScreen = new MenuScreen();
-        } else if (to.equals(SCREEN.AFTER_UPGRADE)) {
-            newScreen = existingGameScreen;
         } else if (to.equals(SCREEN.STARTMENU)) {
             newScreen = new MenuScreen();
         }
@@ -129,7 +117,6 @@ public class XXXX extends ApplicationAdapter {
         game.setScreen(new TransitionScreen(game, oldScreen, newScreen, new DoneCallback() {
             public void done(Screen oldScreen, Screen newScreen) {
                 isChanging = false;
-                XXXX.updateGameScreen();
             }
         }));
     }
@@ -143,7 +130,6 @@ public class XXXX extends ApplicationAdapter {
             @Override
             public void done(Screen oldScreen, Screen newScreen) {
                 isChanging = false;
-                XXXX.updateGameScreen();
             }
         }));
     }
