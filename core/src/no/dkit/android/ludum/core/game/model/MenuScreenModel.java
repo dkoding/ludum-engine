@@ -192,7 +192,7 @@ public class MenuScreenModel {
     }
 
     private String getLevelLabel() {
-        return "Level " + LevelFactory.level + ": " + (XXXX.cleared[LevelFactory.level-1] ? "CLEARED!" : "MORE FOOD HERE!");
+        return "Level " + LevelFactory.level + ": " + (XXXX.cleared[LevelFactory.level-1] ? "CLEARED!" : "KILL ALL HUMANS!");
     }
 
     private void updateMapImage() {

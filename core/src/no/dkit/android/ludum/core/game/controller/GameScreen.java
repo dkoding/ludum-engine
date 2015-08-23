@@ -138,9 +138,11 @@ public class GameScreen implements Screen, InputProcessor {
         scoreWindow.row();
         scoreWindow.add(humanLabel).width(Config.getDimensions().SCREEN_WIDTH / 10);
         scoreWindow.add(humanImage).size(Config.getDimensions().SCREEN_WIDTH / 20).center();
+/*
         scoreWindow.row();
         scoreWindow.add(fpsLabel).width(Config.getDimensions().SCREEN_HEIGHT / 20);
         scoreWindow.add(fps).width(Config.getDimensions().SCREEN_WIDTH / 10);
+*/
         scoreWindow.pack();
 
         scoreWindow.setPosition(Config.getDimensions().SCREEN_WIDTH - scoreWindow.getWidth(), Config.getDimensions().SCREEN_HEIGHT - scoreWindow.getHeight());
