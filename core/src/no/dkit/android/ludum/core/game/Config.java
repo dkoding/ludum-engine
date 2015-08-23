@@ -3,8 +3,8 @@ package no.dkit.android.ludum.core.game;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 public class Config {
-    public static final int MAX_LEVEL = 10;
-    public static boolean DEBUG = true;
+    public static final int MAX_LEVEL = 1;
+    public static boolean DEBUG = false;
     public static final float DEBUG_SCALE = 1f;
     public static boolean DEBUGTEXT = false;
 
@@ -34,8 +34,8 @@ public class Config {
     public static final int NUM_PARTICLES = 50;
     public static final float ENEMY_CHANCE = .1f;
 
-    public static final int PLAYER_START_HEALTH = 5;
-    public static final int PLAYER_START_ARMOR = 5;
+    public static final int PLAYER_START_HEALTH = 25;
+    public static final int PLAYER_START_ARMOR = 25;
     public static final int PLAYER_START_ORBS = 20;
     public static final int PLAYER_START_KEYS = 3;
     public static final int PLAYER_START_CREDITS = 200;
@@ -62,7 +62,7 @@ public class Config {
     public static final float CANNON_CHANCE = .2f;
     public static final float BULLET_RATE_LOW = .1f;
     public static final float BULLET_RATE_MEDIUM = .2f;
-    public static final float BULLET_RATE_HIGH = .1f;
+    public static final float BULLET_RATE_HIGH = .02f;
     public static final int NUM_STARS = 25;
     public static final long RANDOM_SEED = 666;
     public static final int MAX_KEYS = 10;

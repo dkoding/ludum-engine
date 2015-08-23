@@ -8,9 +8,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.Filter;
 import no.dkit.android.ludum.core.game.Config;
-import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.SoundFactory;
-import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.model.body.DirectionalGameBody;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.agent.PlayerBody;
@@ -100,7 +98,7 @@ public class DoorBody extends DirectionalGameBody {
         filter.maskBits = Config.CATEGORY_PLAYER;
         body.getFixtureList().get(0).setSensor(true);
         body.getFixtureList().get(0).setFilterData(filter);
-        SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.DOOROPEN);
+        SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.DOOR);
         open = true;
     }
 

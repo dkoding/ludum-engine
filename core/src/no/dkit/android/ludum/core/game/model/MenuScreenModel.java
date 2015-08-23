@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -29,7 +27,6 @@ import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.shaders.AbstractShader;
 import no.dkit.android.ludum.core.shaders.RenderOperations;
-import no.dkit.android.ludum.core.shaders.fullscreen.SimpleCloudShader;
 import no.dkit.android.ludum.core.shaders.fullscreen.WaterscapeShader;
 
 public class MenuScreenModel {
@@ -132,7 +129,7 @@ public class MenuScreenModel {
             public void clicked(InputEvent event, float x, float y) {
                 Config.sound = !Config.sound;
                 if (Config.sound)
-                    SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.DOOROPEN);
+                    SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.DOOR);
                 toggleSound.setChecked(Config.sound);
             }
         });

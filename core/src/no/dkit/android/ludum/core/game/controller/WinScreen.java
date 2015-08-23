@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
+import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.view.TweenImage;
 import no.dkit.android.ludum.core.game.view.TweenImageAccessor;
 import no.dkit.android.ludum.core.shaders.AbstractShader;
@@ -51,6 +52,8 @@ public class WinScreen implements Screen {
 
         background = new FireShader();
         ((AbstractShader) background).init(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        SoundFactory.getInstance().playMusic(SoundFactory.MUSIC_TYPE.WIN);
     }
 
     public void render(float delta) {

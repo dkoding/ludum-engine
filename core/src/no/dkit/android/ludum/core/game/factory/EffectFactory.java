@@ -110,10 +110,15 @@ public class EffectFactory {
     }
 
     public ParticleEmitter addHitEffect(Vector2 position, GameBody.BODY_TYPE type) {
-        if(type == GameBody.BODY_TYPE.HUMANOID)
+        if(type == GameBody.BODY_TYPE.HUMANOID) {
+            SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.BLOOD);
             return addEffect(position, EFFECT_TYPE.DIRBLOOD, null); // RED
-        else
+        }
+        else {
+            SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.EXPLOSION);
+            SoundFactory.getInstance().playSound(SoundFactory.SOUND_TYPE.DIE);
             return addEffect(position, EFFECT_TYPE.EXPLOSION);
+        }
     }
 
     public ParticleEmitter addDieEffect(Vector2 position, GameBody.BODY_TYPE type) {

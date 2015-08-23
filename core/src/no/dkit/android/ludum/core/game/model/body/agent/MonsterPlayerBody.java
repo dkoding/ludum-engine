@@ -130,26 +130,17 @@ public class MonsterPlayerBody extends PlayerBody {
 
         weaponBody.enable();
         weaponBody2.enable();
+    }
 
-/*
-        if (goingLeft) {
-            enable(left);
-            disable(right);
-        } else {
-            disable(left);
-            enable(right);
-        }
-*/
+    public void finishedAttack() {
+        tweening = true;
+
+        weaponBody.disable();
+        weaponBody2.disable();
     }
 
     public void disableMelee() {
         tweening = false;
-
-        if (Config.DEBUGTEXT)
-            System.out.println("DISABLING MELEE!");
-
-        weaponBody.disable();
-        weaponBody2.disable();
     }
 
     public void addMeleeWeapons(MeleeBody weapon, MeleeBody weapon2) {

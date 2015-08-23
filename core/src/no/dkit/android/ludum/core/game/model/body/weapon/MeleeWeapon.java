@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
+import no.dkit.android.ludum.core.game.factory.SoundFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
 import no.dkit.android.ludum.core.game.model.body.agent.MonsterPlayerBody;
@@ -38,31 +39,22 @@ public class MeleeWeapon extends Weapon {
     @Override
     public void fire1() {
         int rotation = 120;
-        int start = (int)GameModel.getPlayer().getAngle()+ 90;
+        int start = (int) GameModel.getPlayer().getAngle() + 90;
 
         Timeline.createSequence()
-                .beginSequence()
-                .setCallback(new TweenCallback() {
-                    @Override
-                    public void onEvent(int type, BaseTween<?> source) {
-                        if (type == TweenCallback.COMPLETE) {
-                            ((MonsterPlayerBody) owner).disableMelee();
-                        } else if (type == TweenCallback.START) {
-                            ((MonsterPlayerBody) owner).enableMelee();
-                        }
-                    }
-                })
-                .setCallbackTriggers(TweenCallback.COMPLETE | TweenCallback.START)
-                .push(Tween.to(weaponBodies[0], TweenBodyAccessor.ROTATION_RAD, 1f).target((start + rotation) * MathUtils.degreesToRadians).ease(Bounce.OUT))
-                .push(Tween.to(weaponBodies[0], TweenBodyAccessor.ROTATION_RAD, .7f).target(start * MathUtils.degreesToRadians).ease(Expo.IN))
-                .end()
+                .push(Tween.to(weaponBodies[0], TweenBodyAccessor.ROTATION_RAD, .3f).target((start + rotation) * MathUtils.degreesToRadians).ease(Bounce.OUT)
+                                .setCallbackTriggers(TweenCallback.END | TweenCallback.START)
+                                .setCallback(callback)
+                )
+                .push(Tween.to(weaponBodies[0], TweenBodyAccessor.ROTATION_RAD, .7f).target(start * MathUtils.degreesToRadians).ease(Expo.IN)
+                                .setCallbackTriggers(TweenCallback.COMPLETE)
+                                .setCallback(callback)
+                )
                 .start(XXXX.getTweener());
 
         Timeline.createSequence()
-                .beginSequence()
-                .push(Tween.to(weaponBodies[1], TweenBodyAccessor.ROTATION_RAD, 1f).target(((start - rotation)) * MathUtils.degreesToRadians).ease(Bounce.OUT))
+                .push(Tween.to(weaponBodies[1], TweenBodyAccessor.ROTATION_RAD, .3f).target(((start - rotation)) * MathUtils.degreesToRadians).ease(Bounce.OUT))
                 .push(Tween.to(weaponBodies[1], TweenBodyAccessor.ROTATION_RAD, .7f).target(start * MathUtils.degreesToRadians).ease(Expo.IN))
-                .end()
                 .start(XXXX.getTweener());
     }
 
@@ -74,4 +66,20 @@ public class MeleeWeapon extends Weapon {
             weaponBodies = BodyFactory.getInstance().attachMeleeWeapons((MonsterPlayerBody) owner, Config.TILE_SIZE_X / 2);
         }
     }
+
+    final TweenCallback callback = new TweenCallback() {
+        @Override
+        public void onEvent(int type, BaseTween<?> source) {
+            if (type == TweenCallback.COMPLETE) {
+                System.out.println("COMPLETE");
+                ((MonsterPlayerBody) owner).disableMelee();
+            } else if (type == TweenCallback.START) {
+                System.out.println("START");
+                ((MonsterPlayerBody) owner).enableMelee();
+            } else if (type == TweenCallback.END) {
+                System.out.println("END");
+                ((MonsterPlayerBody) owner).finishedAttack();
+            }
+        }
+    };
 }

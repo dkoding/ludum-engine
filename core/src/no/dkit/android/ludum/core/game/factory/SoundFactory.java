@@ -16,21 +16,25 @@ import java.util.Random;
 
 public class SoundFactory implements AssetErrorListener {
     static final String musicFormat = ".mp3";
-    static final String soundFormat = ".mp3";
+    static final String soundFormat = ".wav";
 
     static final String soundpath = "sound/";
     static final String musicpath = "music/";
 
     static SoundFactory soundFactory;
 
+    private long lastPlayTime;
+    private Sound currentSound;
+    private Sound newSound;
+
     private Music music;
 
     public enum SOUND_TYPE {
-        DOOROPEN
+        BLOOD, DIE, EXPLOSION, SHOOT, CHOP, DOOR
     }
 
     public enum MUSIC_TYPE {
-        MENU, GAME
+        MENU, WIN, GAME
     }
 
     private static final Map<SOUND_TYPE, String> soundFileNames;
@@ -40,11 +44,17 @@ public class SoundFactory implements AssetErrorListener {
 
     static {
         soundFileNames = new HashMap<SOUND_TYPE, String>();
-        soundFileNames.put(SOUND_TYPE.DOOROPEN, "dooropen");
+        soundFileNames.put(SOUND_TYPE.DOOR, "door");
+        soundFileNames.put(SOUND_TYPE.BLOOD, "blood");
+        soundFileNames.put(SOUND_TYPE.DIE, "die");
+        soundFileNames.put(SOUND_TYPE.EXPLOSION, "explosion");
+        soundFileNames.put(SOUND_TYPE.SHOOT, "shoot");
+        soundFileNames.put(SOUND_TYPE.CHOP, "chop");
 
         musicFileNames = new HashMap<MUSIC_TYPE, String>();
         musicFileNames.put(MUSIC_TYPE.MENU, "menu");
         musicFileNames.put(MUSIC_TYPE.GAME, "game");
+        musicFileNames.put(MUSIC_TYPE.WIN, "win");
     }
 
     public static SoundFactory getInstance() {
@@ -76,7 +86,10 @@ public class SoundFactory implements AssetErrorListener {
     }
 
     public void playWeaponLaunchSound(Loot.LOOT_TYPE type, float pitch) {
-
+        if (type == Loot.LOOT_TYPE.MELEE)
+            SoundFactory.getInstance().playSound(SOUND_TYPE.CHOP);
+        else
+            SoundFactory.getInstance().playSound(SOUND_TYPE.SHOOT);
     }
 
     public void playHitSound(GameBody.BODY_TYPE type) {
@@ -109,23 +122,19 @@ public class SoundFactory implements AssetErrorListener {
         music = manager.get(musicpath + musicFileNames.get(type) + musicFormat, Music.class);
 
         music.setPosition(0);
-        music.setLooping(true);
+        music.setLooping(type != MUSIC_TYPE.WIN);
 
         music.play();
     }
 
-    /**
-     * Plays the sound. If the sound is already playing, it will be played again, concurrently.
-     *
-     * @param pitch the pitch multiplier, 1 == default, >1 == faster, <1 == slower, the value has to be between 0.5 and 2.0
-     * @return the id of the sound instance if successful, or -1 on failure.
-     */
-    public void playSound(SOUND_TYPE type, float pitch) {
-        manager.get(soundpath + soundFileNames.get(type) + soundFormat, Sound.class).play(1f, pitch, 0f);
-    }
-
     public void playSound(SOUND_TYPE type) {
-        manager.get(soundpath + soundFileNames.get(type) + soundFormat, Sound.class).play();
+        newSound = manager.get(soundpath + soundFileNames.get(type) + soundFormat, Sound.class);
+        if (newSound == currentSound && System.currentTimeMillis() - lastPlayTime <= 100)
+            return; // Prevent same sounds playing
+        lastPlayTime = System.currentTimeMillis();
+        newSound.play(1f, MathUtils.random(.75f, 1.25f), 0f);
+        currentSound = newSound;
+
     }
 
     public void stopMusic() {
