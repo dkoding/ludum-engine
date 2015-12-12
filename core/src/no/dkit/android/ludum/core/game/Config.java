@@ -8,7 +8,7 @@ public class Config {
     public static final float DEBUG_SCALE = 2f;
     public static boolean DEBUGTEXT = false;
 
-    public static final boolean SANDBOX = false;
+    public static final boolean SANDBOX = true;
     public static final Level.LEVEL_TYPE SANDBOX_TYPE = Level.LEVEL_TYPE.TOPDOWN;
 
     public static final float AGENT_SPOT_CHANCE = .9f;
