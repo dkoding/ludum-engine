@@ -184,13 +184,7 @@ public class AgentBody extends PoolableGameBody {
     }
 
     protected void determineAngle() {
-        if (unconscious) {
-            angle = body.getAngle() * MathUtils.radiansToDegrees;
-        } else if (speed >= Config.EPSILON) {
-            angle = MathUtils.atan2(body.getLinearVelocity().y, body.getLinearVelocity().x);
-            body.setTransform(body.getPosition().x, body.getPosition().y, angle);
-            angle *= MathUtils.radiansToDegrees;
-        }
+        angle = body.getAngle() * MathUtils.radiansToDegrees;
     }
 
     private void accelerate(Vector2 linearVelocity) {

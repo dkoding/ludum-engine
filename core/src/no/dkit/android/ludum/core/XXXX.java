@@ -10,6 +10,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import no.dkit.android.ludum.core.game.Config;
+import no.dkit.android.ludum.core.game.controller.GameScreen;
 import no.dkit.android.ludum.core.game.controller.LoadingScreen;
 import no.dkit.android.ludum.core.game.controller.MenuScreen;
 import no.dkit.android.ludum.core.game.controller.SplashScreen;
@@ -136,7 +137,7 @@ public class XXXX extends ApplicationAdapter {
         final Screen oldScreen = game.getScreen();
         Screen newScreen = null;
 
-        if (to.equals(SCREEN.STARTMENU)) {
+        if (to.equals(SCREEN.GAME)) {
             newScreen = new MenuScreen();
         } else if (to.equals(SCREEN.STARTMENU)) {
             newScreen = new MenuScreen();

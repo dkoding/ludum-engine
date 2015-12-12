@@ -2,9 +2,9 @@ package no.dkit.android.ludum.core.game.model.world.level;
 
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.factory.BodyFactory;
-import no.dkit.android.ludum.core.game.factory.LootFactory;
 import no.dkit.android.ludum.core.game.model.GameModel;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
+import no.dkit.android.ludum.core.game.model.world.map.MazeMap;
 import no.dkit.android.ludum.core.game.model.world.map.SandboxMap;
 
 import java.util.List;
@@ -13,7 +13,7 @@ public class SandboxLevel extends Level {
 
     public SandboxLevel() {
         super(Config.SANDBOX_TYPE, 1, false, false);
-        this.map = new SandboxMap().createMap(level, inside, platforms);
+        this.map = new MazeMap().createMap(level, inside, platforms);
         setStartPositionTo(map.getWidth() / 2f, map.getHeight() / 2f);
 
         getDefaultLootFor(worldType);
@@ -34,9 +34,6 @@ public class SandboxLevel extends Level {
     public void onStart() {
         final List<Loot.LOOT_TYPE> weaponTypes = getWeaponTypes();
 
-        for (Loot.LOOT_TYPE weaponType : weaponTypes) {
-            givePlayerWeapon(LootFactory.getInstance().getWeapon(weaponType));
-        }
 /*
         TriggerBody trigger = BodyFactory.getInstance().createTrigger(2, 2);
         trigger.setTrigger(new QuestTrigger(new KillBlobQuest(worldType)));

@@ -430,6 +430,7 @@ public abstract class Level {
     }
 
     private boolean defaultVictoryCondition() {
-        return GameModel.getInstance().getTotalNumEnemies() <= 0;
+        return false;
+        //return GameModel.getInstance().getTotalNumEnemies() <= 0;
     }
 }

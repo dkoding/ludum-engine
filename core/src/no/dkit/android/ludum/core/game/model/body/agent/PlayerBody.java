@@ -12,7 +12,6 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntMap;
 import no.dkit.android.ludum.core.XXXX;
 import no.dkit.android.ludum.core.game.Config;
 import no.dkit.android.ludum.core.game.ai.mind.Mind;
@@ -23,6 +22,7 @@ import no.dkit.android.ludum.core.game.factory.TextFactory;
 import no.dkit.android.ludum.core.game.factory.TextItem;
 import no.dkit.android.ludum.core.game.model.PlayerData;
 import no.dkit.android.ludum.core.game.model.body.GameBody;
+import no.dkit.android.ludum.core.game.model.world.map.dungeon.Direction;
 import no.dkit.android.ludum.core.game.quest.GameEvent;
 import no.dkit.android.ludum.core.game.quest.GameEventListener;
 
@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerBody extends AgentBody implements GameEventListener {
-    public enum CONTROL_MODE {NEWTONIAN, DIRECT, VEHICLE}
+    public enum CONTROL_MODE {NEWTONIAN, DIRECT, VEHICLE, TWOBUTTON}
 
     CONTROL_MODE controlMode = CONTROL_MODE.NEWTONIAN;
 
@@ -341,6 +341,8 @@ public class PlayerBody extends AgentBody implements GameEventListener {
             parseVehicleControllerInput();
         else if (controlMode == CONTROL_MODE.NEWTONIAN)
             parseNewtonianControllerInput();
+        else if (controlMode == CONTROL_MODE.TWOBUTTON)
+            parseTwobuttonControllerInput();
     }
 
     private void parseDirectControllerInput() {
@@ -401,7 +403,29 @@ public class PlayerBody extends AgentBody implements GameEventListener {
             }
         }
 
-        body.setAngularDamping(3f);
+        getBody().setLinearVelocity(speedVector.x, speedVector.y);
+        body.setAngularDamping(0f);
+        body.setLinearDamping(.2f);
+    }
+
+    private void parseTwobuttonControllerInput() {
+        Integer inputKey;
+
+        for (Integer integer : input.keySet()) {
+            inputKey = input.get(integer);
+
+            if (inputKey != 0) {
+                if (integer == Input.Keys.A)
+                    getBody().applyAngularImpulse(.0005f, true);
+                if (integer == Input.Keys.D)
+                    getBody().applyAngularImpulse(-.0005f, true);
+            }
+        }
+
+        speedVector.set(.3f, 0).rotate(getBody().getAngle() * MathUtils.radiansToDegrees);
+        body.applyForceToCenter(speedVector, true);
+
+        body.setAngularDamping(2f);
         body.setLinearDamping(.2f);
     }
 

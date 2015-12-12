@@ -21,7 +21,6 @@ import no.dkit.android.ludum.core.game.factory.BodyFactory;
 import no.dkit.android.ludum.core.game.factory.EffectFactory;
 import no.dkit.android.ludum.core.game.factory.LevelFactory;
 import no.dkit.android.ludum.core.game.factory.LightFactory;
-import no.dkit.android.ludum.core.game.factory.LootFactory;
 import no.dkit.android.ludum.core.game.factory.ResourceFactory;
 import no.dkit.android.ludum.core.game.factory.ShaderFactory;
 import no.dkit.android.ludum.core.game.factory.TextFactory;
@@ -39,7 +38,6 @@ import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringFeatureBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringShadedBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.ParticleBody;
-import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 import no.dkit.android.ludum.core.game.model.world.level.SandboxLevel;
@@ -208,9 +206,6 @@ public class GameModel {
             case TOPDOWN:
                 playerBody = BodyFactory.getInstance().createTopDownPlayer(level.getStartPosition());
         }
-
-        final Weapon weapon = LootFactory.getInstance().getWeapon(Loot.LOOT_TYPE.MELEE);
-        weapon.onPickup(playerBody);
 
         playerBody.getBody().setLinearVelocity(0, 0);
         playerBody.getMind().clear();
@@ -671,7 +666,7 @@ public class GameModel {
         playerBody.removeAllKeys();
         playerBody.getMind().clear();
         playerBody.getMind().addBehavior(new Arrive(pointPos, 5, Config.getDimensions().SCREEN_LONGEST, 30f));
-        playerBody.setControlMode(PlayerBody.CONTROL_MODE.DIRECT); // For when on mobile without keys
+        playerBody.setControlMode(PlayerBody.CONTROL_MODE.NEWTONIAN); // For when on mobile without keys
 
         pointPos.add(deltaX * Config.getDimensions().WORLD_ON_SCREEN_FACTOR, -deltaY * Config.getDimensions().WORLD_ON_SCREEN_FACTOR);
 

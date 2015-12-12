@@ -5,7 +5,7 @@ import no.dkit.android.ludum.core.game.model.world.level.Level;
 public class Config {
     public static final int MAX_LEVEL = 5;
     public static boolean DEBUG = false;
-    public static final float DEBUG_SCALE = 2f;
+    public static final float DEBUG_SCALE = .5f;
     public static boolean DEBUGTEXT = false;
 
     public static final boolean SANDBOX = true;

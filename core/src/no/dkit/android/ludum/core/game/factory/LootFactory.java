@@ -1,11 +1,7 @@
 package no.dkit.android.ludum.core.game.factory;
 
-import no.dkit.android.ludum.core.game.model.body.weapon.MeleeWeapon;
-import no.dkit.android.ludum.core.game.model.loot.Bomb;
-import no.dkit.android.ludum.core.game.model.loot.Gun;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.loot.Orb;
-import no.dkit.android.ludum.core.game.model.loot.Weapon;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
 
 import java.util.HashSet;
@@ -41,22 +37,10 @@ public class LootFactory {
             case ORB:
                 return new Orb();
             default:
-                return getWeapon(type);
+                return new Orb();
         }
     }
 
-    public Weapon getWeapon(Loot.LOOT_TYPE type) {
-        switch (type) {
-            case BOMB:
-                return new Bomb();
-            case GUN:
-                return new Gun();
-            case MELEE:
-                return new MeleeWeapon();
-            default:
-                throw new RuntimeException("DERP..." + type);
-        }
-    }
 
     public void dispose() {
     }

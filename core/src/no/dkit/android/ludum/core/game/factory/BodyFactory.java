@@ -40,8 +40,6 @@ import no.dkit.android.ludum.core.game.model.body.scenery.LampBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringFeatureBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ObscuringShadedBody;
 import no.dkit.android.ludum.core.game.model.body.scenery.ShadedBody;
-import no.dkit.android.ludum.core.game.model.body.weapon.BulletBody;
-import no.dkit.android.ludum.core.game.model.body.weapon.MeleeBody;
 import no.dkit.android.ludum.core.game.model.body.weapon.ParticleBody;
 import no.dkit.android.ludum.core.game.model.loot.Loot;
 import no.dkit.android.ludum.core.game.model.world.level.Level;
@@ -723,7 +721,7 @@ public class BodyFactory {
         final MonsterPlayerBody monsterPlayerBody = new MonsterPlayerBody(body, Config.TILE_SIZE_X / 4,
                 ResourceFactory.getInstance().getWorldTypeImage("head"),
                 ResourceFactory.getInstance().getWorldTypeImage("tail"),
-                PlayerBody.CONTROL_MODE.DIRECT);
+                PlayerBody.CONTROL_MODE.TWOBUTTON);
         final Body[] tail = createTail(monsterPlayerBody, 3, 8);
         monsterPlayerBody.addTail(tail);
         return monsterPlayerBody;
@@ -879,9 +877,6 @@ public class BodyFactory {
     public Array<Body> update() {
         if (world.isLocked()) throw new RuntimeException("WORLD IS LOCKED!");
 
-        if (bulletsToCreate.size > 0)
-            createBullets();
-
         if (agentsToCreate.size > 0)
             createAgents();
 
@@ -896,17 +891,6 @@ public class BodyFactory {
 
         world.getBodies(this.worldBodies);
         return this.worldBodies;
-    }
-
-    private void createBullets() {
-        float angle;
-        for (BulletDef def : bulletsToCreate) {
-            Body body = getBulletBody(def.getType(), def.getSourceX(), def.getSourceY(), def.getVelocityX(), def.getVelocityY(), def.isPlayerOwned());
-            angle = MathUtils.radiansToDegrees * MathUtils.atan2(def.getVelocityY(), def.getVelocityX());
-            new BulletBody(body, bulletFixture.shape.getRadius(), def.getBulletImage(), angle, def.getDamage());
-            break;
-        }
-        bulletsToCreate.clear();
     }
 
     public void createLoot() {
@@ -962,9 +946,6 @@ public class BodyFactory {
 
                     if (randomWalker == ENEMY_ANIM.FEMALESOLDIER || randomWalker == ENEMY_ANIM.MALESOLDIER) {
                         BehaviorFactory.soldierBehavior(target, walkerSingle);
-                        final Loot.LOOT_TYPE weaponForWalker = Level.getInstance().getWeaponFor(randomWalker);
-                        if (weaponForWalker != null)
-                            LootFactory.getInstance().getWeapon(weaponForWalker).onPickup(walkerSingle);
                     } else {
                         BehaviorFactory.civilianBehavior(target, walkerSingle);
                     }
@@ -982,10 +963,6 @@ public class BodyFactory {
 
                         if (randomGroupWalker == ENEMY_ANIM.FEMALESOLDIER || randomGroupWalker == ENEMY_ANIM.MALESOLDIER) {
                             BehaviorFactory.soldierGroupBehavior(target, walkerNeighborhood);
-
-                            final Loot.LOOT_TYPE weaponFor = Level.getInstance().getWeaponFor(randomGroupWalker);
-                            if (weaponFor != null)
-                                LootFactory.getInstance().getWeapon(weaponFor).onPickup(groupWalker);
                         } else {
                             BehaviorFactory.civilianGroupBehavior(target, walkerNeighborhood);
                         }
@@ -1159,34 +1136,5 @@ public class BodyFactory {
         public LightFactory.LIGHT_TYPE getType() {
             return type;
         }
-    }
-
-    public Body[] attachMeleeWeapons(MonsterPlayerBody owner, float length) {
-        if (length == 0) throw new RuntimeException("Length and links must be > 0");
-
-        final BodyDef bodyDef = createBodyDef(true, BodyDef.BodyType.KinematicBody, 0, 0, 0, 0, false);
-
-        final Body weaponBody = createBody(bodyDef);
-        final Body weaponBody2 = createBody(bodyDef);
-
-        meleeFixture.shape = createClawShape(length, false);
-        meleeFixture.isSensor = true;
-        weaponBody.createFixture(meleeFixture);
-
-        meleeFixture.shape = createClawShape(length, true);
-        meleeFixture.isSensor = true;
-        weaponBody2.createFixture(meleeFixture);
-
-        owner.addMeleeWeapons(
-                new MeleeBody(weaponBody, Config.TILE_SIZE_X / 2f, ResourceFactory.getInstance().getWeaponImage("melee")),
-                new MeleeBody(weaponBody2, Config.TILE_SIZE_X / 2f, ResourceFactory.getInstance().getWeaponImage("melee")));
-
-        return new Body[]{weaponBody, weaponBody2};
-    }
-
-    private Shape createClawShape(float hx, boolean inverted) {
-        Shape crossShape = new PolygonShape();
-        ((PolygonShape) crossShape).setAsBox(hx / 2, hx / 8, new Vector2(inverted ? hx * .8f : -hx * .8f, hx * .8f), inverted ? MathUtils.degreesToRadians * -30 : MathUtils.degreesToRadians * 30);
-        return crossShape;
     }
 }
